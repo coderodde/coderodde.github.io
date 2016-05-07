@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="BillPal.jnlp">
+  <information>
+    <title>BillPal</title>
+    <vendor>Rodion Efremov</vendor>
+    <description>BillPal</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="BillPal.jar" size="27050" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="800" height="600" main-class="net.coderodde.billpal.App"  name="BillPal" />
+  <update check="background"/>
+</jnlp>
