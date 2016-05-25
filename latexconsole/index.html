@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
+        
+        <script type="text/javascript" async
+                src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+        </script>
+        
+        <title>LaTeX console</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <h1 align="center">Type in the LaTeX code and press <b>Compile!</b></h1>
+        
+        <div align="center">
+            <p id="latex_output">
+                $$\prod_{i = 1}^n \int_a^b f(t) \, \mathrm{d}t \neq \sum_{i = 1}^n \int_a^b f(t) \, \mathrm{d}t$$
+            </p>
+        </div>
+        
+        <div align="center">
+            <textarea id="latex_input" rows="5" cols="80">$$\sum_{1 \leq i \leq j \leq n} C(i, j) = \delta$$</textarea>
+        </div>
+        
+        <div align="center">
+            <button type="button" id="compile_button">Compile!</button>
+        </div>
+        
+        <script>
+            compile_button = document.getElementById("compile_button");
+            latex_output   = document.getElementById("latex_output");
+            latex_input    = document.getElementById("latex_input");
+            
+            compile_button.onclick = function() { 
+                latex_output.innerHTML = latex_input.value;
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            };
+        </script>
+    </body>
+</html>
