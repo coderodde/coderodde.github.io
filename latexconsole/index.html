@@ -60,7 +60,7 @@
             compile_button.onclick = function() { 
                 latex_output.innerHTML = latex_input.value;
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-                alert(document.URL);
+                alert(location.protocol + '//' + location.host + location.pathname);
             };
 
             var code = get_url_parameter("code");
