@@ -73,7 +73,7 @@
 
             if (code) 
             {
-                latex_input.value = "$$" + code + "$$";
+                latex_input.value = decodeURIComponent(code);
                 latex_output.innerHTML = latex_input.value;
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             }
