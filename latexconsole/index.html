@@ -60,6 +60,12 @@
             compile_button.onclick = function() { 
                 latex_output.innerHTML = latex_input.value;
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                encoded_url_textarea.value = location.protocol +
+                                             '//' +
+                                             location.host +
+                                             location.pathname +
+                                             "code=" +
+                                             encodeURIComponent(latex_input.value);
                 alert(location.protocol + '//' + location.host + location.pathname);
             };
 
