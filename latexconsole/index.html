@@ -46,15 +46,21 @@
         <div align="center">
             <button type="button" id="compile_button">Compile!</button>
         </div>
-        
+       
+        <div align="center">
+            <textarea id="encoded_url_textarea" rows="5" cols="80"></textarea>
+        </div>
+
         <script>
-            compile_button = document.getElementById("compile_button");
-            latex_output   = document.getElementById("latex_output");
-            latex_input    = document.getElementById("latex_input");
-            
+            compile_button       = document.getElementById("compile_button");
+            latex_output         = document.getElementById("latex_output");
+            latex_input          = document.getElementById("latex_input");
+            encoded_url_textarea = document.getElementById("encoded_url_textarea");
+
             compile_button.onclick = function() { 
                 latex_output.innerHTML = latex_input.value;
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                alert(document.URL);
             };
 
             var code = get_url_parameter("code");
