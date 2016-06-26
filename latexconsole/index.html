@@ -8,7 +8,25 @@
         <script type="text/javascript" async
                 src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
         </script>
-        
+
+        <script type="text/javascript">
+            function get_url_parameter(param)
+            {
+                var page_url = window.location.search.substring(1);
+                var url_vars = page_url.split('&');
+
+                for (var i = 0; i < url_vars.length; ++i) 
+                {
+                    var param_name = url_vars[i].split('=');
+
+                    if (param_name[0] == param) 
+                    {
+                        return param_name[1];
+                    }
+                }
+            }
+        </script>
+
         <title>LaTeX console</title>
         <meta charset="UTF-8">
     </head>
@@ -38,6 +56,13 @@
                 latex_output.innerHTML = latex_input.value;
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             };
+
+            var code = get_url_parameter("code");
+
+            if (var_code) 
+            {
+                latex_input.value = var_code;
+            }
         </script>
     </body>
 </html>
