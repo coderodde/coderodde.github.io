@@ -62,6 +62,7 @@
             if (code) 
             {
                 latex_input.value = "$$" + code + "$$";
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             }
         </script>
     </body>
