@@ -33,21 +33,23 @@
     <body>
         <h1 align="center">Type in the LaTeX code and press <b>Compile!</b></h1>
         
-        <div align="center" style="width:1px; border: 1px solid black; margin: 20px;">
+        <div align="center" style="margin: 30px;">
             <p id="latex_output">
                 $$\prod_{i = 1}^n \int_a^b f(t) \, \mathrm{d}t \neq \sum_{i = 1}^n \int_a^b f(t) \, \mathrm{d}t$$
             </p>
         </div>
         
         <div align="center">
+            <h3>Input area</h3>
             <textarea id="latex_input" rows="5" cols="80">$$\sum_{1 \leq i \leq j \leq n} C(i, j) = \delta$$</textarea>
         </div>
         
-        <div align="center">
+        <div align="center" style="margin: 30px;">
             <button type="button" id="compile_button">Compile!</button>
         </div>
        
         <div align="center">
+            <h3>URL to share</h3>
             <textarea id="encoded_url_textarea" rows="5" cols="80"></textarea>
         </div>
 
