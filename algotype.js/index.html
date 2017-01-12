@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Algotype.js demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="algotype.css">
+        <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
+    </head>
+    <body>
+        <script src="algotype.js"></script>
+        <h1>Algotype.js - typesetting pseudocode in HTML files</h1>
+        <h3>Algotype.js?</h3>
+        <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
+           The motivation wat that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on the actual algorithms.
+           The below fictional algorithm was typeset with Algotype.js:
+        </p>
+        <p>
+            <alg-algorithm name="Super-Sum-Algorithm" parameter="x A R" comment="A nice, efficient algorithm right here">
+                <alg-if condition="x > |A|">
+                    <alg-foreach condition="z \in R" comment="For each do something.">
+                        <alg-step>$y = $ Aux-Function$(z, x)$</alg-step>
+                    </alg-foreach>
+                </alg-if>
+                <alg-else-if condition="x < |A|">
+                    <alg-for init="i = 1" to="|R|" label="for_loop">
+                        <alg-if condition="x \mod 3 == 1">
+                            <alg-break>for_loop</alg-break>
+                        </alg-if>
+                        <alg-else-if condition="x \mod 3 == 2">
+                            <alg-continue>for_loop</alg-continue>
+                        </alg-else-if>
+                        <alg-return>A \setminus R</alg-return>
+                    </alg-for>
+                </alg-else-if>
+                <alg-else>
+                    <alg-step comment="This is comment" comment-id="id1">x = y + z</alg-step>
+                    <alg-step comment="This is comment" comment-id="id2">x = y + z</alg-step>
+                    <alg-step comment="This is comment" comment-id="id3">x = y + z</alg-step>
+                    <alg-step comment="This is comment" comment-id="id4">x = y + z</alg-step>
+                </alg-else>
+            </alg-algorithm>
+        </p>
+    </body>
+</html>
