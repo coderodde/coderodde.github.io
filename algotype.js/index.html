@@ -99,6 +99,8 @@
             You can also omit some commas in the above lists, or omit one or both parentheses.
         </ul>
         
+        
+        <!-- ALG-BREAK -->
         <hr>
         <a name="alg-break"><h4><code>alg-break</code></h4></a>
         <h5>Summary</h5>
@@ -110,7 +112,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameter="">
-        <alg-break comment="Comment text">Label</alg-break>
+        <alg-break comment="Break comment">Label</alg-break>
         </alg-algorithm>
         </p>
         
@@ -125,6 +127,8 @@
             <li>The token <code>Label</code> is optional and is used most often for breaking out of an outer loop.</li>
         </ul>
         
+        <!-- ALG-CONTINUE -->
+        
         <hr>
         <a name="alg-continue"><h4><code>alg-continue</code></h4></a>
         <h5>Summary</h5>
@@ -136,7 +140,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameter="">
-        <alg-continue id="continue-id" comment="Comment text" comment-id="continue-comment-id">Label</alg-continue>
+        <alg-continue comment="Continue comment">Label</alg-continue>
         </alg-algorithm>
         </p>
         <table class="attribute-list">
@@ -164,7 +168,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-else>
+            <alg-else comment="Else comment">
                 <alg-step>$x \leftarrow x^2$</alg-step>
             </alg-else>
         </alg-algorithm>
@@ -189,16 +193,126 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-else-if condition="n \leq 1">
+            <alg-else-if condition="n \leq 1" comment="Else if comment">
                 <alg-step>$x \leftarrow x + y$</alg-step>
             </alg-else-if>
         </alg-algorithm>
         </p>
         <table class="attribute-list">
-            <tr class="attribute-list"><td><code>condition</code></td>   <td>the <code>else-if</code> condition</td>             <td><b>required</b></td></tr>
-            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>else-if</code> statement ID</td>          <td><b>optional</b></td></tr>
-            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>else-if</code> statement comment</td>     <td><b>optional</b></td></tr>
-            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>else-if</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>condition</code></td>   <td>the <code>else if</code> condition</td>             <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>else if</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>else if</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>else if</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
+        
+        <!-- ALG-FOR -->
+        <hr>
+        <a name="alg-for"><h4><code>alg-for</code></h4></a>
+        <h5>Summary</h5>
+        The <code>alg-for</code> tag typesets <code>for</code> loops. <i>This element may have other inner elements.</i>
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-for init="i = 1" to="n" step="2" id="for-id" comment="For comment" comment-id="for-comment-id"&gt;
+...
+&lt;/alg-for&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+            <alg-algorithm name="Dummy-Algorithm" parameters="">
+                <alg-for init="i = 1" to="n" step="2" comment="For comment">
+                    <alg-step>...</alg-step>
+                </alg-for>
+            </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>init</code></td>        <td>the loop counter initialization</td>            <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>to</code></td>          <td>the loop counter upper bound</td>               <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>step</code></td>        <td>step value</td>                                 <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>for</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>for</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>for</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
+        
+        <!-- ALG-FOREACH -->
+        <hr>
+        <a name="alg-foreach"><h4><code>alg-foreach</code></h4></a>
+        <h5>Summary</h5>
+        The <code>alg-foreach</code> tag typesets <code>for each</code> loops. <i>This element may have other inner elements.</i>
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-foreach condition="x \in Q" id="foreach-id" comment="For each comment" comment-id="foreach-comment-id&gt;
+...
+&lt;/alg-foreach&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-foreach condition="x \in Q" comment="For each comment">
+                <alg-step>...</alg-step>
+            </alg-foreach>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>condition</code></td>   <td>the loop condition</td>                             <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>for each</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>for each</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>for each</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
+        
+        <!-- ALG-FOREVER -->
+        <hr>
+        <a name="alg-forever"><h4><code>alg-forever</code></h4></a>
+        <h5>Summary</h5>
+        The <code>alg-forever</code> tag typesets <code>forever</code> loops that runs unconditionally. <i>This element may have other inner elements.</i>
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-forever id="forever-id" comment="Forever comment" comment-id="forever-comment-id"&gt;
+...
+&lt;/alg-forever&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-forever comment="Forever comment">
+                <alg-step>...</alg-step>
+            </alg-forever>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>forever</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>forever</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>forever</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
+        
+        <!-- ALG-FOR-DOWNTO -->
+        <hr>
+        <a name="alg-for-downto"><h4><code>alg-for-downto</code></h4></a>
+        <h5>Synopsis</h5>
+        The <code>alg-for-downto</code> tag typesets <code>for</code> loops that countdown the counter. <i>This element may have other inner elements.</i>
+        <pre>
+&lt;alg-for-downto init="i = n" to="1" step="2" id="for-downto-id" comment="For down to comment" comment-id="for-downto-comment-id"&gt;
+...
+&lt/alg-for-downto&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-for-downto init="i = n" to="1" step="2" comment="For down to comment">
+                <alg-step>...</alg-step>
+            </alg-for-downto>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>init</code></td>        <td>the loop counter initialization</td>                   <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>to</code></td>          <td>the loop counter lower bound</td>                      <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>step</code></td>        <td>step value</td>                                        <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>for downto</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>for downto</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>for downto</code> statement comment ID</td>  <td><b>optional</b></td></tr>
         </table>
         
         
@@ -216,7 +330,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-if condition="n > 1">
+            <alg-if condition="n > 1" comment="If comment">
                 <alg-step>$x \leftarrow x + n$</alg-step>
             </alg-if>
         </alg-algorithm>
