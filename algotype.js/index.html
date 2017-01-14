@@ -150,10 +150,63 @@
             <li>The token <code>Label</code> is optional and is used most often for continuing an outer loop.</li>
         </ul>
         
+        <!-- ALG-ELSE -->
+        <hr>
+        <a name="alg-else"><h4><code>alg-else</code></h4></a>
+        <h5>Summary</h5>
+        The <code>alg-else</code> tag typesets <code>else</code> branches. <i>This element may have other inner elements.</i>
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-else id="else-id" comment="Else comment" comment-id="else-comment-id"&gt;
+...
+&lt;/alg-else&gt;        
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-else>
+                <alg-step>$x \leftarrow x^2$</alg-step>
+            </alg-else>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>else</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>else</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>else</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
+        <!-- ALG-ELSE-IF -->
+        <hr>
+        <a name="alg-else-if"><h4><code>alg-else-if</code></h4></a>
+        <h5>Summary</h5>
+        The <code>alg-else-if</code> tag typesets <code>else-if</code> branches. <i>This element may have other inner elements.</i>
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-else-if condition="n \leq 1" id="else-if-id" comment="Else if comment" comment-id="else-if-comment-id"&gt;
+...
+&lt;/alg-else-if&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-else-if condition="n \leq 1">
+                <alg-step>$x \leftarrow x + y$</alg-step>
+            </alg-else-if>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>condition</code></td>   <td>the <code>else-if</code> condition</td>             <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>else-if</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>else-if</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>else-if</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
+        
+        <!-- ALG-IF-->
         <hr>
         <a name="alg-if"><h4><code>alg-if</code></h4></a>
         <h5>Summary</h5>
-        The <code>alg-if</code> tag typesets the <code>if</code> keywords. <i>This element may have other inner elements.</i>
+        The <code>alg-if</code> tag typesets <code>if</code> branches. <i>This element may have other inner elements.</i>
         <h5>Synopsis</h5>
         <pre>
 &lt;alg-if condition="n > 1" id="if-id" comment="If comment" comment-id="if-comment-id"&gt;
@@ -164,7 +217,7 @@
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-if condition="n > 1">
-                <alg-step>...</alg-step>
+                <alg-step>$x \leftarrow x + n$</alg-step>
             </alg-if>
         </alg-algorithm>
         </p>
