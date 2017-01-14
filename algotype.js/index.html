@@ -11,6 +11,14 @@
             td {
                 padding-right: 40px;
             }
+            
+            table.attribute-list {
+                border-collapse: collapse;
+            }
+            
+            tr.attribute-list {
+                border: 1px solid black;
+            }
         </style>
     </head>
     <body>
@@ -19,7 +27,7 @@
         
         <h2>Algotype.js?</h2>
         <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
-           The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on the actual algorithms.
+           The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on the algorithm logic.
         </p>
         
         
@@ -31,7 +39,7 @@
 &lt;link rel="stylesheet" type="text/css" href="algotype_my_config.css"&gt;
 &lt;script src="algotype.js"&gt;&lt;/script&gt;
         </pre>
-        in the &lt;head&gt; of the HTML file.
+        in the &lt;head&gt; of the HTML file. Feel free, however, to get rid of <code>algotype_my_config.css</code> and add all the custom CSS rules straight into <code>algotype.css</code>.
         </p>
         
         
@@ -59,10 +67,9 @@
             <li><a href="#alg-while">        <code>alg-while        </code></a></li>
         </ul>
         <hr>
-        <h4><code>alg-algorithm</code></h4>
+        <a name="alg-algorithm"><h4><code>alg-algorithm</code></h4></a>
         <h5>Summary</h5>
-        <a name="alg-algorithm"></a>
-        The tag <code>alg-algorithm</code> defines an entire algorithm. 
+        The tag <code>alg-algorithm</code> defines an entire algorithm. <i>Naturally, it may have all inner elements except</i> <code>alg-algorithm</code><i>.</i>
         <h5>Synopsis</h5>
         <pre>
 &lt;alg-algorithm name="Algorithm-Name" parameters="x A R" comment="Algorithm header comment"&gt;
@@ -74,15 +81,15 @@
         <alg-algorithm name="Algorithm-Name" parameters="(x ,A, Z)" comment="Algorithm header comment"></alg-algorithm>
         </p>
         <p>
-        <table>
-            <tr><td><code>name</code></td><td>the name of the algorithm</td><td><b>required</b></td></tr>
-            <tr><td><code>parameters</code></td><td>the list of algorithm's parameters</td><td><b>required</b></td></tr>
-            <tr><td><code>comment</code></td><td>the algorithm comment</td><td><b>optional</b></td></tr>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>name</code></td><td>the name of the algorithm</td><td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>parameters</code></td><td>the list of algorithm's parameters</td><td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td><td>the algorithm comment</td><td><b>optional</b></td></tr>
         </table>
         </p>
         <h5>Notes</h5>
         <ul>
-            <li>Make sure that you wrap the element <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt</code>; into a, say <code>&lt;div&gt;</code> that does not contain any other elements. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last element of the parent.</li>
+            <li>Make sure that you wrap the element <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt</code>; into a, say, <code>&lt;div&gt;</code> that does not contain any other elements. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last element of the parent.</li>
             <li>The parameter list accepts several formats. The above parameter list $(x, A, R)$ may be specified in <code>parameters</code> attribute as
                 <ul><code>x A R</code></ul>
                 <ul><code>x, A, R</code></ul>
@@ -93,49 +100,79 @@
         </ul>
         
         <hr>
-        <h4><code>alg-break</code></h4>
+        <a name="alg-break"><h4><code>alg-break</code></h4></a>
         <h5>Summary</h5>
-        <a name="alg-break"></a>
-        The tag <code>alg-break</code> typesets a break statement.
+        The tag <code>alg-break</code> typesets a break statement. <i>This element may not have inner elements.</i>
         <h5>Synopsis</h5>
         <pre>
-&lt;alg-break &gt;Label&lt;/alg-break&gt;
+&lt;alg-break id="break-id" comment="Break comment" comment-id="break-comment-id"&gt;Label&lt;alg-break&gt;
         </pre>
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameter="">
-        <alg-break comment="Comment text">label</alg-break>
+        <alg-break comment="Comment text">Label</alg-break>
         </alg-algorithm>
-        <table>
-            <tr><td><code>comment</code></td><td>the <b>break</b> statement comment<td><b>optional</b></td></tr>
-        </table>
         </p>
+        
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td><td>the <code>break</code> statement ID</td><td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td><td>the <code>break</code> statement comment<td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td><td>the <code>break</code> statement comment ID<td><b>optional</b></td></tr>
+        </table>
+       
         <h5>Notes</h5>
         <ul>
-            <li>The token <code>label</code> is optional and is used most ofter for breaking out of an outer loop.</li>
+            <li>The token <code>Label</code> is optional and is used most often for breaking out of an outer loop.</li>
         </ul>
         
         <hr>
-        <h4><code>alg-continue</code></h4>
+        <a name="alg-continue"><h4><code>alg-continue</code></h4></a>
         <h5>Summary</h5>
-        <a name="alg-continue"></a>
-        The tag <code>alg-continue</code> typesets a continue statement.
+        The tag <code>alg-continue</code> typesets a continue statement. <i>This element may not have inner elements.</i>
         <h5>Synopsis</h5>
         <pre>
-&lt;alg-continue&gt;Label&lt;/alg-continue&gt;
+&lt;alg-continue id="continue-id" comment="Continue comment" comment-id="continue-comment-id"&gt;Label&lt;/alg-continue&gt;
         </pre>
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameter="">
-        <alg-continue comment="Comment text">label</alg-continue>
+        <alg-continue id="continue-id" comment="Comment text" comment-id="continue-comment-id">Label</alg-continue>
         </alg-algorithm>
-        <table>
-            <tr><td><code>comment</code></td><td>the <b>continue</b> statement comment<td><b>optional</b></td></tr>
-        </table>
         </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td><td>the <code>continue</code> statement ID<td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td><td>the <code>continue</code> statement comment<td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td><td>the <code>continue</code> statement comment ID<td><b>optional</b></td></tr>
+        </table>
+        
         <h5>Notes</h5>
         <ul>
-            <li>The token <code>label</code> is optional and is used most ofter for continuing an outer loop.</li>
+            <li>The token <code>Label</code> is optional and is used most often for continuing an outer loop.</li>
         </ul>
+        
+        <hr>
+        <a name="alg-if"><h4><code>alg-if</code></h4></a>
+        <h5>Summary</h5>
+        The <code>alg-if</code> tag typesets the <code>if</code> keywords. <i>This element may have other inner elements.</i>
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-if condition="n > 1" id="if-id" comment="If comment" comment-id="if-comment-id"&gt;
+...
+&lt;/alg-if&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-if condition="n > 1">
+                <alg-step>...</alg-step>
+            </alg-if>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>condition</code></td>   <td>the <code>if</code> condition</td>             <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>if</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>if</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>if</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
     </body>
 </html>
