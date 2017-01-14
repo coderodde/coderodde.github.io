@@ -22,7 +22,7 @@
         </style>
     </head>
     <body>
-        <h1>Algotype.js - typesetting pseudocode in HTML files</h1>
+        <h1 style="text-align: center;">Algotype.js - typesetting pseudocode in HTML files</h1>
         
         
         <h2>Algotype.js?</h2>
@@ -452,5 +452,71 @@
             <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>step</code> statement comment</td>     <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>step</code> statement comment ID</td>  <td><b>optional</b></td></tr>
         </table>
+        
+        <h2>Example</h2>
+        <p>
+        <alg-algorithm name="Compute-Something-Interesting" parameters="Q R">
+            <alg-step>$X \leftarrow \varnothing$</alg-step>
+            <alg-foreach condition="q \in Q" label="outer">
+                <alg-foreach condition="r \in R">
+                    <alg-if condition="q = r">
+                        <alg-continue>outer</alg-continue>
+                    </alg-if>
+                    <alg-else-if condition="q < r">
+                        <alg-step>$X \leftarrow X \cup \{ q \}$</alg-step>
+                    </alg-else-if>
+                    <alg-else>
+                        <alg-step>$x \leftarrow$ Aux-Method$(q, r)$</alg-step>
+                        <alg-return>$x \; + $ Prune$(q, r)$</alg-return>
+                    </alg-else>
+                </alg-foreach>
+            </alg-foreach>
+        </alg-algorithm>
+        </p>
+        The source for the above pseudocode is
+        <pre>
+&lt;alg-algorithm name="Compute-Something-Interesting" parameters="Q R"&gt;
+    &lt;alg-step&gt;$X \leftarrow \varnothing$&lt;/alg-step&gt;
+    &lt;alg-foreach condition="q \in Q" label="outer"&gt;
+        &lt;alg-foreach condition="r \in R"&gt;
+            &lt;alg-if condition="q = r"&gt;
+                &lt;alg-continue&gt;outer&lt;/alg-continue&gt;
+            &lt;/alg-if&gt;
+            &lt;alg-else-if condition="q &lt; r"&gt;
+                &lt;alg-step&gt;$X \leftarrow X \cup \{ q \}$&lt;/alg-step&gt;
+            &lt;/alg-else-if&gt;
+            &lt;alg-else&gt;
+                &lt;alg-step&gt;$x \leftarrow$ Aux-Method$(q, r)$&lt;/alg-step&gt;
+                &lt;alg-return&gt;$x \; + $ Prune$(q, r)$&lt;/alg-return&gt;
+            &lt;/alg-else&gt;
+        &lt;/alg-foreach&gt;
+    &lt;/alg-foreach&gt;
+&lt;/alg-algorithm&gt;
+        </pre>
+        
+        <h2>Miscellany</h2>
+        <ul>
+            <li>Sometimes you will need to fix spacing in TeX mode using such tokens as <code>\;</code> <code>\,</code> and so on.</li>
+            <li>Algotype.js defines several TeX mode commands for writing primarily <code>if</code> conditions:
+                <ul>
+                    <li>And</li>
+                    <li>Or</li>
+                    <li>Not</li>
+                    <li>Is</li>
+                    <li>In</li>
+                    <li>Mapped</li>
+                    <li>Nil</li>
+                </ul>
+                The above may look like:
+            <alg-algorithm name="Dummy-Algorithm" parameters="x, y">
+                <alg-step>$b \leftarrow$ Is-Prime$(y)$</alg-step>
+                <alg-if condition="(x > 0 \; \Or \; x < 0) \; \And \; b">
+                    <alg-step>...</alg-step>
+                </alg-if>
+            </alg-algorithm>
+            </li>
+        </ul>
+        <hr>
+        <span style="color:grey">Jan 14, 2017 19:24 by Rodion Efremov</span>
     </body>
 </html>
