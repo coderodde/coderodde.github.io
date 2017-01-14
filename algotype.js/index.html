@@ -1,46 +1,88 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Algotype.js demo</title>
+        <title>Algotype.js</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="algotype.css">
         <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
+        <script src="algotype.js"></script>
+        <style>
+            td {
+                padding-right: 40px;
+            }
+        </style>
     </head>
     <body>
-        <script src="algotype.js"></script>
         <h1>Algotype.js - typesetting pseudocode in HTML files</h1>
-        <h3>Algotype.js?</h3>
+        
+        
+        <h2>Algotype.js?</h2>
         <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
-           The motivation wat that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on the actual algorithms.
-           The below fictional algorithm was typeset with Algotype.js:
+           The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on the actual algorithms.
+        </p>
+        
+        
+        <h2>Including Algotype.js</h2>
+        <p>
+            In order to load the Algotype.js library, all you need is:
+        <pre>
+&lt;link rel="stylesheet" type="text/css" href="algotype.css"&gt;
+&lt;link rel="stylesheet" type="text/css" href="algotype_my_config.css"&gt;
+&lt;script src="algotype.js"&gt;&lt;/script&gt;
+        </pre>
+        in the &lt;head&gt; of the HTML file.
+        </p>
+        
+        
+        <h2>Dependencies</h2>
+        <p>
+            Algotype.js implicitly loads <a href="https://www.mathjax.org/">MathJax</a> library for writing TeX.
+        </p>
+        
+        <h2>Documentation</h2>
+        <h3>Algotype.js tags</h3>
+        <ul>
+            <li><a href="#alg-algorithm">    <code>alg-algorithm    </code></a></li>
+            <li><a href="#alg-break">        <code>alg-break        </code></a></li>
+            <li><a href="#alg-continue">     <code>alg-continue     </code></a></li>
+            <li><a href="#alg-else">         <code>alg-else         </code></a></li>
+            <li><a href="#alg-else-if">      <code>alg-else-if      </code></a></li>
+            <li><a href="#alg-for">          <code>alg-for          </code></a></li>
+            <li><a href="#alg-foreach">      <code>alg-foreach      </code></a></li>
+            <li><a href="#alg-forever">      <code>alg-forever      </code></a></li>
+            <li><a href="#alg-for-downto">   <code>alg-for-downto   </code></a></li>
+            <li><a href="#alg-if">           <code>alg-if           </code></a></li>
+            <li><a href="#alg-repeat-until"> <code>alg-repeat-until </code></a></li>
+            <li><a href="#alg-return">       <code>alg-return       </code></a></li>
+            <li><a href="#alg-step">         <code>alg-step         </code></a></li>
+            <li><a href="#alg-while">        <code>alg-while        </code></a></li>
+        </ul>
+        
+        <h4><code>alg-algorithm</code></h4>
+        <h5>Summary</h5>
+        <a name="alg-algorithm"></a>
+        The tag <code>alg-algorithm</code> defines an entire algorithm. 
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-algorithm name="Algorithm-Name" parameters="x A R" comment="Algorithm header comment"&gt;
+...
+&lt;/alg-algorithm&gt;
+        </pre>
+        The above will be rendered as follows
+        <p>
+        <alg-algorithm name="Algorithm-Name" parameters="x A R" comment="Algorithm header comment"></alg-algorithm>
         </p>
         <p>
-            <alg-algorithm name="Super-Sum-Algorithm" parameters="x A R" comment="A nice, efficient algorithm right here">
-                <alg-if condition="x > |A|">
-                    <alg-foreach condition="z \in R" comment="For each do something.">
-                        <alg-step>$y = $ Aux-Function$(z, x)$</alg-step>
-                    </alg-foreach>
-                </alg-if>
-                <alg-else-if condition="x < |A|">
-                    <alg-for init="i = 1" to="|R|" label="for_loop">
-                        <alg-if condition="x \mod 3 == 1">
-                            <alg-break>for_loop</alg-break>
-                        </alg-if>
-                        <alg-else-if condition="x \mod 3 == 2">
-                            <alg-continue>for_loop</alg-continue>
-                        </alg-else-if>
-                        <alg-return>A \setminus R</alg-return>
-                    </alg-for>
-                </alg-else-if>
-                <alg-else>
-                    <alg-step id="step_id1" comment="This is comment" comment-id="comment_id1">$x = y + z$</alg-step>
-                    <alg-step id="step_id2" comment="This is comment" comment-id="comment_id2">$x = y + z$</alg-step>
-                    <alg-step id="step_id3" comment="This is comment" comment-id="comment_id3">$x = y + z$</alg-step>
-                    <alg-step id="step_id4" comment="This is comment" comment-id="comment_id4">$x = y + z$</alg-step>
-                    <alg-step comment-id="comment_id4" comment="yeah fuck">$1$</alg-step>
-                </alg-else>
-            </alg-algorithm>
+        <table>
+            <tr><td><code>name</code></td><td>the name of the algorithm</td><td><b>required</b></td></tr>
+            <tr><td><code>parameters</code></td><td>the list of algorithm's parameters</td><td><b>required</b></td></tr>
+            <tr><td><code>comment</code></td><td>the algorithm comment</td><td><b>optional</b></td></tr>
+        </table>
         </p>
+        <h5>Notes</h5>
+        <ul>
+            <li>Make sure that you wrap the tags <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt</code>; into a, say &lt;div&gt; that does not contain any other tags. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last tag of the parent.</li>
+        </ul>
     </body>
 </html>
