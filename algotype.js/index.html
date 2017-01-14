@@ -58,7 +58,7 @@
             <li><a href="#alg-step">         <code>alg-step         </code></a></li>
             <li><a href="#alg-while">        <code>alg-while        </code></a></li>
         </ul>
-        
+        <hr>
         <h4><code>alg-algorithm</code></h4>
         <h5>Summary</h5>
         <a name="alg-algorithm"></a>
@@ -71,7 +71,7 @@
         </pre>
         The above will be rendered as follows
         <p>
-        <alg-algorithm name="Algorithm-Name" parameters="x A R" comment="Algorithm header comment"></alg-algorithm>
+        <alg-algorithm name="Algorithm-Name" parameters="(x ,A, Z)" comment="Algorithm header comment"></alg-algorithm>
         </p>
         <p>
         <table>
@@ -82,7 +82,60 @@
         </p>
         <h5>Notes</h5>
         <ul>
-            <li>Make sure that you wrap the tags <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt</code>; into a, say &lt;div&gt; that does not contain any other tags. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last tag of the parent.</li>
+            <li>Make sure that you wrap the element <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt</code>; into a, say <code>&lt;div&gt;</code> that does not contain any other elements. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last element of the parent.</li>
+            <li>The parameter list accepts several formats. The above parameter list $(x, A, R)$ may be specified in <code>parameters</code> attribute as
+                <ul><code>x A R</code></ul>
+                <ul><code>x, A, R</code></ul>
+                <ul><code>(x A R)</code></ul>
+                <ul><code>(x, A, R)</code></ul>
+            </li>
+            You can also omit some commas in the above lists, or omit one or both parentheses.
+        </ul>
+        
+        <hr>
+        <h4><code>alg-break</code></h4>
+        <h5>Summary</h5>
+        <a name="alg-break"></a>
+        The tag <code>alg-break</code> typesets a break statement.
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-break &gt;Label&lt;/alg-break&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameter="">
+        <alg-break comment="Comment text">label</alg-break>
+        </alg-algorithm>
+        <table>
+            <tr><td><code>comment</code></td><td>the <b>break</b> statement comment<td><b>optional</b></td></tr>
+        </table>
+        </p>
+        <h5>Notes</h5>
+        <ul>
+            <li>The token <code>label</code> is optional and is used most ofter for breaking out of an outer loop.</li>
+        </ul>
+        
+        <hr>
+        <h4><code>alg-continue</code></h4>
+        <h5>Summary</h5>
+        <a name="alg-continue"></a>
+        The tag <code>alg-continue</code> typesets a continue statement.
+        <h5>Synopsis</h5>
+        <pre>
+&lt;alg-continue&gt;Label&lt;/alg-continue&gt;
+        </pre>
+        The above will be rendered as follows at line 1:
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameter="">
+        <alg-continue comment="Comment text">label</alg-continue>
+        </alg-algorithm>
+        <table>
+            <tr><td><code>comment</code></td><td>the <b>continue</b> statement comment<td><b>optional</b></td></tr>
+        </table>
+        </p>
+        <h5>Notes</h5>
+        <ul>
+            <li>The token <code>label</code> is optional and is used most ofter for continuing an outer loop.</li>
         </ul>
     </body>
 </html>
