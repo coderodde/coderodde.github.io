@@ -529,7 +529,7 @@
         
         <a name="example"><h2>Example</h2></a>
         <p>
-        <alg-algorithm name="Compute-Something-Interesting" parameters="Q R">
+        <alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
             <alg-foreach condition="q \in Q" label="outer">
                 <alg-foreach condition="r \in R">
@@ -537,7 +537,7 @@
                         <alg-continue>outer</alg-continue>
                     </alg-if>
                     <alg-else-if condition="q < r">
-                        <alg-step>$X \leftarrow X \cup \{ q \}$</alg-step>
+                        <alg-step comment="Important step">$X \leftarrow X \cup \{ q \}$</alg-step>
                     </alg-else-if>
                     <alg-else>
                         <alg-step>$x \leftarrow$ Aux-Method$(q, r)$</alg-step>
@@ -549,7 +549,7 @@
         </p>
         The source for the above pseudocode is
         <pre>
-&lt;alg-algorithm name="Compute-Something-Interesting" parameters="Q R"&gt;
+&lt;alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment"&gt;
     &lt;alg-step&gt;$X \leftarrow \varnothing$&lt;/alg-step&gt;
     &lt;alg-foreach condition="q \in Q" label="outer"&gt;
         &lt;alg-foreach condition="r \in R"&gt;
@@ -557,7 +557,7 @@
                 &lt;alg-continue&gt;outer&lt;/alg-continue&gt;
             &lt;/alg-if&gt;
             &lt;alg-else-if condition="q &lt; r"&gt;
-                &lt;alg-step&gt;$X \leftarrow X \cup \{ q \}$&lt;/alg-step&gt;
+                &lt;alg-step comment="Important step"&gt;$X \leftarrow X \cup \{ q \}$&lt;/alg-step&gt;
             &lt;/alg-else-if&gt;
             &lt;alg-else&gt;
                 &lt;alg-step&gt;$x \leftarrow$ Aux-Method$(q, r)$&lt;/alg-step&gt;
@@ -650,10 +650,10 @@
         <a name="future"><h2>Future improvements</h2></a>
         <ol>
             <li>Fix the condition handling of <code>if</code> and <code>else if</code> such that it allows both TeX and function calls. (Jan 15, 2017)</li>
-            <li>Make the source file algotype.js self sufficient: the library does not rely on external CSS file except custom overrides.</li>
+            <li>Make the source file algotype.js self sufficient: the library does not rely on external CSS file except custom overrides. (Jan 15, 2017)</li>
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 15, 2017 11:38 by Rodion Efremov</span>
+        <span style="color:grey">Jan 15, 2017 16:48 by Rodion Efremov</span>
     </body>
 </html>
