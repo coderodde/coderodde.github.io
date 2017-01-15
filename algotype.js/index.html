@@ -27,7 +27,7 @@
         
         <h2>Algotype.js?</h2>
         <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
-           The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on the algorithm logic.
+           The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on algorithm logic.
         </p>
         
         
@@ -45,7 +45,7 @@
         
         <h2>Dependencies</h2>
         <p>
-            Algotype.js implicitly loads <a href="https://www.mathjax.org/">MathJax</a> library for writing TeX.
+            Algotype.js automatically loads <a href="https://www.mathjax.org/">MathJax</a> library for writing TeX.
         </p>
         
         <h2>Documentation</h2>
@@ -82,7 +82,7 @@
         </pre>
         The above will be rendered as follows
         <p>
-        <alg-algorithm name="Algorithm-Name" parameters="(x ,A, Z)" comment="Algorithm header comment"></alg-algorithm>
+        <alg-algorithm name="Algorithm-Name" parameters="(x ,A, R)" comment="Algorithm header comment"></alg-algorithm>
         </p>
         <p>
         <table class="attribute-list">
@@ -166,7 +166,7 @@
         <hr>
         <a name="alg-else"><h3><code>alg-else</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-else</code> tag typesets <code>else</code> branches. <i>This element may have other inner elements.</i>
+        The <code>alg-else</code> tag typesets the <code>else</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-else id="else-id" 
@@ -179,7 +179,7 @@
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-else comment="Else comment">
-                <alg-step>$x \leftarrow x^2$</alg-step>
+                <alg-step>...</alg-step>
             </alg-else>
         </alg-algorithm>
         </p>
@@ -193,7 +193,7 @@
         <hr>
         <a name="alg-else-if"><h3><code>alg-else-if</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-else-if</code> tag typesets <code>else-if</code> branches. <i>This element may have other inner elements.</i>
+        The <code>alg-else-if</code> tag typesets the <code>else-if</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-else-if condition="n \leq 1" 
@@ -207,7 +207,7 @@
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-else-if condition="n \leq 1" comment="Else if comment">
-                <alg-step>$x \leftarrow x + y$</alg-step>
+                <alg-step>...</alg-step>
             </alg-else-if>
         </alg-algorithm>
         </p>
@@ -223,7 +223,7 @@
         <hr>
         <a name="alg-for"><h3><code>alg-for</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-for</code> tag typesets <code>for</code> loops. <i>This element may have other inner elements.</i>
+        The <code>alg-for</code> tag typesets the <code>for</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-for init="i = 1" 
@@ -247,7 +247,7 @@
         <table class="attribute-list">
             <tr class="attribute-list"><td><code>init</code></td>        <td>the loop counter initialization</td>            <td><b>required</b></td></tr>
             <tr class="attribute-list"><td><code>to</code></td>          <td>the loop counter upper bound</td>               <td><b>required</b></td></tr>
-            <tr class="attribute-list"><td><code>step</code></td>        <td>step value</td>                                 <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>step</code></td>        <td>the step value</td>                             <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>label</code></td>       <td>the loop label</td>                             <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>for</code> statement ID</td>          <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>for</code> statement comment</td>     <td><b>optional</b></td></tr>
@@ -259,7 +259,7 @@
         <hr>
         <a name="alg-foreach"><h3><code>alg-foreach</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-foreach</code> tag typesets <code>for each</code> loops. <i>This element may have other inner elements.</i>
+        The <code>alg-foreach</code> tag typesets the <code>for each</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-foreach condition="x \in Q" 
@@ -291,7 +291,7 @@
         <hr>
         <a name="alg-forever"><h3><code>alg-forever</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-forever</code> tag typesets <code>forever</code> loops that runs unconditionally. <i>This element may have other inner elements.</i>
+        The <code>alg-forever</code> tag typesets the <code>forever</code> loops that iterate unconditionally. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-forever label="loop_label" 
@@ -321,7 +321,7 @@
         <hr>
         <a name="alg-for-downto"><h3><code>alg-for-downto</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-for-downto</code> tag typesets <code>for</code> loops that countdown the counter. <i>This element may have other inner elements.</i>
+        The <code>alg-for-downto</code> tag typesets the <code>for</code> loops that countdown the counter. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-for-downto init="i = n" 
@@ -345,7 +345,7 @@
         <table class="attribute-list">
             <tr class="attribute-list"><td><code>init</code></td>        <td>the loop counter initialization</td>                   <td><b>required</b></td></tr>
             <tr class="attribute-list"><td><code>to</code></td>          <td>the loop counter lower bound</td>                      <td><b>required</b></td></tr>
-            <tr class="attribute-list"><td><code>step</code></td>        <td>step value</td>                                        <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>step</code></td>        <td>the step value</td>                                    <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>label</code></td>       <td>the loop label</td>                                    <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>for downto</code> statement ID</td>          <td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>for downto</code> statement comment</td>     <td><b>optional</b></td></tr>
@@ -357,7 +357,7 @@
         <hr>
         <a name="alg-if"><h3><code>alg-if</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-if</code> tag typesets <code>if</code> branches. <i>This element may have other inner elements.</i>
+        The <code>alg-if</code> tag typesets the <code>if</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-if condition="n > 1" 
@@ -371,7 +371,7 @@
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-if condition="n > 1" comment="If comment">
-                <alg-step>$x \leftarrow x + n$</alg-step>
+                <alg-step>...</alg-step>
             </alg-if>
         </alg-algorithm>
         </p>
@@ -387,7 +387,7 @@
         <hr>
         <a name="alg-repeat-until"><h3><code>alg-repeat-until</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-repeat-until</code> tag typesets loops whose condition is evaluated <b>after</b> each iteration. <i>This element may have other inner elements.</i>
+        The <code>alg-repeat-until</code> tag typesets the loops whose condition is evaluated <b>after</b> each iteration. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-repeat-until condition="n > 0" 
@@ -419,7 +419,7 @@
         <hr>
         <a name="alg-return"><h3><code>alg-return</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-return</code> tag typesets return statements.
+        The <code>alg-return</code> tag typesets the return statements. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-return id="return-id" 
@@ -445,12 +445,12 @@
         <hr>
         <a name="alg-step"><h3><code>alg-step</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-step</code> tag typesets a single step.
+        The <code>alg-step</code> tag typesets a single step/non-block statement. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-step id="step-id" 
           comment="Step comment" 
-          comment-id="step-comment-id"&gt;&dollar;x \leftarrow 1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&doll&dollar;&lt;/alg-step&gt;
+          comment-id="step-comment-id"&gt;&dollar;x \leftarrow 1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-step&gt;
         </pre>
         The above will be rendered as follows at line 1:
         <p>
@@ -471,7 +471,7 @@
         <hr>
         <a name="alg-while"><h3><code>alg-while</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-while</code> tag typesets <code>while</code> loops.
+        The <code>alg-while</code> tag typesets the <code>while</code> loops.
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-while condition="x > 0" 
@@ -491,11 +491,11 @@
         </alg-algorithm>
         </p>
         <table class="attribute-list">
-            <tr class="attribute-list"><td><code>condition</code></td>   <td>the iteration condition</td>                     <td><b>required</b></td></tr>
-            <tr class="attribute-list"><td><code>label</code></td>       <td>the loop label</td>                              <td><b>optional</b></td></tr>
-            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>step</code> statement ID</td>          <td><b>optional</b></td></tr>
-            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>step</code> statement comment</td>     <td><b>optional</b></td></tr>
-            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>step</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>condition</code></td>   <td>the iteration condition</td>                      <td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>label</code></td>       <td>the loop label</td>                               <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>while</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>while</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>while</code> statement comment ID</td>  <td><b>optional</b></td></tr>
         </table>
         
         <h2>Example</h2>
@@ -544,13 +544,13 @@
             <li>Sometimes you will need to fix spacing in TeX mode using such tokens as <code>\;</code> <code>\,</code> and so on.</li>
             <li>Algotype.js defines several TeX mode commands for writing primarily <code>if</code> conditions:
                 <ul>
-                    <li>And</li>
-                    <li>Or</li>
-                    <li>Not</li>
-                    <li>Is</li>
-                    <li>In</li>
-                    <li>Mapped</li>
-                    <li>Nil</li>
+                    <li> <code>And</code>    </li>
+                    <li> <code>Or</code>     </li>
+                    <li> <code>Not</code>    </li>
+                    <li> <code>Is</code>     </li>
+                    <li> <code>In</code>     </li>
+                    <li> <code>Mapped</code> </li>
+                    <li> <code>Nil</code>    </li>
                 </ul>
                 The above may look like:
             <alg-algorithm name="Dummy-Algorithm" parameters="x, y">
