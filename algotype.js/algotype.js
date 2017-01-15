@@ -24,7 +24,7 @@ Algotype.DISTANCE_BETWEEN_LINE_NUMBER_AND_CODE = 8;
 // The URL from which to download the MathJax math typesetting facilities.
 Algotype.MATHJAX_SCRIPT_URL = 
     "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML";
-    
+
 // Configuration for MathJax. This provides in the pseudocode macros for such
 // keywords as 'and', 'or', 'not', and others, with the font that matches the 
 // actual keywords, such as 'for each', 'repeat ... until', etc.
@@ -43,18 +43,18 @@ Algotype.MATHJAX_CONFIG =
             '}' +
         '}' +
     '});';
-    
+
 Algotype.MATHJAX_CONFIG_MIME_TYPE = "text/x-mathjax-config";
 
 Algotype.UNNAMED_ALGORITHM = "UnnamedAlgorithm";
-    
+
 Algotype.loadMathJax = function() {
     // Load the MathJax.
     var importedScript = document.createElement("script");
     importedScript.async = "true";
     importedScript.src = Algotype.MATHJAX_SCRIPT_URL;
     document.head.appendChild(importedScript);
-    
+
     // Make MathJax process the configuration.
     var mathJaxSettingsScript = document.createElement("script");
     mathJaxSettingsScript.type = Algotype.MATHJAX_CONFIG_MIME_TYPE;
@@ -65,11 +65,11 @@ Algotype.loadMathJax = function() {
 Algotype.getAlgorithmHeaderComment = function (algorithmElement) {
     var algorithmHeaderComment = 
             algorithmElement.getAttribute("comment");
-    
+
     if (!algorithmHeaderComment) {
         return "";
     }
-    
+
     return " " +
             Algotype.ALGORITHM_HEADER_COMMENT_TAG + 
             " " + algorithmHeaderComment;
@@ -78,43 +78,43 @@ Algotype.getAlgorithmHeaderComment = function (algorithmElement) {
 Algotype.getAlgorithmParameterList = function(algorithmElement) {
     var algorithmParameterList = 
             algorithmElement.getAttribute("parameters") || "";
-    
+
     algorithmParameterList = algorithmParameterList.trim();
-    
+
     if (!algorithmParameterList) {
         return "$()$";
     }
-    
+
     // Remove the beginning parenthesis, if present.
     if (algorithmParameterList[0] === "(") {
         algorithmParameterList = 
                 algorithmParameterList.substring(1, 
                                                  algorithmParameterList.length);
     }
-    
+
     // Remove the ending parenthesis, if present.
     if (algorithmParameterList[algorithmParameterList.length - 1] === ")") {
         algorithmParameterList =
                 algorithmParameterList
                 .substring(0, algorithmParameterList.length - 1);
     }
-    
+
     // Remove possible leading and trailing space within the parentheses.
     algorithmParameterList = algorithmParameterList.trim();
-    
+
     // Split the string into parameter tokens.
     var algorithmParameters = algorithmParameterList.split(/\s*,\s*|\s+/);
-    
+
     // Construct the TeX for the algorithm parameter list.
     var tex = "$(";
     var separator = "";
-    
+
     for (var i = 0; i < algorithmParameters.length; ++i) {
         tex += separator;
         tex += algorithmParameters[i];
         separator = ", ";
     }
-    
+
     return tex + ")$";
 };
 
@@ -137,31 +137,31 @@ Algotype.getLabelHtml = function(state, label) {
 Algotype.typesetIf = function(ifElement, state) {
     var conditionTeX = (ifElement.getAttribute("condition") || "").trim();
     conditionTeX = addTeXDelimeters(conditionTeX);
-    
+
     var htmlText = "";
     var comment = ifElement.getAttribute("comment");
     var commentId = (ifElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     var ifId = (ifElement.getAttribute("id") || "").trim();
     var ifIdTextBegin = "";
     var ifIdTextEnd = "";
-    
+
     if (ifId) {
         ifIdTextBegin = "<span id='" + ifId + "'>";
         ifIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -180,25 +180,25 @@ Algotype.typesetIf = function(ifElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = ifElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -207,31 +207,31 @@ Algotype.typesetIf = function(ifElement, state) {
 Algotype.typesetElseIf = function(elseIfElement, state) {
     var conditionTeX = (elseIfElement.getAttribute("condition") || "").trim();
     conditionTeX = addTeXDelimeters(conditionTeX);
-    
+
     var htmlText = "";
     var comment = elseIfElement.getAttribute("comment");
     var commentId = (elseIfElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     var elseIfId = (elseIfElement.getAttribute("id") || "").trim();
     var elseIfIdTextBegin = "";
     var elseIfIdTextEnd = "";
-    
+
     if (elseIfId) {
         elseIfIdTextBegin = "<span id='" + elseIfId + "'>";
         elseIfIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -250,25 +250,25 @@ Algotype.typesetElseIf = function(elseIfElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = elseIfElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -279,26 +279,26 @@ Algotype.typesetElse = function(elseElement, state) {
     var comment = elseElement.getAttribute("comment");
     var commentId = (elseElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     var elseId = (elseElement.getAttribute("id") || "").trim();
     var elseIdTextBegin = "";
     var elseIdTextEnd = "";
-    
+
     if (elseId) {
         elseIdTextBegin = "<span id='" + elseId + "'>";
         elseIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -316,27 +316,27 @@ Algotype.typesetElse = function(elseElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
-    
-    
+
+
     state["indentation"]++;
-    
+
     var childElements = elseElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -347,10 +347,10 @@ Algotype.typesetStep = function(stepElement, state, isReturn) {
     var inTeX = false;
     var htmlText = "";
     var call = "";
-    
+
     for (var i = 0; i < stepText.length; ++i) {
         var character = stepText[i];
-        
+
         switch (character) {
             case '$':
                 if (!inTeX) {
@@ -361,20 +361,20 @@ Algotype.typesetStep = function(stepElement, state, isReturn) {
                             "class='algotype-text algotype-algorithm-name'>" + 
                             call + 
                             "</span>";
-                    
+
                         call = "";
                     }
-                    
+
                     inTeX = true;
                 } else {
                     inTeX = false;
                 }
-                
+
                 htmlText += "$";
                 break;
-               
+
             default:
-                
+
                 if (inTeX) {
                     htmlText += character;
                 } else {
@@ -382,7 +382,7 @@ Algotype.typesetStep = function(stepElement, state, isReturn) {
                 }
         }
     }
-    
+
     if (call) {
         // Handling the trailing call sequence.
         htmlText += " <span " + 
@@ -390,37 +390,37 @@ Algotype.typesetStep = function(stepElement, state, isReturn) {
                     call + 
                     "</span>";
     }
-    
+
     var comment = stepElement.getAttribute("comment") || "";
     var commentId = (stepElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "'";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment'" + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     var returnHtml = "";
-    
+
     if (isReturn === true) {
         returnHtml = "<span class='algotype-text algotype-keyword'>" +
                      "return</span> ";
     }
-    
+
     var stepId = (stepElement.getAttribute("id") || "").trim();
     var stepIdTextBegin = "";
     var stepIdTextEnd = "";
-    
+
     if (stepId) {
         stepIdTextBegin = "<span id='" + stepId + "'>";
         stepIdTextEnd = "</span>";
     }
-    
+
     htmlText = "<table class='algotype-code-row-table'>\n" + 
                "  <tbody class='algotype-code-row-tbody'>\n" +
                "    <tr class='algotype-algorithm-line'>\n" +
@@ -439,7 +439,7 @@ Algotype.typesetStep = function(stepElement, state, isReturn) {
                "    </tr>\n" +
                "  </tbody>\n" +
                "</table>\n";
-       
+
     state["lineNumber"]++;
     return htmlText;
 };
@@ -452,27 +452,27 @@ Algotype.typesetBreak = function(breakElement, state) {
     var comment = breakElement.getAttribute("comment") || "";
     var commentId = (breakElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "'";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment'" + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     var label = breakElement.innerHTML;
     var breakId = (breakElement.getAttribute("id") || "").trim();
     var breakIdTextBegin = "";
     var breakIdTextEnd = "";
-    
+
     if (breakId) {
         breakIdTextBegin = "<span id='" + breakId + "'>";
         breakIdTextEnd = "</span>";
     }
-    
+
     var htmlText = 
             "<table class='algotype-code-row-table'>\n" +
             "  <tbody class='algotype-code-row-tbody'>\n" +
@@ -491,8 +491,8 @@ Algotype.typesetBreak = function(breakElement, state) {
             "    </tr>\n" +
             "  </tbody>\n" +
             "</table>\n";
-    
-    
+
+
     state["lineNumber"]++;
     return htmlText;
 };
@@ -501,27 +501,27 @@ Algotype.typesetContinue = function(continueElement, state) {
     var comment = continueElement.getAttribute("comment") || "";
     var commentId = (continueElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "'";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment'" + idText + ">" + 
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " + 
                   comment.trim() + "</span>";
     }
-    
+
     var label = continueElement.innerHTML;
     var continueId = (continueElement.getAttribute("id") || "").trim();
     var continueIdTextBegin = "";
     var continueIdTextEnd = "";
-    
+
     if (continueId) {
         continueIdTextBegin = "<span id='" + continueId + "'>";
         continueIdTextEnd = "</span>";
     }
-    
+
     var htmlText = "<table class='algotype-code-row-table'>\n" +
             "  <tbody class='algotype-code-row-tbody'>\n" +
             "    <tr class='algotype-algorithm-line'>\n" +
@@ -539,8 +539,8 @@ Algotype.typesetContinue = function(continueElement, state) {
             "    </tr>\n" +
             "  </tbody>\n" +
             "</table>\n";
-    
-    
+
+
     state["lineNumber"]++;
     return htmlText;
 };
@@ -548,50 +548,50 @@ Algotype.typesetContinue = function(continueElement, state) {
 Algotype.typesetForEach = function(forEachElement, state) {
     var conditionTeX = forEachElement.getAttribute("condition") || "";
     conditionTeX = conditionTeX.trim();
-    
+
     if (conditionTeX[0] !== "$") {
         conditionTeX = "$" + conditionTeX;
     }
-    
+
     if (conditionTeX[conditionTeX.length - 1] !== "$") {
         conditionTeX += "$";
     }
-    
+
     var label = forEachElement.getAttribute("label");
     var htmlText = "";
     var comment = forEachElement.getAttribute("comment");
     var commentId = (forEachElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" + 
                 Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                 comment.trim() + "</span>";
     }
-    
+
     if (label) {
         label = label.trim();
-        
+
         if (label[label.length - 1] !== ":") {
             label += ":";
         }
-        
+
         htmlText += Algotype.getLabelHtml(state, label);
     }
-    
+
     var forEachId = (forEachElement.getAttribute("id") || "").trim();
     var forEachIdTextBegin = "";
     var forEachIdTextEnd = "";
-    
+
     if (forEachId) {
         forEachIdTextBegin = "<span id='" + forEachId +"'>";
         forEachIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -610,25 +610,25 @@ Algotype.typesetForEach = function(forEachElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = forEachElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -638,17 +638,17 @@ function addTeXDelimeters(code) {
     if (!code) {
         return "";
     }
-    
+
     code = code.trim();
-    
+
     if (code[0] !== "$") {
         code = "$" + code;
     }
-    
+
     if (code[code.length - 1] !== "$") {
         code += "$";
     }
-    
+
     return code;
 }
 
@@ -656,54 +656,54 @@ Algotype.typesetFor = function(forElement, state) {
     var initConditionTeX = forElement.getAttribute("init") || "";
     var toConditionTeX = forElement.getAttribute("to") || "";
     var stepConditionTeX = forElement.getAttribute("step") || "";
-    
+
     initConditionTeX = addTeXDelimeters(initConditionTeX);
     toConditionTeX = addTeXDelimeters(toConditionTeX);
-    
+
     if (stepConditionTeX) {
         stepConditionTeX = addTeXDelimeters(stepConditionTeX);
     }
-    
+
     var label = forElement.getAttribute("label");
     var htmlText = "";
     var comment = forElement.getAttribute("comment");
     var commentId = (forElement.getAttribute("comment-id") || "").trim();
     var idText = "";
     var stepText = "";
-    
+
     if (stepConditionTeX) {
         stepText = " step " + stepConditionTeX;
     }
-    
+
     if (commentId) {
         idText = "id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                 Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                 comment.trim() + "</span>";
     }
-    
+
     if (label) {
         label = label.trim();
-        
+
         if (label[label.length - 1] !== ":") {
             label += ":";
         }
-        
+
         htmlText += Algotype.getLabelHtml(state, label);
     }
-    
+
     var forId = (forElement.getAttribute("id") || "").trim();
     var forIdTextBegin = "";
     var forIdTextEnd = "";
-    
+
     if (forId) {
         forIdTextBegin = "<span id='" + forId + "'>";
         forIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -723,25 +723,25 @@ Algotype.typesetFor = function(forElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = forElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -751,54 +751,54 @@ Algotype.typesetForDownto = function(forDowntoElement, state) {
     var initConditionTeX = forDowntoElement.getAttribute("init") || "";
     var toConditionTeX   = forDowntoElement.getAttribute("to")   || "";
     var stepConditionTeX = forDowntoElement.getAttribute("step") || "";
-    
+
     initConditionTeX = addTeXDelimeters(initConditionTeX);
     toConditionTeX   = addTeXDelimeters(toConditionTeX);
-    
+
     if (stepConditionTeX) {
         stepConditionTeX = addTeXDelimeters(stepConditionTeX);
     }
-    
+
     var label = forDowntoElement.getAttribute("label");
     var htmlText = "";
     var comment = forDowntoElement.getAttribute("comment");
     var commentId = (forDowntoElement.getAttribute("comment-id") || "").trim();
     var idText = "";
     var stepText = "";
-    
+
     if (stepConditionTeX) {
         stepText = " step " + stepConditionTeX;
     }
-    
+
     if (commentId) {
         idText = "id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     if (label) {
         label = label.trim();
-        
+
         if (label[label.length - 1] !== ":") {
             label += ":";
         }
-        
+
         htmlText += Algotype.getLabelHtml(state, label);
     }
-    
+
     var forDowntoId = (forDowntoElement.getAttribute("id") || "").trim();
     var forDowntoTextBegin = "";
     var forDowntoTextEnd = "";
-    
+
     if (forDowntoId) {
         forDowntoTextBegin = "<span id='" + forDowntoId + "'>";
         forDowntoTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -819,24 +819,24 @@ Algotype.typesetForDownto = function(forDowntoElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
     var childElements = forDowntoElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -848,36 +848,36 @@ Algotype.typesetForever = function(foreverElement, state) {
     var comment = foreverElement.getAttribute("comment");
     var commentId = (foreverElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = "id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                 Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                 comment.trim() + "</span>";
     }
-    
+
     if (label) {
         label = label.trim();
-        
+
         if (label[label.length - 1] !== ":") {
             label += ":";
         }
-        
+
         htmlText += Algotype.getLabelHtml(state, label);
     }
-    
+
     var foreverId = (foreverElement.getAttribute("id") || "").trim();
     var foreverIdTextBegin = "";
     var foreverIdTextEnd = "";
-    
+
     if (foreverId) {
         foreverIdTextBegin = "<span id='" + foreverId + "'>";
         foreverIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -895,25 +895,25 @@ Algotype.typesetForever = function(foreverElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = foreverElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;   
     return htmlText;
@@ -921,44 +921,44 @@ Algotype.typesetForever = function(foreverElement, state) {
 
 Algotype.typesetWhile = function(whileElement, state) {
     var conditionTeX = (whileElement.getAttribute("condition") || "").trim();
-    
+
     conditionTeX = addTeXDelimeters(conditionTeX);
-    
+
     var label = whileElement.getAttribute("label");
     var htmlText = "";
     var comment = whileElement.getAttribute("comment");
     var commentId = (whileElement.getAttribute("comment-id") || "").trim();
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " + 
                   comment.trim() + "</span>";
     }
-    
+
     if (label) {
         label = label.trim();
-        
+
         if (label[label.length - 1] !== ":") {
             label += ":";
         }
-        
+
         htmlText += Algotype.getLabelHtml(state, label);
     }
-    
+
     var whileId = (whileElement.getAttribute("id") || "").trim();
     var whileIdTextBegin = "";
     var whileIdTextEnd = "";
-    
+
     if (whileId) {
         whileIdTextBegin = "<span id='" + whileId + "'>";
         whileIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -977,25 +977,25 @@ Algotype.typesetWhile = function(whileElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = whileElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
     return htmlText;
@@ -1004,46 +1004,46 @@ Algotype.typesetWhile = function(whileElement, state) {
 Algotype.typesetRepeatUntil = function(repeatUntilElement, state) {
     var conditionTeX = 
             (repeatUntilElement.getAttribute("condition") || "").trim();
-    
+
     conditionTeX = addTeXDelimeters(conditionTeX);
-    
+
     var label = repeatUntilElement.getAttribute("label");
     var htmlText = "";
     var comment = repeatUntilElement.getAttribute("comment");
     var commentId = 
             (repeatUntilElement.getAttribute("comment-id") || "").trim();
-    
+
     var idText = "";
-    
+
     if (commentId) {
         idText = " id='" + commentId + "' ";
     }
-    
+
     if (comment) {
         comment = " <span class='algotype-step-comment' " + idText + ">" +
                   Algotype.ALGORITHM_STEP_COMMENT_TAG + " " +
                   comment.trim() + "</span>";
     }
-    
+
     if (label) {
         label = label.trim();
-        
+
         if (label[label.length - 1] !== ":") {
             label += ":";
         }
-        
+
         htmlText += Algotype.getLabelHtml(state, label);
     }
-    
+
     var repeatUntilId = (repeatUntilElement.getAttribute("id") || "").trim();
     var repeatUntilIdTextBegin = "";
     var repeatUntilIdTextEnd = "";
-    
+
     if (repeatUntilId) {
         repeatUntilIdTextBegin = "<span id='" + repeatUntilId + "'>";
         repeatUntilIdTextEnd = "</span>";
     }
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -1060,28 +1060,28 @@ Algotype.typesetRepeatUntil = function(repeatUntilElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-        
+
     var saveIndentation = state["indentation"];
-    
+
     state["lineNumber"]++;
     state["indentation"]++;
-    
+
     var childElements = repeatUntilElement.children;
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     // Reset the indentation counter.
     state["indentation"] = saveIndentation;
-    
+
     htmlText += "<table class='algotype-code-row-table'>\n" +
                 "  <tbody class='algotype-code-row-tbody'>\n" +
                 "    <tr class='algotype-algorithm-line'>\n" +
@@ -1100,7 +1100,7 @@ Algotype.typesetRepeatUntil = function(repeatUntilElement, state) {
                 "    </tr>\n" +
                 "  </tbody>\n" +
                 "</table>\n";
-    
+
     state["lineNumber"]++;
     return htmlText;
 };
@@ -1108,12 +1108,12 @@ Algotype.typesetRepeatUntil = function(repeatUntilElement, state) {
 Algotype.typesetAlgorithm = function(algorithmElement) {
     var algorithmName =
             algorithmElement.getAttribute("name") || Algotype.UNNAMED_ALGORITHM;
-    
+
     var algorithmParameterList = 
             Algotype.getAlgorithmParameterList(algorithmElement);
-    
+
     var commentText = Algotype.getAlgorithmHeaderComment(algorithmElement);
-    
+
     var parentNode = algorithmElement.parentNode;
 
     var htmlText = 
@@ -1122,25 +1122,25 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
             "</span><span class='algotype-text'>" + algorithmParameterList + 
             commentText +
             "</span><br/>";
-    
+
     var childElements = algorithmElement.children;
-    
+
     var state = {
         lineNumber: 1,
         indentation: 0
     };
-    
+
     for (var i = 0; i < childElements.length; ++i) {
         var elementName = childElements[i].tagName.toLowerCase();
         var handlerFunction = Algotype.dispatchTable[elementName];
-        
+
         if (handlerFunction) {
             htmlText += handlerFunction(childElements[i], state);
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
     }
-    
+
     var paragraphElement = document.createElement("p");
     paragraphElement.style.textAlign = "left";
     paragraphElement.innerHTML = htmlText;
@@ -1150,10 +1150,10 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
 Algotype.setup = function() {
     // Load MathJax.
     Algotype.loadMathJax();
-    
+
     // Typeset all algorithms present in the DOM.
     var algorithmList = document.getElementsByTagName("alg-algorithm");
-    
+
     for (var i = 0; i < algorithmList.length; ++i) {
         Algotype.typesetAlgorithm(algorithmList[i]);
     }
@@ -1181,6 +1181,6 @@ window.onload = function() {
     if (oldOnloadHandler) {
         oldOnloadHandler();
     }
-    
+
     Algotype.setup();
 };
