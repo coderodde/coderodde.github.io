@@ -542,6 +542,7 @@
         <h2>Miscellany</h2>
         <ul>
             <li>Sometimes you will need to fix spacing in TeX mode using such tokens as <code>\;</code> <code>\,</code> and so on.</li>
+            <li>Some attributes are declared as <b>required</b>, yet Algotype.js (yet) does not enforce that those attributes are given values. As of now, omitting a required attribute leads to <i><b>undefined</b></i> behaviour.</li>
             <li>Algotype.js defines several TeX mode commands for writing primarily <code>if</code> conditions:
                 <ul>
                     <li> <code>And</code>    </li>
@@ -617,7 +618,12 @@
         </alg-algorithm>
         </p>
         
+        <h2>Future improvements</h2>
+        <ol>
+            <li>Fix the condition handling of <code>if</code> and <code>else if</code> such that it allows both TeX and function calls. (Jan 15, 2017)</li>
+        </ol>
+        
         <hr>
-        <span style="color:grey">Jan 15, 2017 11:23 by Rodion Efremov</span>
+        <span style="color:grey">Jan 15, 2017 11:38 by Rodion Efremov</span>
     </body>
 </html>
