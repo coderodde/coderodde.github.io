@@ -561,7 +561,63 @@
             </alg-algorithm>
             </li>
         </ul>
+        
+        <h2>Highlighting code and comments</h2>
+        <p>
+            The primary function of statement and comment IDs is to have a mechanism for changing the way they are rendered by default. Given CSS rules
+        <pre>
+#step_id1 {
+    color: black;
+}
+
+#comment_id1 {
+    color: black;
+}
+
+#step_id2 {
+    color: brown;
+}
+
+#comment_id2 {
+    color: black;
+}
+
+#step_id3 {
+    color: black;
+}
+
+#comment_id3 {
+    color: blue;
+}
+
+#step_id4 {
+    color: brown;
+}
+
+#comment_id4 {
+    color: blue;
+}
+        </pre>
+        and the algorithm
+        <pre>
+&lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
+    &lt;alg-step id="step_id1" comment="Comment" comment-id="comment_id1"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
+    &lt;alg-step id="step_id2" comment="Comment" comment-id="comment_id2"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
+    &lt;alg-step id="step_id3" comment="Comment" comment-id="comment_id3"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
+    &lt;alg-step id="step_id4" comment="Comment" comment-id="comment_id4"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
+&lt;/alg-algorithm&gt;
+        </pre>
+        we get the output
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-step id="step_id1" comment="Comment" comment-id="comment_id1">$x \leftarrow y + z$</alg-step>
+            <alg-step id="step_id2" comment="Comment" comment-id="comment_id2">$x \leftarrow y + z$</alg-step>
+            <alg-step id="step_id3" comment="Comment" comment-id="comment_id3">$x \leftarrow y + z$</alg-step>
+            <alg-step id="step_id4" comment="Comment" comment-id="comment_id4">$x \leftarrow y + z$</alg-step>
+        </alg-algorithm>
+        </p>
+        
         <hr>
-        <span style="color:grey">Jan 14, 2017 19:24 by Rodion Efremov</span>
+        <span style="color:grey">Jan 15, 2017 11:23 by Rodion Efremov</span>
     </body>
 </html>
