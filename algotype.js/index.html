@@ -24,14 +24,43 @@
     <body>
         <h1 style="text-align: center;">Algotype.js - typesetting pseudocode in HTML files</h1>
         
+        <h1>Table of contents</h1>
+        <ul>
+            <li><a href="#algotypejs_question">Algotype.js?</a></li>
+            <li><a href="#including">Including Algotype.js</a></li>
+            <li><a href="#dependencies">Dependencies</a></li>
+            <li>
+                <a href="#documentation">Documentation</a>
+                <ul>
+                    <li><a href="#alg-algorithm">    <code>alg-algorithm    </code></a></li>
+                    <li><a href="#alg-break">        <code>alg-break        </code></a></li>
+                    <li><a href="#alg-continue">     <code>alg-continue     </code></a></li>
+                    <li><a href="#alg-else">         <code>alg-else         </code></a></li>
+                    <li><a href="#alg-else-if">      <code>alg-else-if      </code></a></li>
+                    <li><a href="#alg-for">          <code>alg-for          </code></a></li>
+                    <li><a href="#alg-foreach">      <code>alg-foreach      </code></a></li>
+                    <li><a href="#alg-forever">      <code>alg-forever      </code></a></li>
+                    <li><a href="#alg-for-downto">   <code>alg-for-downto   </code></a></li>
+                    <li><a href="#alg-if">           <code>alg-if           </code></a></li>
+                    <li><a href="#alg-repeat-until"> <code>alg-repeat-until </code></a></li>
+                    <li><a href="#alg-return">       <code>alg-return       </code></a></li>
+                    <li><a href="#alg-step">         <code>alg-step         </code></a></li>
+                    <li><a href="#alg-while">        <code>alg-while        </code></a></li>
+                </ul>
+            </li>
+            <li><a href="#example">Example</a></li>
+            <li><a href="#misc">Miscellany</a></li>
+            <li><a href="#highlight">Highlighting code and comments</a></li>
+            <li><a href="#future">Future improvements</a></li>
+        </ul>
         
-        <h2>Algotype.js?</h2>
+        <a name="algotypejs_question"><h2>Algotype.js?</h2></a>
         <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
            The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on algorithm logic.
         </p>
         
         
-        <h2>Including Algotype.js</h2>
+        <a name="including"><h2>Including Algotype.js</h2></a>
         <p>
             In order to load the Algotype.js library, all you need is:
         <pre>
@@ -43,12 +72,12 @@
         </p>
         
         
-        <h2>Dependencies</h2>
+        <a name="dependencies"><h2>Dependencies</h2></a>
         <p>
             Algotype.js automatically loads <a href="https://www.mathjax.org/">MathJax</a> library for writing TeX.
         </p>
         
-        <h2>Documentation</h2>
+        <a name="documentation"><h2>Documentation</h2></a>
         <h3>Algotype.js tags</h3>
         <ul>
             <li><a href="#alg-algorithm">    <code>alg-algorithm    </code></a></li>
@@ -498,7 +527,7 @@
             <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>while</code> statement comment ID</td>  <td><b>optional</b></td></tr>
         </table>
         
-        <h2>Example</h2>
+        <a name="example"><h2>Example</h2></a>
         <p>
         <alg-algorithm name="Compute-Something-Interesting" parameters="Q R">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
@@ -539,7 +568,7 @@
 &lt;/alg-algorithm&gt;
         </pre>
         
-        <h2>Miscellany</h2>
+        <a name="misc"><h2>Miscellany</h2></a>
         <ul>
             <li>Sometimes you will need to fix spacing in TeX mode using such tokens as <code>\;</code> <code>\,</code> and so on.</li>
             <li>Some attributes are declared as <b>required</b>, yet Algotype.js (yet) does not enforce that those attributes are given values. As of now, omitting a required attribute leads to <i><b>undefined</b></i> behaviour.</li>
@@ -563,7 +592,7 @@
             </li>
         </ul>
         
-        <h2>Highlighting code and comments</h2>
+        <a name="highlight"><h2>Highlighting code and comments</h2></a>
         <p>
             The primary function of statement and comment IDs is to have a mechanism for changing the way they are rendered by default. Given CSS rules
         <pre>
@@ -618,9 +647,10 @@
         </alg-algorithm>
         </p>
         
-        <h2>Future improvements</h2>
+        <a name="future"><h2>Future improvements</h2></a>
         <ol>
             <li>Fix the condition handling of <code>if</code> and <code>else if</code> such that it allows both TeX and function calls. (Jan 15, 2017)</li>
+            <li>Make the source file algotype.js self sufficient: the library does not rely on external CSS file except custom overrides.</li>
         </ol>
         
         <hr>
