@@ -738,7 +738,7 @@
             In case you need to color highlight only a part of a single statement, you can write, for example,
         <pre>
 &lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
-    &lt;alg-yield id="yield_id"&gt;$c \times $&lt;font color="brown"&gt;Get-Factor()&lt;/font&gt; + &lt;font color="red"&gt;Fix-Constant()&lt;/font&gt;&lt;/alg-yield&gt;
+    &lt;alg-yield id="yield_id"&gt;$c \times $&lt;font color="brown"&gt;Get-Factor$()$&lt;/font&gt; + &lt;font color="red"&gt;Fix-Constant$()$&lt;/font&gt;&lt;/alg-yield&gt;
     &lt;alg-return&gt;1 + &lt;font color="red"&gt;Aux-Call&lt;/font&gt;&lt;font color="green"&gt;$(x, y)$&lt;/font&gt;&lt;/alg-return&gt;
 &lt;/alg-algorithm&gt;
         </pre>
@@ -746,7 +746,7 @@
         <p>which will give you</p>
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-yield id="yield_id">$c \times $<font color="brown">Get-Factor()</font> + <font color="red">Fix-Constant()</font></alg-yield>
+            <alg-yield id="yield_id">$c \times $<font color="brown">Get-Factor$()$</font> + <font color="red">Fix-Constant$()$</font></alg-yield>
             <alg-return>1 + <font color="red">Aux-Call</font><font color="green">$(x, y)$</font></alg-return>
         </alg-algorithm>
         </p>
@@ -759,9 +759,10 @@
             <li>After moving the CSS rules to algotype.js (issue 2) the loop labels are not rendered correctly. (Jan 15, 2017) <b><i>[Done at Jan 16, 2017 12:19]</i></b></li>
             <li>Add keywords <code>print</code>, <code>output</code> and <code>yield</code>. (Jan 16, 2017) <b><i>[Done at Jan 16, 2017 13:35]</i></b></li>
             <li>Add <code>then</code> to <code>if</code> and <code>else if</code>. (Jan 16, 2017) <b><i>[Done at Jan 16, 2017 13:36]</i></b></li>
+            <li>Surround the algorithm headers with bottom and top horizontal lines. (Jan 16, 2017) <b><i>[Done at Jan 16, 2017 19:25]</i></b></li>
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 16, 2017 16:40 by Rodion Efremov</span>
+        <span style="color:grey">Jan 16, 2017 19:25 by Rodion Efremov</span>
     </body>
 </html>
