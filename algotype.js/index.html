@@ -41,10 +41,13 @@
                     <li><a href="#alg-forever">      <code>alg-forever      </code></a></li>
                     <li><a href="#alg-for-downto">   <code>alg-for-downto   </code></a></li>
                     <li><a href="#alg-if">           <code>alg-if           </code></a></li>
+                    <li><a href="#alg-output">       <code>alg-output       </code></a></li>
+                    <li><a href="#alg-print">        <code>alg-print        </code></a></li>
                     <li><a href="#alg-repeat-until"> <code>alg-repeat-until </code></a></li>
                     <li><a href="#alg-return">       <code>alg-return       </code></a></li>
                     <li><a href="#alg-step">         <code>alg-step         </code></a></li>
                     <li><a href="#alg-while">        <code>alg-while        </code></a></li>
+                    <li><a href="#alg-yield">        <code>alg-yield        </code></a></li>
                 </ul>
             </li>
             <li><a href="#example">Example</a></li>
@@ -88,10 +91,13 @@
             <li><a href="#alg-forever">      <code>alg-forever      </code></a></li>
             <li><a href="#alg-for-downto">   <code>alg-for-downto   </code></a></li>
             <li><a href="#alg-if">           <code>alg-if           </code></a></li>
+            <li><a href="#alg-output">       <code>alg-output       </code></a></li>
+            <li><a href="#alg-print">        <code>alg-print        </code></a></li>
             <li><a href="#alg-repeat-until"> <code>alg-repeat-until </code></a></li>
             <li><a href="#alg-return">       <code>alg-return       </code></a></li>
             <li><a href="#alg-step">         <code>alg-step         </code></a></li>
             <li><a href="#alg-while">        <code>alg-while        </code></a></li>
+            <li><a href="#alg-yield">        <code>alg-yield        </code></a></li>
         </ul>
         
         
@@ -442,6 +448,56 @@
         </table>
         
         
+        <!-- ALG-OUTPUT -->
+        <hr>
+        <a name="alg-output"><h3><code>alg-output</code></h3></a>
+        <h4>Summary</h4>
+        The <code>alg-output</code> tag typesets the output statements. <i>This element may not have inner elements.</i>
+        <h4>Synopsis</h4>
+        <pre>
+&lt;alg-output id="output-id" 
+            comment="Output comment" 
+            comment-id="output-comment-id"&gt;&dollar;1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-output&gt;
+        </pre>
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-output comment="Output comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-output>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>output</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>output</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>output</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        <h4>Notes</h4>
+        In the <code>alg-output</code> element, all text not delimeted by &dollar; TeX delimeters is considered to be a function call and is thus typeset using small-caps font just like the algorithm name.
+        
+        
+        <!-- ALG-PRINT -->
+        <hr>
+        <a name="alg-print"><h3><code>alg-print</code></h3></a>
+        <h4>Summary</h4>
+        The <code>alg-print</code> tag typesets the print statements. <i>This element may not have inner elements.</i>
+        <h4>Synopsis</h4>
+        <pre>
+&lt;alg-print id="print-id" 
+           comment="Print comment" 
+           comment-id="print-comment-id"&gt;&dollar;1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-print&gt;
+        </pre>
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-print comment="Print comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-print>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>print</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>print</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>print</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        <h4>Notes</h4>
+        In the <code>alg-print</code> element, all text not delimeted by &dollar; TeX delimeters is considered to be a function call and is thus typeset using small-caps font just like the algorithm name.
+        
+        
         <!-- ALG-RETURN -->
         <hr>
         <a name="alg-return"><h3><code>alg-return</code></h3></a>
@@ -525,16 +581,41 @@
             <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>while</code> statement comment ID</td>  <td><b>optional</b></td></tr>
         </table>
         
+        <!-- ALG-YIELD -->
+        <hr>
+        <a name="alg-yield"><h3><code>alg-yield</code></h3></a>
+        <h4>Summary</h4>
+        The <code>alg-yield</code> tag typesets the yield statements. <i>This element may not have inner elements.</i>
+        <h4>Synopsis</h4>
+        <pre>
+&lt;alg-yield id="yield-id" 
+           comment="Yield comment" 
+           comment-id="yield-comment-id"&gt;&dollar;1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-yield&gt;
+        </pre>
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-yield comment="Yield comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-yield>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>yield</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>yield</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>yield</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        <h4>Notes</h4>
+        In the <code>alg-yield</code> element, all text not delimeted by &dollar; TeX delimeters is considered to be a function call and is thus typeset using small-caps font just like the algorithm name.
+        
+        
         <a name="example"><h2>Example</h2></a>
         <p>
         <alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
-            <alg-foreach condition="q \in Q" label="outer">
-                <alg-foreach condition="r \in R">
-                    <alg-if condition="q = r">
+            <alg-foreach condition="$q \in Q$" label="outer">
+                <alg-foreach condition="$r \in R$">
+                    <alg-if condition="$q = r$">
                         <alg-continue>outer</alg-continue>
                     </alg-if>
-                    <alg-else-if condition="q < r">
+                    <alg-else-if condition="$q < r$">
                         <alg-step comment="Important step">$X \leftarrow X \cup \{ q \}$</alg-step>
                     </alg-else-if>
                     <alg-else>
@@ -583,11 +664,12 @@
                 The above may look like:
             <alg-algorithm name="Dummy-Algorithm" parameters="x, y">
                 <alg-step>$b \leftarrow$ Is-Prime$(y)$</alg-step>
-                <alg-if condition="(x > 0 \; \Or \; x < 0) \; \And \; b">
+                <alg-if condition="$(x > 0 \; \Or \; x < 0) \; \And \; b$">
                     <alg-step>...</alg-step>
                 </alg-if>
             </alg-algorithm>
             </li>
+            <li>Loop conditions, <code>if</code>- or <code>else if</code>-conditions, text in single step commands (<code>alg-step</code>, <code>alg-return</code>, etc.) allow TeX code surrounded by single &dollar; characters. Everything else that is not surrounded by those TeX delimeters, is considered a function call, which is rendered using bold small-caps font.</li>
         </ul>
         
         <a name="highlight"><h2>Highlighting code and comments</h2></a>
@@ -645,6 +727,23 @@
         </alg-algorithm>
         </p>
         
+        <p>
+            In case you need to color highlight only a part of a single statement, you can write, for example,
+        <pre>
+        &lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
+            &lt;alg-yield id="yield_id"&gt;$c \times $&lt;font color="brown"&gt;Get-Factor()&lt;/font&gt; + &lt;font color="red"&gt;Fix-Constant()&lt;/font&gt;&lt;/alg-yield&gt;
+            &lt;alg-return&gt;1 + &lt;font color="red"&gt;Aux-Call&lt;/font&gt;&lt;font color="green"&gt;$(x, y)$&lt;/font&gt;&lt;/alg-return&gt;
+        &lt;/alg-algorithm&gt;
+        </pre>
+        </p>
+        <p>which will give you</p>
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-yield id="yield_id">$c \times $<font color="brown">Get-Factor()</font> + <font color="red">Fix-Constant()</font></alg-yield>
+            <alg-return>1 + <font color="red">Aux-Call</font><font color="green">$(x, y)$</font></alg-return>
+        </alg-algorithm>
+        </p>
+        
         <a name="future"><h2>Future improvements</h2></a>
         <ol>
             <li>Fix the condition handling of <code>if</code> and <code>else if</code> such that it allows both TeX and function calls. (Jan 15, 2017) <b><i>[Done at Jan 16, 2017 14:20]</i></b></li>
@@ -655,6 +754,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 16, 2017 13:38 by Rodion Efremov</span>
+        <span style="color:grey">Jan 16, 2017 15:49 by Rodion Efremov</span>
     </body>
 </html>
