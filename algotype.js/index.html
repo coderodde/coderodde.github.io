@@ -635,12 +635,12 @@
         <pre>
 &lt;alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment"&gt;
     &lt;alg-step&gt;$X \leftarrow \varnothing$&lt;/alg-step&gt;
-    &lt;alg-foreach condition="q \in Q" label="outer"&gt;
-        &lt;alg-foreach condition="r \in R"&gt;
-            &lt;alg-if condition="q = r"&gt;
+    &lt;alg-foreach condition="$q \in Q$" label="outer"&gt;
+        &lt;alg-foreach condition="$r \in R$"&gt;
+            &lt;alg-if condition="$q = r$"&gt;
                 &lt;alg-continue&gt;outer&lt;/alg-continue&gt;
             &lt;/alg-if&gt;
-            &lt;alg-else-if condition="q &lt; r"&gt;
+            &lt;alg-else-if condition="$q &lt; r$"&gt;
                 &lt;alg-step comment="Important step"&gt;$X \leftarrow X \cup \{ q \}$&lt;/alg-step&gt;
             &lt;/alg-else-if&gt;
             &lt;alg-else&gt;
@@ -762,6 +762,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 16, 2017 16:31 by Rodion Efremov</span>
+        <span style="color:grey">Jan 16, 2017 16:40 by Rodion Efremov</span>
     </body>
 </html>
