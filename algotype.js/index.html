@@ -56,12 +56,13 @@
             <li><a href="#future">Future improvements</a></li>
         </ul>
         
+        <hr>
         <a name="algotypejs_question"><h2>Algotype.js?</h2></a>
         <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
            The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on algorithm logic.
         </p>
         
-        
+        <hr>
         <a name="including"><h2>Including Algotype.js</h2></a>
         <p>
             In order to load the Algotype.js library, all you need is:
@@ -72,12 +73,13 @@
         in the &lt;head&gt; of the HTML file. The file <code>algotype_my_config.css</code> is supposed to contain style overrides for algorithm elements (see <a href="#highlight">Highlighting code and comments</a>).
         </p>
         
-        
+        <hr>
         <a name="dependencies"><h2>Dependencies</h2></a>
         <p>
             Algotype.js automatically loads <a href="https://www.mathjax.org/">MathJax</a> library for writing TeX.
         </p>
         
+        <hr>
         <a name="documentation"><h2>Documentation</h2></a>
         <h3>Algotype.js tags</h3>
         <ul>
@@ -229,7 +231,7 @@
         The <code>alg-else-if</code> tag typesets the <code>else-if</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-else-if condition="n \leq 1" 
+&lt;alg-else-if condition="&dollar;n \leq 1&dollar;" 
              id="else-if-id" 
              comment="Else if comment" 
              comment-id="else-if-comment-id"&gt;
@@ -239,7 +241,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-else-if condition="n \leq 1" comment="Else if comment">
+            <alg-else-if condition="$n \leq 1$" comment="Else if comment">
                 <alg-step>...</alg-step>
             </alg-else-if>
         </alg-algorithm>
@@ -259,9 +261,9 @@
         The <code>alg-for</code> tag typesets the <code>for</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-for init="i = 1" 
-         to="n" 
-         step="2" 
+&lt;alg-for init="$i = 1$" 
+         to="$n$" 
+         step="$2$" 
          label="loop_label" 
          id="for-id" 
          comment="For comment" 
@@ -272,7 +274,7 @@
         The above will be rendered as follows at line 1:
         <p>
             <alg-algorithm name="Dummy-Algorithm" parameters="">
-                <alg-for init="i = 1" to="n" step="2" label="loop_label" comment="For comment">
+                <alg-for init="$i = 1$" to="$n$" step="$2$" label="loop_label" comment="For comment">
                     <alg-step>...</alg-step>
                 </alg-for>
             </alg-algorithm>
@@ -295,7 +297,7 @@
         The <code>alg-foreach</code> tag typesets the <code>for each</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-foreach condition="x \in Q" 
+&lt;alg-foreach condition="$x \in Q$" 
              label="loop_label" 
              id="foreach-id" 
              comment="For each comment" 
@@ -306,7 +308,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-foreach condition="x \in Q" label="loop_label" comment="For each comment">
+            <alg-foreach condition="$x \in Q$" label="loop_label" comment="For each comment">
                 <alg-step>...</alg-step>
             </alg-foreach>
         </alg-algorithm>
@@ -357,9 +359,9 @@
         The <code>alg-for-downto</code> tag typesets the <code>for</code> loops that countdown the counter. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-for-downto init="i = n" 
-                to="1" 
-                step="2"
+&lt;alg-for-downto init="$i = n$" 
+                to="$1$" 
+                step="$2$"
                 label="loop_label" 
                 id="for-downto-id" 
                 comment="For down to comment" 
@@ -370,7 +372,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-for-downto init="i = n" to="1" step="2" label="loop_label" comment="For down to comment">
+            <alg-for-downto init="$i = n$" to="$1$" step="$2$" label="loop_label" comment="For down to comment">
                 <alg-step>...</alg-step>
             </alg-for-downto>
         </alg-algorithm>
@@ -393,7 +395,7 @@
         The <code>alg-if</code> tag typesets the <code>if</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-if condition="n > 1" 
+&lt;alg-if condition="$n > 1$" 
         id="if-id" 
         comment="If comment" 
         comment-id="if-comment-id"&gt;
@@ -403,7 +405,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-if condition="n > 1" comment="If comment">
+            <alg-if condition="$n > 1$" comment="If comment">
                 <alg-step>...</alg-step>
             </alg-if>
         </alg-algorithm>
@@ -423,7 +425,7 @@
         The <code>alg-repeat-until</code> tag typesets the loops whose condition is evaluated <b>after</b> each iteration. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-repeat-until condition="n > 0" 
+&lt;alg-repeat-until condition="$n > 0$" 
                   label="loop_label" 
                   id="repeat-until-id" 
                   comment="Repeat until comment" 
@@ -434,7 +436,7 @@
         The above will be rendered as follows:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-repeat-until condition="n > 0" label="loop_label" comment="Repeat until comment">
+            <alg-repeat-until condition="$n > 0$" label="loop_label" comment="Repeat until comment">
                 <alg-step>...</alg-step>
             </alg-repeat-until>
         </alg-algorithm>
@@ -459,6 +461,7 @@
             comment="Output comment" 
             comment-id="output-comment-id"&gt;&dollar;1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-output&gt;
         </pre>
+        The above will be rendered as follows:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-output comment="Output comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-output>
@@ -485,6 +488,7 @@
            comment-id="print-comment-id"&gt;&dollar;1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-print&gt;
         </pre>
         <p>
+        The above will be rendered as follows:
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-print comment="Print comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-print>
         </alg-algorithm>
@@ -557,7 +561,7 @@
         The <code>alg-while</code> tag typesets the <code>while</code> loops.
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-while condition="x > 0" 
+&lt;alg-while condition="$x > $0" 
            label="loop_label" 
            id="while-id" 
            comment="While comment" 
@@ -568,7 +572,7 @@
         The above will be rendered as follows at line 1:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-while condition="x > 0" label="loop_label" comment="While comment">
+            <alg-while condition="$x > 0$" label="loop_label" comment="While comment">
                 <alg-step>...</alg-step>
             </alg-while>
         </alg-algorithm>
@@ -592,6 +596,7 @@
            comment="Yield comment" 
            comment-id="yield-comment-id"&gt;&dollar;1 \; + &dollar; Aux-Procedure&dollar;(x, y, Q)&dollar;&lt;/alg-yield&gt;
         </pre>
+        The above will be rendered as follows:
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
             <alg-yield comment="Yield comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-yield>
@@ -605,7 +610,7 @@
         <h4>Notes</h4>
         In the <code>alg-yield</code> element, all text not delimeted by &dollar; TeX delimeters is considered to be a function call and is thus typeset using small-caps font just like the algorithm name.
         
-        
+        <hr>
         <a name="example"><h2>Example</h2></a>
         <p>
         <alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment">
@@ -647,6 +652,7 @@
 &lt;/alg-algorithm&gt;
         </pre>
         
+        <hr>
         <a name="misc"><h2>Miscellany</h2></a>
         <ul>
             <li>Sometimes you will need to fix spacing in TeX mode using such tokens as <code>\;</code> <code>\,</code> and so on.</li>
@@ -672,6 +678,7 @@
             <li>Loop conditions, <code>if</code>- or <code>else if</code>-conditions, text in single step commands (<code>alg-step</code>, <code>alg-return</code>, etc.) allow TeX code surrounded by single &dollar; characters. Everything else that is not surrounded by those TeX delimeters, is considered a function call, which is rendered using bold small-caps font.</li>
         </ul>
         
+        <hr>
         <a name="highlight"><h2>Highlighting code and comments</h2></a>
         <p>
             The primary function of statement and comment IDs is to have a mechanism for changing the way they are rendered by default. Given CSS rules
@@ -744,6 +751,7 @@
         </alg-algorithm>
         </p>
         
+        <hr>
         <a name="future"><h2>Future improvements</h2></a>
         <ol>
             <li>Fix the condition handling of <code>if</code> and <code>else if</code> such that it allows both TeX and function calls. (Jan 15, 2017) <b><i>[Done at Jan 16, 2017 14:20]</i></b></li>
@@ -754,6 +762,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 16, 2017 15:50 by Rodion Efremov</span>
+        <span style="color:grey">Jan 16, 2017 16:31 by Rodion Efremov</span>
     </body>
 </html>
