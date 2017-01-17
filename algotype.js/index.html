@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>Algotype.js</title>
         <meta charset="UTF-8">
@@ -57,13 +57,13 @@
         </ul>
         
         <hr>
-        <a name="algotypejs_question"><h2>Algotype.js?</h2></a>
+        <a id="algotypejs_question"><h2>Algotype.js?</h2></a>
         <p>This vanilla JavaScript library allows users to typeset pseudocode with custom XML tags and MathJax in HTML documents.
            The motivation was that people (for the most part) don't need to take representation of pseudocode into account, but rather concentrate on algorithm logic.
         </p>
         
         <hr>
-        <a name="including"><h2>Including Algotype.js</h2></a>
+        <a id="including"><h2>Including Algotype.js</h2></a>
         <p>
             In order to load the Algotype.js library, all you need is:
         <pre>
@@ -74,13 +74,13 @@
         </p>
         
         <hr>
-        <a name="dependencies"><h2>Dependencies</h2></a>
+        <a id="dependencies"><h2>Dependencies</h2></a>
         <p>
             Algotype.js automatically loads <a href="https://www.mathjax.org/">MathJax</a> library for writing TeX.
         </p>
         
         <hr>
-        <a name="documentation"><h2>Documentation</h2></a>
+        <a id="documentation"><h2>Documentation</h2></a>
         <h3>Algotype.js tags</h3>
         <ul>
             <li><a href="#alg-algorithm">    <code>alg-algorithm    </code></a></li>
@@ -104,7 +104,7 @@
         
         
         <hr>
-        <a name="alg-algorithm"><h3><code>alg-algorithm</code></h3></a>
+        <a id="alg-algorithm"><h3><code>alg-algorithm</code></h3></a>
         <h4>Summary</h4>
         The tag <code>alg-algorithm</code> defines an entire algorithm. <i>Naturally, it may have all inner elements except</i> <code>alg-algorithm</code><i>.</i>
         <h4>Synopsis</h4>
@@ -141,7 +141,7 @@
         
         <!-- ALG-BREAK -->
         <hr>
-        <a name="alg-break"><h3><code>alg-break</code></h3></a>
+        <a id="alg-break"><h3><code>alg-break</code></h3></a>
         <h4>Summary</h4>
         The tag <code>alg-break</code> typesets a break statement. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -171,7 +171,7 @@
         
         <!-- ALG-CONTINUE -->
         <hr>
-        <a name="alg-continue"><h3><code>alg-continue</code></h3></a>
+        <a id="alg-continue"><h3><code>alg-continue</code></h3></a>
         <h4>Summary</h4>
         The tag <code>alg-continue</code> typesets a continue statement. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -199,7 +199,7 @@
         
         <!-- ALG-ELSE -->
         <hr>
-        <a name="alg-else"><h3><code>alg-else</code></h3></a>
+        <a id="alg-else"><h3><code>alg-else</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-else</code> tag typesets the <code>else</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -226,7 +226,7 @@
         
         <!-- ALG-ELSE-IF -->
         <hr>
-        <a name="alg-else-if"><h3><code>alg-else-if</code></h3></a>
+        <a id="alg-else-if"><h3><code>alg-else-if</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-else-if</code> tag typesets the <code>else-if</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -256,7 +256,7 @@
         
         <!-- ALG-FOR -->
         <hr>
-        <a name="alg-for"><h3><code>alg-for</code></h3></a>
+        <a id="alg-for"><h3><code>alg-for</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-for</code> tag typesets the <code>for</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -292,7 +292,7 @@
         
         <!-- ALG-FOREACH -->
         <hr>
-        <a name="alg-foreach"><h3><code>alg-foreach</code></h3></a>
+        <a id="alg-foreach"><h3><code>alg-foreach</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-foreach</code> tag typesets the <code>for each</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -324,7 +324,7 @@
         
         <!-- ALG-FOREVER -->
         <hr>
-        <a name="alg-forever"><h3><code>alg-forever</code></h3></a>
+        <a id="alg-forever"><h3><code>alg-forever</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-forever</code> tag typesets the <code>forever</code> loops that iterate unconditionally. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -354,7 +354,7 @@
         
         <!-- ALG-FOR-DOWNTO -->
         <hr>
-        <a name="alg-for-downto"><h3><code>alg-for-downto</code></h3></a>
+        <a id="alg-for-downto"><h3><code>alg-for-downto</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-for-downto</code> tag typesets the <code>for</code> loops that countdown the counter. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -390,7 +390,7 @@
         
         <!-- ALG-IF-->
         <hr>
-        <a name="alg-if"><h3><code>alg-if</code></h3></a>
+        <a id="alg-if"><h3><code>alg-if</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-if</code> tag typesets the <code>if</code> branches. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -420,7 +420,7 @@
         
         <!-- ALG-REPEAT-UNTIL -->
         <hr>
-        <a name="alg-repeat-until"><h3><code>alg-repeat-until</code></h3></a>
+        <a id="alg-repeat-until"><h3><code>alg-repeat-until</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-repeat-until</code> tag typesets the loops whose condition is evaluated <b>after</b> each iteration. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
@@ -452,7 +452,7 @@
         
         <!-- ALG-OUTPUT -->
         <hr>
-        <a name="alg-output"><h3><code>alg-output</code></h3></a>
+        <a id="alg-output"><h3><code>alg-output</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-output</code> tag typesets the output statements. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -478,7 +478,7 @@
         
         <!-- ALG-PRINT -->
         <hr>
-        <a name="alg-print"><h3><code>alg-print</code></h3></a>
+        <a id="alg-print"><h3><code>alg-print</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-print</code> tag typesets the print statements. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -504,7 +504,7 @@
         
         <!-- ALG-RETURN -->
         <hr>
-        <a name="alg-return"><h3><code>alg-return</code></h3></a>
+        <a id="alg-return"><h3><code>alg-return</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-return</code> tag typesets the return statements. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -530,7 +530,7 @@
         
         <!-- ALG-STEP -->
         <hr>
-        <a name="alg-step"><h3><code>alg-step</code></h3></a>
+        <a id="alg-step"><h3><code>alg-step</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-step</code> tag typesets a single step/non-block statement. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -556,7 +556,7 @@
 
         <!-- ALG-WHILE -->
         <hr>
-        <a name="alg-while"><h3><code>alg-while</code></h3></a>
+        <a id="alg-while"><h3><code>alg-while</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-while</code> tag typesets the <code>while</code> loops.
         <h4>Synopsis</h4>
@@ -587,7 +587,7 @@
         
         <!-- ALG-YIELD -->
         <hr>
-        <a name="alg-yield"><h3><code>alg-yield</code></h3></a>
+        <a id="alg-yield"><h3><code>alg-yield</code></h3></a>
         <h4>Summary</h4>
         The <code>alg-yield</code> tag typesets the yield statements. <i>This element may not have inner elements.</i>
         <h4>Synopsis</h4>
@@ -611,7 +611,7 @@
         In the <code>alg-yield</code> element, all text not delimeted by &dollar; TeX delimeters is considered to be a function call and is thus typeset using small-caps font just like the algorithm name.
         
         <hr>
-        <a name="example"><h2>Example</h2></a>
+        <a id="example"><h2>Example</h2></a>
         <p>
         <alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
@@ -653,7 +653,7 @@
         </pre>
         
         <hr>
-        <a name="misc"><h2>Miscellany</h2></a>
+        <a id="misc"><h2>Miscellany</h2></a>
         <ul>
             <li>Sometimes you will need to fix spacing in TeX mode using such tokens as <code>\;</code> <code>\,</code> and so on.</li>
             <li>Some attributes are declared as <b>required</b>, yet Algotype.js (yet) does not enforce that those attributes are given values. As of now, omitting a required attribute leads to <i><b>undefined</b></i> behaviour.</li>
@@ -679,7 +679,7 @@
         </ul>
         
         <hr>
-        <a name="highlight"><h2>Highlighting code and comments</h2></a>
+        <a id="highlight"><h2>Highlighting code and comments</h2></a>
         <p>
             The primary function of statement and comment IDs is to have a mechanism for changing the way they are rendered by default. Given CSS rules
         <pre>
@@ -763,7 +763,7 @@
         </p>
         
         <hr>
-        <a name="future"><h2>Future improvements</h2></a>
+        <a id="future"><h2>Future improvements</h2></a>
         <ol>
             <li>Fix the condition handling of <code>if</code> and <code>else if</code> such that it allows both TeX and function calls. (Jan 15, 2017) <b><i>[Done at Jan 16, 2017 14:20]</i></b></li>
             <li>Make the source file algotype.js self sufficient: the library does not rely on external CSS file except custom overrides. (Jan 15, 2017) <b><i>[Done at Jan 15, 2017 17:18]</i></b></li>
@@ -775,6 +775,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 17, 2017 17:26 by Rodion Efremov</span>
+        <span style="color:grey">Jan 17, 2017 17:26 by Rodion Efremov devv</span>
     </body>
 </html>
