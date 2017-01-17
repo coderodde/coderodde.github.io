@@ -738,16 +738,20 @@
             In case you need to color highlight only a part of a single statement, you can write, for example,
         <pre>
 &lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
-    &lt;alg-yield id="yield_id"&gt;$c \times $&lt;font color="brown"&gt;Get-Factor$()$&lt;/font&gt; + &lt;font color="red"&gt;Fix-Constant$()$&lt;/font&gt;&lt;/alg-yield&gt;
-    &lt;alg-return&gt;1 + &lt;font color="red"&gt;Aux-Call&lt;/font&gt;&lt;font color="green"&gt;$(x, y)$&lt;/font&gt;&lt;/alg-return&gt;
+    &lt;alg-if condition="$\color{blue}{x + y} &gt; \color{red}{2} \; \And $&lt;font color='#789'&gt;Call&lt;/font&gt;$(x, y)$"&gt;
+        &lt;alg-yield id="yield_id"&gt;$c \times $&lt;font color="brown"&gt;Get-Factor$()$&lt;/font&gt; + &lt;font color="red"&gt;Fix-Constant$()$&lt;/font&gt;&lt;/alg-yield&gt;
+        &lt;alg-return&gt;1 + &lt;font color="red"&gt;Aux-Call&lt;/font&gt;&lt;font color="green"&gt;$(x, y)$&lt;/font&gt;&lt;/alg-return&gt;
+    &lt;/alg-if&gt;
 &lt;/alg-algorithm&gt;
         </pre>
         </p>
         <p>which will give you</p>
         <p>
         <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-yield id="yield_id">$c \times $<font color="brown">Get-Factor$()$</font> + <font color="red">Fix-Constant$()$</font></alg-yield>
-            <alg-return>1 + <font color="red">Aux-Call</font><font color="green">$(x, y)$</font></alg-return>
+            <alg-if condition="$\color{blue}{x + y} > \color{red}{2} \; \And $<font color='#789'>Call</font>$(x, y)$">
+                <alg-yield id="yield_id">$c \times $<font color="brown">Get-Factor$()$</font> + <font color="red">Fix-Constant$()$</font></alg-yield>
+                <alg-return>1 + <font color="red">Aux-Call</font><font color="green">$(x, y)$</font></alg-return>
+            </alg-if>
         </alg-algorithm>
         </p>
         
@@ -764,6 +768,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 17, 2017 09:45 by Rodion Efremov</span>
+        <span style="color:grey">Jan 17, 2017 10:56 by Rodion Efremov</span>
     </body>
 </html>
