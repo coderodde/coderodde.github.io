@@ -133,12 +133,14 @@
         <ul>
             <li>Make sure that you wrap the element <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt</code>; into a, say, <code>&lt;div&gt;</code> that does not contain any other elements. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last element of the parent.</li>
             <li>The parameter list accepts several formats. The above parameter list $(x, A, R)$ may be specified in <code>parameters</code> attribute as
-                <ul><code>x A R</code></ul>
-                <ul><code>x, A, R</code></ul>
-                <ul><code>(x A R)</code></ul>
-                <ul><code>(x, A, R)</code></ul>
+                <ul>
+                    <li><code>x A R</code></li>
+                    <li><code>x, A, R</code></li>
+                    <li><code>(x A R)</code></li>
+                    <li><code>(x, A, R)</code></li>
+                </ul>
             </li>
-            You can also omit some commas in the above lists, or omit one or both parentheses.
+            <li>You can also omit some commas in the above lists, or omit one or both parentheses.</li>
         </ul>
         
         
@@ -370,7 +372,7 @@
                 comment="For down to comment" 
                 comment-id="for-downto-comment-id"&gt;
 ...
-&lt/alg-for-downto&gt;
+&lt;/alg-for-downto&gt;
         </pre>
         The above will be rendered as follows at line 1:
         <p>
@@ -434,7 +436,7 @@
                   comment="Repeat until comment" 
                   comment-id="repeat-until-comment-id"&gt;
 ...
-&lt/alg-repeat-until&gt;
+&lt;/alg-repeat-until&gt;
         </pre>
         The above will be rendered as follows:
         <p>
@@ -741,8 +743,7 @@
             In case you need to color highlight only a part of a single statement, you can write, for example,
         </p>
         
-        <p>
-        <code>
+        <blockquote>
         <pre>
 &lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
     &lt;alg-if condition="<b>$\color{blue}{x + y} &gt; \color{red}{2} \; \And $&lt;font color='#789'&gt;Call&lt;/font&gt;$(x, y)$</b>"&gt;
@@ -751,8 +752,7 @@
     &lt;/alg-if&gt;
 &lt;/alg-algorithm&gt;
         </pre>
-        </code>
-        </p>
+        </blockquote>
         
         <p>which will give you</p>
         
@@ -778,6 +778,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 17, 2017 17:26 by Rodion Efremov devv 4</span>
+        <span style="color:grey">Jan 17, 2017 17:26 by Rodion Efremov devv 6</span>
     </body>
 </html>
