@@ -743,24 +743,51 @@
         </p>
         
         <blockquote>
-        <pre>
-&lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
-    &lt;alg-if condition="<b><span style='color: navy;'>$\color{blue}{x + y} &gt; \color{red}{2} \; \And $  &lt;span style='color:#789'&gt;Call&lt;/span&gt;$(x, y)$</span></b>"&gt;
-        &lt;alg-yield id="yield_id"&gt;<b><span style='color: navy;'>$c \; \times $&lt;span style='color:brown;'&gt;Get-Factor$()$&lt;/span&gt; $ + $ &lt;span style='color:red;'&gt;Fix-Constant$()$&lt;/span&gt;</span></b>&lt;/alg-yield&gt;
-        &lt;alg-return&gt;<b><span style='color: navy;'>1 + &lt;span style='color:red;'&gt;Aux-Call&lt;/span&gt;$\color{green}{(x, y)}$</span></b>&lt;/alg-return&gt;
+            <pre>
+&lt;alg-algorithm name="Colorful-Algorithm" parameters=""&gt;
+    &lt;alg-if condition="$\color{blue} x + y \color{black} &gt; \color{red} 2 \; \And $ &lt;span style='color:#789'&gt;Call-Func&lt;/span&gt;$(x, y)$"&gt;
+        &lt;alg-yield id="yield_id"&gt;$c \; \times $&lt;span style='color:brown;'&gt;Get-Factor&lt;/span&gt;$\color{yellow}{(x, y)} + $ &lt;span style='color:red;'&gt;Fix-Constant&lt;/span&gt;$()$&lt;/alg-yield&gt;
+        &lt;alg-return&gt;1 + &lt;span style='color:red;'&gt;Aux-Call&lt;/span&gt;$\color{green}{(y, x + y)}$&lt;/alg-return&gt;
     &lt;/alg-if&gt;
 &lt;/alg-algorithm&gt;
-        </pre>
+            </pre>
         </blockquote>
         
         <p>which will give you</p>
         
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
-            <alg-if condition="$\color{blue}{x + y} > \color{red}{2} \; \And $  <span style='color:#789'>Call</span>$(x, y)$">
-                <alg-yield id="yield_id">$c \; \times $<span style='color:brown;'>Get-Factor$()$</span> $ + $ <span style='color:red;'>Fix-Constant$()$</span></alg-yield>
-                <alg-return>1 + <span style='color:red;'>Aux-Call</span>$\color{green}{(x, y)}$</alg-return>
+        <alg-algorithm name="Colorful-Algorithm" parameters="">
+            <alg-if condition="$\color{blue} x + y \color{black} > \color{red} 2 \; \And $ <span style='color:#789'>Call-Func</span>$(x, y)$">
+                <alg-yield id="yield_id">$c \; \times $<span style='color:brown;'>Get-Factor</span>$\color{yellow}{(x, y)} + $ <span style='color:red;'>Fix-Constant</span>$()$</alg-yield>
+                <alg-return>1 + <span style='color:red;'>Aux-Call</span>$\color{green}{(y, x + y)}$</alg-return>
             </alg-if>
+        </alg-algorithm>
+        </p>
+        
+        <p>
+        If need be, you can define your custom colors for the TeX output. Just write
+        <pre>
+&lt;span style="display:none;"&gt;$\definecolor{funky}{RGB}{255, 200, 0}$&lt;/span&gt;
+        </pre>
+        <p>
+            
+        <span style="display:none;">$\definecolor{funky}{RGB}{255, 200, 0}$</span>
+        
+        <p>
+            ... and then, for example, ...
+        </p>
+        
+        <p>
+        <pre>
+&lt;alg-algorithm name="Pretty-Algorithm" parameters=""&gt;
+    &lt;alg-return&gt;$1 + \color{funky} x + y \log x \color{black} \; + $ Helper-Func$(x, \color{funky} y \color{black})$&lt;/alg-return&gt;
+&lt;/alg-algorithm&gt;
+        </pre>
+        </p>
+        which will give you
+        <p>
+        <alg-algorithm name="Pretty-Algorithm" parameters="">
+            <alg-return>$1 + \color{funky} x + y \log x \color{black} \; + $ Helper-Func$(x, \color{funky} y \color{black})$</alg-return>
         </alg-algorithm>
         </p>
         
@@ -778,6 +805,6 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 17, 2017 19:48 by Rodion Efremov</span>
+        <span style="color:grey">Jan 18, 2017 20:37 by Rodion Efremov</span>
     </body>
 </html>
