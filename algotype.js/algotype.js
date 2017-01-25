@@ -810,9 +810,11 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
     var commentText = Algotype.getAlgorithmHeaderComment(algorithmElement);
     
     var parentNode = algorithmElement.parentNode;
-
+    var width = algorithmElement.getAttribute("width");
+    
     var htmlText = 
-            "<table class='algotype-algorithm-header'>\n" +
+            "<table class='algotype-algorithm-header'" + 
+            (width ? "style='width: " + width + "px;'" : "") + ">\n" +
             "    <tbody class='algotype-no-padding-no-margin'>\n" +
             "        <tr class='algotype-no-padding-no-margin'>\n" + 
             "            <td class='algotype-no-padding-no-margin'>" +
