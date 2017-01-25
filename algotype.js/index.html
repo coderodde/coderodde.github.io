@@ -36,6 +36,7 @@
                     <li><a href="#alg-continue">     <code>alg-continue     </code></a></li>
                     <li><a href="#alg-else">         <code>alg-else         </code></a></li>
                     <li><a href="#alg-else-if">      <code>alg-else-if      </code></a></li>
+                    <li><a href="#alg-error">        <code>alg-error        </code></a></li>
                     <li><a href="#alg-for">          <code>alg-for          </code></a></li>
                     <li><a href="#alg-foreach">      <code>alg-foreach      </code></a></li>
                     <li><a href="#alg-forever">      <code>alg-forever      </code></a></li>
@@ -257,12 +258,36 @@
             <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>else if</code> statement comment ID</td>  <td><b>optional</b></td></tr>
         </table>
         
+        <!-- ALG-ERROR -->
+        <hr>
+        <a id="alg-error"><h3><code>alg-error</code></h3></a>
+        <h4>Summary</h4>
+        The <code>alg-error</code> tag typesets the errors and exception raises. <i>This element may not have inner elements.</i>
+        <h4>Synopsis</h4>
+        <pre>
+&lt;alg-error id="error-id"
+           comment="Error comment"
+           comment-id="error-comment-id"&gt;Error text here&lt;/alg-error&gt;
+        </pre>
+        <p>
+        <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-error id="error-id"
+                       comment="Error comment"
+                       comment-id="error-comment-id">Error text here</alg-error>
+        </alg-algorithm>
+        </p>
+        <table class="attribute-list">
+            <tr class="attribute-list"><td><code>id</code></td>          <td>the <code>error</code> statement ID</td>          <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment</code></td>     <td>the <code>error</code> statement comment</td>     <td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>comment-id</code></td>  <td>the <code>error</code> statement comment ID</td>  <td><b>optional</b></td></tr>
+        </table>
+        
         
         <!-- ALG-FOR -->
         <hr>
         <a id="alg-for"><h3><code>alg-for</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-for</code> tag typesets the <code>for</code> loops. <i>This element may have other inner elements.</i>
+        The <code>alg-for</code> tag typesets the <code>for</code> loops. 
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-for init="$i = 1$" 
@@ -804,10 +829,10 @@
             <li>Make the code less DRY. (Jan 17, 2017) <b><i>[Done at Jan 17, 2017 19:34]</i></b></li>
             <li>Devise a way for specifying the length of the horizontal algorithm header lines. (Jan 22, 2017)</li>
             <li>Devise a way for coloring the algorithm header. (Jan 23, 2017)</li>
-            <li>Add the <code>error</code> keyword. (Jan 23, 2017)</li>
+            <li>Add the <code>error</code> keyword. (Jan 23, 2017) <b><i>[Done at Jan 25, 2017 17:04]</i></b></li>
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 23, 2017 20:47 by Rodion Efremov</span>
+        <span style="color:grey">Jan 25, 2017 17:04 by Rodion Efremov</span>
     </body>
 </html>
