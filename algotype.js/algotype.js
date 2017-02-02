@@ -206,13 +206,13 @@ Algotype.typesetElse = function(elseElement, state) {
 
 Algotype.typesetCondition = function(conditionText) {
     if (!conditionText) {
-        return "";
+        return "$ $";
     }
     
     conditionText = conditionText.trim();
     
     if (!conditionText) {
-        return "";
+        return "$ $";
     }
     
     var inTeX = false;
@@ -801,14 +801,31 @@ Algotype.typesetError = function(errorElement, state) {
 };
 
 Algotype.typesetAlgorithm = function(algorithmElement) {
-    var algorithmName =
-            algorithmElement.getAttribute("name") || Algotype.UNNAMED_ALGORITHM;
+    var declarationTeX = 
+            Algotype.typesetCondition(algorithmElement.getAttribute("header"));
     
-    var algorithmParameterList = 
-            Algotype.getAlgorithmParameterList(algorithmElement);
+    var comment = algorithmElement.getAttribute("comment") || "";
+    var commentId = (algorithmElement.getAttribute("comment-id") || "").trim();
+    var idText = "";
     
-    var commentText = Algotype.getAlgorithmHeaderComment(algorithmElement);
+    if (commentId) {
+        idText = " id='" + commentId + "' ";
+    }
     
+    if (comment) {
+        comment = " <span class='algotype-step-comment' " + idText + ">" +
+                  Algotype.ALGORITHM_STEP_COMMENT_TAG + " " + 
+                  comment.trim() + "</span>";
+    }
+    
+    var id = (algorithmElement.getAttribute("id") || "").trim();
+    var idTextBegin = "";
+    var idTextEnd = "";
+    
+    if (id) {
+        idTextBegin = "<span id='" + id + "'>";
+        idTextEnd = "</span>";
+    }
     var parentNode = algorithmElement.parentNode;
     var width = algorithmElement.getAttribute("width");
     
@@ -818,11 +835,7 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
             "    <tbody class='algotype-no-padding-no-margin'>\n" +
             "        <tr class='algotype-no-padding-no-margin'>\n" + 
             "            <td class='algotype-no-padding-no-margin'>" +
-            "<span class='algotype-text algotype-algorithm-name'>" +
-            algorithmName +
-            "</span><span class='algotype-text'>" + algorithmParameterList + 
-            commentText +
-            "</span></td>\n" + 
+            idTextBegin + declarationTeX + idTextEnd + comment + "</td>" +
             "        </tr>\n" + 
             "    </tbody>\n" +
             "</table>\n";

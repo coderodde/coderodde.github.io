@@ -18,6 +18,14 @@
             tr.attribute-list {
                 border: 1px solid black;
             }
+            
+            #comment_color {
+                color: yellow;
+            }
+            
+            #algo_color {
+                color: red;
+            }
         </style>
     </head>
     <body>
@@ -120,7 +128,7 @@
         </pre>
         The above will be rendered as follows
         <p>
-        <alg-algorithm name="Algorithm-Name" parameters="(x ,A, R)" comment="Algorithm header comment"></alg-algorithm>
+        <alg-algorithm header="Algorithm-Name$(x, A, R, Z)$" comment="Algorithm header comment"></alg-algorithm>
         </p>
        
         <table class="attribute-list">
@@ -157,7 +165,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameter="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
         <alg-break comment="Break comment">Label</alg-break>
         </alg-algorithm>
         </p>
@@ -187,7 +195,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameter="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
         <alg-continue comment="Continue comment">Label</alg-continue>
         </alg-algorithm>
         </p>
@@ -217,7 +225,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-else comment="Else comment">
                 <alg-step>...</alg-step>
             </alg-else>
@@ -245,7 +253,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-else-if condition="$n \leq 1$" comment="Else if comment">
                 <alg-step>...</alg-step>
             </alg-else-if>
@@ -270,7 +278,7 @@
            comment-id="error-comment-id"&gt;Error text here&lt;/alg-error&gt;
         </pre>
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-error id="error-id"
                        comment="Error comment"
                        comment-id="error-comment-id">Error text here</alg-error>
@@ -302,7 +310,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-            <alg-algorithm name="Dummy-Algorithm" parameters="">
+            <alg-algorithm header="Dummy-Algorithm$()$">
                 <alg-for init="$i = 1$" to="$n$" step="$2$" label="loop_label" comment="For comment">
                     <alg-step>...</alg-step>
                 </alg-for>
@@ -336,7 +344,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-foreach condition="$x \in Q$" label="loop_label" comment="For each comment">
                 <alg-step>...</alg-step>
             </alg-foreach>
@@ -367,7 +375,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-forever label="loop_label" comment="Forever comment">
                 <alg-step>...</alg-step>
             </alg-forever>
@@ -400,7 +408,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-for-downto init="$i = n$" to="$1$" step="$2$" label="loop_label" comment="For down to comment">
                 <alg-step>...</alg-step>
             </alg-for-downto>
@@ -433,7 +441,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-if condition="$n > 1$" comment="If comment">
                 <alg-step>...</alg-step>
             </alg-if>
@@ -464,7 +472,7 @@
         </pre>
         The above will be rendered as follows:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-repeat-until condition="$n > 0$" label="loop_label" comment="Repeat until comment">
                 <alg-step>...</alg-step>
             </alg-repeat-until>
@@ -492,7 +500,7 @@
         </pre>
         The above will be rendered as follows:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-output comment="Output comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-output>
         </alg-algorithm>
         </p>
@@ -518,7 +526,7 @@
         </pre>
         <p>
         The above will be rendered as follows:
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-print comment="Print comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-print>
         </alg-algorithm>
         </p>
@@ -544,7 +552,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-return comment="Return comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-return>
         </alg-algorithm>
         </p>
@@ -570,7 +578,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-step comment="Step comment">$x \leftarrow 1 \; +$ Aux-Procedure$(x, y, Q)$</alg-step>
         </alg-algorithm>
         </p>
@@ -600,7 +608,7 @@
         </pre>
         The above will be rendered as follows at line 1:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-while condition="$x > 0$" label="loop_label" comment="While comment">
                 <alg-step>...</alg-step>
             </alg-while>
@@ -627,7 +635,7 @@
         </pre>
         The above will be rendered as follows:
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-yield comment="Yield comment">$1 \; +$ Aux-Procedure$(x, y, Q)$</alg-yield>
         </alg-algorithm>
         </p>
@@ -642,7 +650,7 @@
         <hr>
         <a id="example"><h2>Example</h2></a>
         <p>
-        <alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment">
+        <alg-algorithm header="Compute-Something-Interesting$(Q, R)$" comment="Interesting comment">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
             <alg-foreach condition="$q \in Q$" label="outer">
                 <alg-foreach condition="$r \in R$">
@@ -662,7 +670,7 @@
         </p>
         The source for the above pseudocode is
         <pre>
-&lt;alg-algorithm name="Compute-Something-Interesting" parameters="Q R" comment="Interesting comment"&gt;
+&lt;alg-algorithm header="Compute-Something-Interesting$(Q, R)$" comment="Interesting comment"&gt;
     &lt;alg-step&gt;$X \leftarrow \varnothing$&lt;/alg-step&gt;
     &lt;alg-foreach condition="$q \in Q$" label="outer"&gt;
         &lt;alg-foreach condition="$r \in R$"&gt;
@@ -697,7 +705,7 @@
                     <li> <code>Nil</code>    </li>
                 </ul>
                 The above may look like:
-            <alg-algorithm name="Dummy-Algorithm" parameters="x, y">
+            <alg-algorithm header="Dummy-Algorithm$(x, y)$">
                 <alg-step>$b \leftarrow$ Is-Prime$(y)$</alg-step>
                 <alg-if condition="$(x > 0 \; \Or \; x < 0) \; \And \; b$">
                     <alg-step>...</alg-step>
@@ -746,7 +754,7 @@
         </pre>
         and the algorithm
         <pre>
-&lt;alg-algorithm name="Dummy-Algorithm" parameters=""&gt;
+&lt;alg-algorithm header="Dummy-Algorithm$()$"&gt;
     &lt;alg-step id="step_id1" comment="Comment" comment-id="comment_id1"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
     &lt;alg-step id="step_id2" comment="Comment" comment-id="comment_id2"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
     &lt;alg-step id="step_id3" comment="Comment" comment-id="comment_id3"&gt;$x \leftarrow y + z$&lt;/alg-step&gt;
@@ -755,7 +763,7 @@
         </pre>
         we get the output
         <p>
-        <alg-algorithm name="Dummy-Algorithm" parameters="">
+        <alg-algorithm header="Dummy-Algorithm$()$">
             <alg-step id="step_id1" comment="Comment" comment-id="comment_id1">$x \leftarrow y + z$</alg-step>
             <alg-step id="step_id2" comment="Comment" comment-id="comment_id2">$x \leftarrow y + z$</alg-step>
             <alg-step id="step_id3" comment="Comment" comment-id="comment_id3">$x \leftarrow y + z$</alg-step>
@@ -769,7 +777,7 @@
         
         <blockquote>
             <pre>
-&lt;alg-algorithm name="Colorful-Algorithm" parameters=""&gt;
+&lt;alg-algorithm header="Colorful-Algorithm$()$"&gt;
     &lt;alg-if condition="$\color{blue} x + y \color{black} &gt; \color{red} 2 \; \And $ &lt;span style='color:#789'&gt;Call-Func&lt;/span&gt;$(x, y)$"&gt;
         &lt;alg-yield id="yield_id"&gt;$c \; \times $&lt;span style='color:brown;'&gt;Get-Factor&lt;/span&gt;$\color{yellow}{(x, y)} + $ &lt;span style='color:red;'&gt;Fix-Constant&lt;/span&gt;$()$&lt;/alg-yield&gt;
         &lt;alg-return&gt;1 + &lt;span style='color:red;'&gt;Aux-Call&lt;/span&gt;$\color{green}{(y, x + y)}$&lt;/alg-return&gt;
@@ -781,7 +789,7 @@
         <p>which will give you</p>
         
         <p>
-        <alg-algorithm name="Colorful-Algorithm" parameters="">
+        <alg-algorithm header="<span style='color:pink;'>Colorful</span>-Algorithm$(\color{red}x, \color{black}y)$" comment="<span style='color: brown;'>Color</span>ful comment">
             <alg-if condition="$\color{blue} x + y \color{black} > \color{red} 2 \; \And $ <span style='color:#789'>Call-Func</span>$(x, y)$">
                 <alg-yield id="yield_id">$c \; \times $<span style='color:brown;'>Get-Factor</span>$\color{yellow}{(x, y)} + $ <span style='color:red;'>Fix-Constant</span>$()$</alg-yield>
                 <alg-return>1 + <span style='color:red;'>Aux-Call</span>$\color{green}{(y, x + y)}$</alg-return>
@@ -804,14 +812,14 @@
         
         <p>
         <pre>
-&lt;alg-algorithm name="Pretty-Algorithm" parameters=""&gt;
+&lt;alg-algorithm n="Pretty-Algorithm" parameters=""&gt;
     &lt;alg-return&gt;$1 + \color{funky} x + y \log x \color{black} \; + $ Helper-Func$(x, \color{funky} y \color{black})$&lt;/alg-return&gt;
 &lt;/alg-algorithm&gt;
         </pre>
         </p>
         which will give you
         <p>
-        <alg-algorithm name="Pretty-Algorithm" parameters="">
+        <alg-algorithm header="Pretty-Algorithm$(Q, X)$">
             <alg-return>$1 + \color{funky} x + y \log x \color{black} \; + $ Helper-Func$(x, \color{funky} y \color{black})$</alg-return>
         </alg-algorithm>
         </p>
@@ -828,12 +836,12 @@
             <li>Improve the algorithm header. (Jan 17, 2017) <b><i>[Done at Jan 17, 2017 09:45]</i></b></li>
             <li>Make the code less DRY. (Jan 17, 2017) <b><i>[Done at Jan 17, 2017 19:34]</i></b></li>
             <li>Devise a way for specifying the length of the horizontal algorithm header lines. (Jan 22, 2017) <b><i>[Done at Jan 25, 2017 17:36]</i></b></li>
-            <li>Devise a way for coloring the algorithm header. (Jan 23, 2017)</li>
+            <li>Devise a way for coloring the algorithm header. (Jan 23, 2017) <b><i>[Done at Feb 2, 2017 11:09]</i></b></li>
             <li>Add the <code>error</code> keyword. (Jan 23, 2017) <b><i>[Done at Jan 25, 2017 17:04]</i></b></li>
             <li>Devise a way for coloring the algorithm header bars. (Jan 25, 2017)</li>
         </ol>
         
         <hr>
-        <span style="color:grey">Jan 25, 2017 17:38 by Rodion Efremov</span>
+        <span style="color:grey">Feb 2, 2017 11:09 by Rodion Efremov</span>
     </body>
 </html>
