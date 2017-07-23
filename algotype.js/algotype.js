@@ -828,9 +828,16 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
     }
     var parentNode = algorithmElement.parentNode;
     var width = algorithmElement.getAttribute("width");
+    var upperHeaderBarStyle = 
+            algorithmElement.getAttribute("algorithm-upper-header-style");
+    var lowerHeaderBarStyle = 
+            algorithmElement.getAttribute("algorithm-lower-header-style");
+    
+    var customStyleText = upperHeaderBarStyle + " " + lowerHeaderBarStyle;
     
     var htmlText = 
-            "<table class='algotype-algorithm-header'" + 
+            "<table class='algotype-algorithm-header' " +
+            (customStyleText ? "style='" + customStyleText + "' " : " ") +
             (width ? "style='width: " + width + "px;'" : "") + ">\n" +
             "    <tbody class='algotype-no-padding-no-margin'>\n" +
             "        <tr class='algotype-no-padding-no-margin'>\n" + 
@@ -856,6 +863,16 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
         } else {
             throw new Error("Unknown element: '" + elementName + "'.");
         }
+    }
+    
+    var footerBarStyle = 
+            algorithmElement.getAttribute("algorithm-footer-style");
+    
+    if (footerBarStyle) {
+        htmlText += 
+                "<br />" +
+                "<hr style='padding: 0px; margin: 0px; margin-top: -15px; " +
+                "text-align: left; border-width: 0px; " + footerBarStyle + "' />";
     }
     
     var paragraphElement = document.createElement("p");
@@ -924,18 +941,18 @@ td.algotype-line-number-space { \n\
 } \n\
 .algotype-label {} \n\
 \n\
-.algotype-label { \n\
-        font-size: 14px; \n\
+.algotype-label {               \n\
+        font-size: 14px;        \n\
         font-family: monospace; \n\
-        font-weight: normal;\n\
+        font-weight: normal;    \n\
 }\n\
-.algotype-no-padding-no-margin {\n\
-    margin: 0;  \n\
-    padding: 0; \n\
+.algotype-no-padding-no-margin { \n\
+    margin: 0;                   \n\
+    padding: 0;                  \n\
 }\n\
 \n\
-.algotype-algorithm-header { \n\
-    border-bottom: 2px solid black; \n\
+.algotype-algorithm-header {        \n\
+    border-bottom: 2px solid gray; \n\
     border-top: 3px solid black;    \n\
     border-colapse: collapse;       \n\
     margin: 0;                      \n\

@@ -4,8 +4,8 @@
         <title>Algotype.js</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
         <script src="algotype.js"></script>
+        <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
         <style>
             td {
                 padding-right: 40px;
@@ -19,6 +19,11 @@
                 border: 1px solid black;
             }
             
+            .algotype-algorithm-header {
+                border-bottom: 2px solid brown;
+                border-top: 3px solid green;
+            }
+            
             #comment_color {
                 color: yellow;
             }
@@ -29,7 +34,6 @@
         </style>
     </head>
     <body>
-        <h1 style="text-align: center;">Algotype.js - typesetting pseudocode in HTML files</h1>
         
         <h1>Table of contents</h1>
         <ul>
@@ -650,7 +654,11 @@
         <hr>
         <a id="example"><h2>Example</h2></a>
         <p>
-        <alg-algorithm header="Compute-Something-Interesting$(Q, R)$" comment="Interesting comment">
+        <alg-algorithm header="Compute-Something-Interesting$(Q, R)$" 
+                       comment="Interesting comment" 
+                       algorithm-upper-header-style="border-top: 3px solid #ffaa33; width: 480px;"
+                       algorithm-lower-header-style="border-bottom: 2px solid black; width: 480px;"
+                       algorithm-footer-style ="background-color: #ffaa33; width: 480px; height: 3px;">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
             <alg-foreach condition="$q \in Q$" label="outer">
                 <alg-foreach condition="$r \in R$">
@@ -839,9 +847,12 @@
             <li>Devise a way for coloring the algorithm header. (Jan 23, 2017) <b><i>[Done at Feb 2, 2017 11:09]</i></b></li>
             <li>Add the <code>error</code> keyword. (Jan 23, 2017) <b><i>[Done at Jan 25, 2017 17:04]</i></b></li>
             <li>Devise a way for coloring the algorithm header bars. (Jan 25, 2017)</li>
+            <li>Add the bottom footer bar. (Jul 23, 2017)</li>
+            <li>Make the header and footer bars as long as the longest line in the pseudocode. (Jul 23, 2017)</li>
         </ol>
         
         <hr>
-        <span style="color:grey">Feb 2, 2017 11:09 by Rodion Efremov</span>
+        <span style="color:grey">Jul 23, 2017 17:46 by Rodion Efremov</span>
+        
     </body>
 </html>
