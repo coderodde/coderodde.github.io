@@ -656,9 +656,9 @@
         <p>
         <alg-algorithm header="Compute-Something-Interesting$(Q, R)$" 
                        comment="Interesting comment" 
-                       algorithm-upper-header-style="border-top: 3px solid #ffaa33; width: 480px;"
-                       algorithm-lower-header-style="border-bottom: 2px solid black; width: 480px;"
-                       algorithm-footer-style ="background-color: #ffaa33; width: 480px; height: 3px;">
+                       algorithm-upper-header-style="border-top: 3px solid #ffaa33; width: 474px;"
+                       algorithm-lower-header-style="border-bottom: 2px solid black; width: 474px;"
+                       algorithm-footer-style ="background-color: #ffaa33; width: 474px; height: 3px;">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
             <alg-foreach condition="$q \in Q$" label="outer">
                 <alg-foreach condition="$r \in R$">
@@ -678,7 +678,11 @@
         </p>
         The source for the above pseudocode is
         <pre>
-&lt;alg-algorithm header="Compute-Something-Interesting$(Q, R)$" comment="Interesting comment"&gt;
+&lt;alg-algorithm header="Compute-Something-Interesting$(Q, R)$" 
+                  comment="Interesting comment"  
+                  algorithm-upper-header-style="border-top: 3px solid #ffaa33; width: 474px;"
+                  algorithm-lower-header-style="border-bottom: 2px solid black; width: 474px;"
+                  algorithm-footer-style ="background-color: #ffaa33; width: 474px; height: 3px;" &gt;
     &lt;alg-step&gt;$X \leftarrow \varnothing$&lt;/alg-step&gt;
     &lt;alg-foreach condition="$q \in Q$" label="outer"&gt;
         &lt;alg-foreach condition="$r \in R$"&gt;
@@ -853,7 +857,7 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jul 24, 2017 10:17 by Rodion Efremov</span>
+        <span style="color:grey">Jul 24, 2017 11:13 by Rodion Efremov</span>
         
     </body>
 </html>
