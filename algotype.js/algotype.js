@@ -23,7 +23,8 @@ Algotype.DISTANCE_BETWEEN_LINE_NUMBER_AND_CODE = 8;
 
 // The URL from which to download the MathJax math typesetting facilities.
 Algotype.MATHJAX_SCRIPT_URL = 
-    "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML";
+    "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js" +
+    "?config=TeX-AMS_CHTML";
     
 // Configuration for MathJax. This provides in the pseudocode macros for such
 // keywords as 'and', 'or', 'not', and others, with the font that matches the 
