@@ -33,12 +33,19 @@
 #yield_id {
     color: blueviolet;
 }
-    
-/*.algotype-algorithm-header {
-    border-bottom: 2px solid #ffaa00;   
-    border-top: 3px solid #44aacc;
-}*/
-/*
-#algorithm_header_line {
-    border-bottom: 2px solid #44aacc;
-}*/
+
+.upper_header_bar {
+    border-top: 3px solid #ffaa33 !important;
+    width: 474px;
+}
+
+.lower_header_bar {
+    border-bottom: 2px solid black !important; 
+    width: 474px;
+}
+
+.footer_bar {
+    background-color: #ffaa33;
+    width: 474px; 
+    height: 3px;
+}

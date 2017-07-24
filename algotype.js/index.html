@@ -34,7 +34,6 @@
         </style>
     </head>
     <body>
-        
         <h1>Table of contents</h1>
         <ul>
             <li><a href="#algotypejs_question">Algotype.js?</a></li>
@@ -656,9 +655,9 @@
         <p>
         <alg-algorithm header="Compute-Something-Interesting$(Q, R)$" 
                        comment="Interesting comment" 
-                       algorithm-upper-header-style="border-top: 3px solid #ffaa33; width: 474px;"
-                       algorithm-lower-header-style="border-bottom: 2px solid black; width: 474px;"
-                       algorithm-footer-style ="background-color: #ffaa33; width: 474px; height: 3px;">
+                       algorithm-upper-header-class="upper_header_bar"
+                       algorithm-lower-header-class="lower_header_bar"
+                       algorithm-footer-class="footer_bar">
             <alg-step>$X \leftarrow \varnothing$</alg-step>
             <alg-foreach condition="$q \in Q$" label="outer">
                 <alg-foreach condition="$r \in R$">
@@ -680,9 +679,9 @@
         <pre>
 &lt;alg-algorithm header="Compute-Something-Interesting$(Q, R)$" 
                   comment="Interesting comment"  
-                  algorithm-upper-header-style="border-top: 3px solid #ffaa33; width: 474px;"
-                  algorithm-lower-header-style="border-bottom: 2px solid black; width: 474px;"
-                  algorithm-footer-style ="background-color: #ffaa33; width: 474px; height: 3px;" &gt;
+                  algorithm-upper-header-class="upper_header_bar"
+                  algorithm-lower-header-class="lower_header_bar"
+                  algorithm-footer-class="footer_bar"&gt;
     &lt;alg-step&gt;$X \leftarrow \varnothing$&lt;/alg-step&gt;
     &lt;alg-foreach condition="$q \in Q$" label="outer"&gt;
         &lt;alg-foreach condition="$r \in R$"&gt;
@@ -700,7 +699,26 @@
     &lt;/alg-foreach&gt;
 &lt;/alg-algorithm&gt;
         </pre>
-        
+        <p>
+            Above, the header and footer styles are:
+        <pre>
+.upper_header_bar {
+    border-top: 3px solid #ffaa33 !important;
+    width: 474px;
+}
+
+.lower_header_bar {
+    border-bottom: 2px solid black !important; 
+    width: 474px;
+}
+
+.footer_bar {
+    background-color: #ffaa33;
+    width: 474px; 
+    height: 3px;
+}
+        </pre>
+        </p>
         <hr>
         <a id="misc"><h2>Miscellany</h2></a>
         <ul>
@@ -857,7 +875,7 @@
         </ol>
         
         <hr>
-        <span style="color:grey">Jul 24, 2017 11:13 by Rodion Efremov</span>
+        <span style="color:grey">Jul 24, 2017 11:47 by Rodion Efremov</span>
         
     </body>
 </html>
