@@ -138,20 +138,14 @@
             <tr class="attribute-list"><td><code>name</code></td><td>the name of the algorithm</td><td><b>required</b></td></tr>
             <tr class="attribute-list"><td><code>parameters</code></td><td>the list of algorithm's parameters</td><td><b>required</b></td></tr>
             <tr class="attribute-list"><td><code>comment</code></td><td>the algorithm comment</td><td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>algorithm-upper-header-class</code></td><td>the CSS class for styling the upper header bar</td><td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>algorithm-lower-header-class</code></td><td>the CSS class for styling the lower header bar</td><td><b>optional</b></td></tr>
+            <tr class="attribute-list"><td><code>algorithm-footer-class</code></td><td>the CSS class for styling the footer bar</td><td><b>optional</b></td></tr>
         </table>
        
         <h4>Notes</h4>
         <ul>
             <li>Make sure that you wrap the element <code>&lt;alg-algorithm&gt;...&lt;/alg-algorithm&gt;</code>; into a, say, <code>&lt;div&gt;</code> that does not contain any other elements. Otherwise, it will be placed as the very last element of its parent element even if the algorithm is not the last element of the parent.</li>
-            <li>The parameter list accepts several formats. The above parameter list $(x, A, R)$ may be specified in <code>parameters</code> attribute as
-                <ul>
-                    <li><code>x A R</code></li>
-                    <li><code>x, A, R</code></li>
-                    <li><code>(x A R)</code></li>
-                    <li><code>(x, A, R)</code></li>
-                </ul>
-            </li>
-            <li>You can also omit some commas in the above lists, or omit one or both parentheses.</li>
         </ul>
         
         
