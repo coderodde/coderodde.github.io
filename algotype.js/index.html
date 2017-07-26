@@ -291,7 +291,7 @@
         <hr>
         <a id="alg-for"><h3><code>alg-for</code></h3></a>
         <h4>Summary</h4>
-        The <code>alg-for</code> tag typesets the <code>for</code> loops. 
+        The <code>alg-for</code> tag typesets the <code>for</code> loops. <i>This element may have other inner elements.</i>
         <h4>Synopsis</h4>
         <pre>
 &lt;alg-for init="$i = 1$" 
@@ -800,7 +800,7 @@
         
         <blockquote>
             <pre>
-&lt;alg-algorithm header="Colorful-Algorithm$()$"&gt;
+&lt;alg-algorithm header="&lt;span style='color:pink;'&gt;Colorful&lt;/span&gt;-Algorithm$(\color{red}x, \color{black}y)$" comment="&lt;span style='color: brown;'&gt;Color&lt;/span&gt;ful comment"&gt;
     &lt;alg-if condition="$\color{blue} x + y \color{black} &gt; \color{red} 2 \; \And $ &lt;span style='color:#789'&gt;Call-Func&lt;/span&gt;$(x, y)$"&gt;
         &lt;alg-yield id="yield_id"&gt;$c \; \times $&lt;span style='color:brown;'&gt;Get-Factor&lt;/span&gt;$\color{yellow}{(x, y)} + $ &lt;span style='color:red;'&gt;Fix-Constant&lt;/span&gt;$()$&lt;/alg-yield&gt;
         &lt;alg-return&gt;1 + &lt;span style='color:red;'&gt;Aux-Call&lt;/span&gt;$\color{green}{(y, x + y)}$&lt;/alg-return&gt;
@@ -865,11 +865,11 @@
             <li>Add the bottom footer bar. (Jul 23, 2017) <b><i>[Done at Jul 24, 2017 10:14]</i></b></li>
             <li>Make the header and footer bars as long as the longest line in the pseudocode. (Jul 23, 2017) <b><i>[Canceled at Jul 24, 2017 10:16]</i></b></li>
             <li>Allow the user to customize the header and footer bars. (Jul 24, 2017) <b><i>[Done at Jul 24, 2017 10:16]</i></b></li>
-            <li>Remove the trailing colons from the loops. (Jul 26, 2017)</li>
+            <li>Remove the trailing colons from the loops. (Jul 26, 2017) <b><i>[Done at Jul 26, 2017 22:29]</i></b></li>
         </ol>
         
         <hr>
-        <span style="color:grey">Jul 26, 2017 22:10 by Rodion Efremov</span>
+        <span style="color:grey">Jul 26, 2017 22:29 by Rodion Efremov</span>
         
     </body>
 </html>
