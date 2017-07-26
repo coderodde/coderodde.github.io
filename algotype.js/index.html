@@ -124,8 +124,7 @@
         The tag <code>alg-algorithm</code> defines an entire algorithm. <i>Naturally, it may have all inner elements except</i> <code>alg-algorithm</code><i>.</i>
         <h4>Synopsis</h4>
         <pre>
-&lt;alg-algorithm name="Algorithm-Name" 
-               parameters="x A R" 
+&lt;alg-algorithm name="Algorithm-Name$(x, A, R, Z)$"
                comment="Algorithm header comment"&gt;
 ...
 &lt;/alg-algorithm&gt;
@@ -136,8 +135,7 @@
         </p>
        
         <table class="attribute-list">
-            <tr class="attribute-list"><td><code>name</code></td><td>the name of the algorithm</td><td><b>required</b></td></tr>
-            <tr class="attribute-list"><td><code>parameters</code></td><td>the list of algorithm's parameters</td><td><b>required</b></td></tr>
+            <tr class="attribute-list"><td><code>header</code></td><td>the name of the algorithm and the argument list</td><td><b>required</b></td></tr>
             <tr class="attribute-list"><td><code>comment</code></td><td>the algorithm comment</td><td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>algorithm-upper-header-class</code></td><td>the CSS class for styling the upper header bar</td><td><b>optional</b></td></tr>
             <tr class="attribute-list"><td><code>algorithm-lower-header-class</code></td><td>the CSS class for styling the lower header bar</td><td><b>optional</b></td></tr>
