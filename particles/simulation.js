@@ -160,8 +160,8 @@ function SimulationEngine(canvasContext,
     this.worldHeight              = worldHeight;
     this.sleepTime                = sleepTime;
     this.exit                     = false;
-    this.pause                    = true;
-    this.particleToForceVectorMap = {};
+    this.pause                    = false;
+    this.particleToForceVectorMap = [];
 }
 
 SimulationEngine.prototype.togglePause = function() {
