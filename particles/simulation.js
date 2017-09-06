@@ -142,20 +142,6 @@ Vector.prototype.multiply = function(factor) {
     return new Vector(this.x * factor, this.y * factor);
 };
 
-function getParticleForce(particle1, particle2) {
-    var distance = particle1.getDistance(particle2);
-    var mass1 = particle1.getMass();
-    var mass2 = particle2.getMass();
-    return Configuration.FORCE_CONSTANT * mass1 * mass2 / (distance * distance);
-}
-
-function getPotentialEnergy(particle1, particle2) {
-    var mass1 = particle1.getMass();
-    var mass2 = particle2.getMass();
-    var distance = particle1.getDistance(particle2);
-    return Configuration.FORCE_CONSTANT * mass1 * mass2 / distance;
-}
-
 function SimulationEngine(canvasContext, 
                           canvasElement,
                           particles,
