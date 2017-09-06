@@ -794,7 +794,6 @@ Algotype.typesetAlgorithm = function(algorithmElement) {
     var customStyleClasses = upperHeaderBarClass + " " + 
                              lowerHeaderBarClass + "'";
                      
-    console.log(customStyleClasses);
     var htmlText = 
             "<table class='algotype-algorithm-header " + customStyleClasses + 
             (width ? "style='width: " + width + "px;'" : "") + ">\n" +
