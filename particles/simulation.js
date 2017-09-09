@@ -206,7 +206,7 @@ SimulationEngine.prototype.redraw = function() {
     this.font = "20px Arial";
     this.canvasContext.fillText("Total energy: " + this.computeTotalEnergy(), 
                                 0, 
-                                30);
+                                15);
 };
 
 SimulationEngine.prototype.computeForceVectors = function() {
