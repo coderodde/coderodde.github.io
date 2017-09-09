@@ -253,18 +253,24 @@ SimulationEngine.prototype.moveParticles = function() {
 SimulationEngine.prototype.resolveWorldBorderCollisions = function() {
     for (var i = 0; i < this.particles.length; ++i) {
         var particle = this.particles[i];
+        var x = particle.getX();
+        var y = particle.getY();
         var radius = particle.getRadius();
         
-        if (particle.getY() - radius <= 0.0) {
+        if (y - radius <= 0.0) {
             particle.setVelocityY(-particle.getVelocityY());
-        } else if (particle.getY() + radius >= this.worldHeight) {
+            particle.setY(radius);
+        } else if (y + radius >= this.worldHeight) {
             particle.setVelocityY(-particle.getVelocityY());
+            particle.setY(this.worldHeight - radius);
         }
         
-        if (particle.getX() - radius <= 0.0) {
+        if (x - radius <= 0.0) {
             particle.setVelocityX(-particle.getVelocityX());
-        } else if (particle.getX() + radius >= this.worldWidth) {
+            particle.setX(radius);
+        } else if (x + radius >= this.worldWidth) {
             particle.setVelocityX(-particle.getVelocityX());
+            particle.setX(this.worldWidth - radius);
         }
     }
 };
