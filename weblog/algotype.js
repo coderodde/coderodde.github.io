@@ -49,6 +49,20 @@ Algotype.MATHJAX_CONFIG =
 Algotype.MATHJAX_CONFIG_MIME_TYPE = "text/x-mathjax-config";
 
 Algotype.UNNAMED_ALGORITHM = "UnnamedAlgorithm";
+    
+Algotype.loadMathJax = function() {
+    // Load the MathJax.
+    var importedScript = document.createElement("script");
+    importedScript.async = "true";
+    importedScript.src = Algotype.MATHJAX_SCRIPT_URL;
+    document.head.appendChild(importedScript);
+    
+    // Make MathJax process the configuration.
+    var mathJaxSettingsScript = document.createElement("script");
+    mathJaxSettingsScript.type = Algotype.MATHJAX_CONFIG_MIME_TYPE;
+    mathJaxSettingsScript.innerHTML = Algotype.MATHJAX_CONFIG;
+    document.head.appendChild(mathJaxSettingsScript);
+};
 
 Algotype.getAlgorithmHeaderComment = function (algorithmElement) {
     var algorithmHeaderComment = 
@@ -884,7 +898,7 @@ td.algotype-line-number-space { \n\
 .algotype-algorithm-name {    \n\
     font-variant: small-caps; \n\
     font-weight: bolder;      \n\
-} \n\
+} \n\
 .algotype-label {} \n\
 \n\
 .algotype-label {               \n\
@@ -920,9 +934,9 @@ td.algotype-line-number-space { \n\
 };
     
 Algotype.setup = function() {
-    alert("yeah");
     // Load MathJax.
     Algotype.setCSSRules();
+    Algotype.loadMathJax();
     
     // Typeset all algorithms present in the DOM.
     var algorithmList = document.getElementsByTagName("alg-algorithm");
@@ -952,4 +966,12 @@ Algotype.dispatchTable["alg-step"]         = Algotype.typesetStep;
 Algotype.dispatchTable["alg-while"]        = Algotype.typesetWhile;
 Algotype.dispatchTable["alg-yield"]        = Algotype.typesetYield;
 
-Algotype.setup();
+var oldOnloadHandler = window.onload;
+
+window.onload = function() {
+    if (oldOnloadHandler) {
+        oldOnloadHandler();
+    }
+    
+    Algotype.setup();
+};

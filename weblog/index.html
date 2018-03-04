@@ -3,23 +3,61 @@
     <head>
         <title>coderodde - weblog</title>
         <style>
+            h1, h3 {
+                text-align: center;
+            }
+            
             article {
                 font-family: "Times New Roman";
-                font-size: 10pt;
+                font-size: 12pt;
                 text-align: justify;
             }
-        </style>
-        <script src="mathjax.js"></script>
-        <script src="algotype.js"></script>
-        <script>
             
-        </script>
+            #main {
+                width: 800px;
+                margin: auto;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="weblog/algotype_my_config.css">
+        <script src="weblog/algotype.js"></script>
     </head>
     <body>
-        <h1>coderodde's technical weblog</h1>
-        <h3>Solving most cost-effective loan problem</h3>
-        <article>
-            Hello, my funky friend $$\int_a $$ and $funky x > 0$ fdsasd.
-        </article>
+        <div id="main">
+            <h1>coderodde's technical weblog</h1>
+            <h3>Solving most cost-effective loan problem</h3>
+            <article>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mi leo, vestibulum id ante ut, sollicitudin pretium risus. Morbi sed ipsum mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent posuere, nibh at pulvinar vehicula, dui est laoreet nisl, sed euismod libero lacus eu risus. Aenean sodales, ex vitae auctor convallis, est ipsum aliquam nisl, a tempus lorem sem sed neque. Suspendisse lectus nisi, rhoncus vel interdum in, posuere sed mi.
+
+Nullam at posuere nisi. Quisque libero metus, tempor quis ex eget, ultricies molestie neque. Nam laoreet purus sit amet metus ultricies luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras facilisis facilisis elementum. Nam vitae turpis id velit tempus aliquet vel in nisl. Fusce elementum mauris sed nisi porttitor hendrerit. In hac habitasse platea dictumst. Duis tincidunt, quam eleifend convallis hendrerit, dolor sapien rhoncus eros, vel iaculis lorem ligula ac enim. Nunc a mi ut arcu lobortis bibendum. Nam at tellus quis purus lobortis mollis blandit nec nunc.
+<p>
+        <alg-algorithm header="Compute-Sumthing-Interesting$(Q, R)$" 
+                       comment="Interesting comment" 
+                       algorithm-upper-header-class="upper_header_bar"
+                       algorithm-lower-header-class="lower_header_bar"
+                       algorithm-footer-class="footer_bar">
+            <alg-step>$X \leftarrow \varnothing$</alg-step>
+            <alg-foreach condition="$q \in Q$" label="outer">
+                <alg-foreach condition="$r \in R$">
+                    <alg-if condition="$q = r$">
+                        <alg-continue>outer</alg-continue>
+                    </alg-if>
+                    <alg-else-if condition="$q < r$">
+                        <alg-step comment="Important step">$X \leftarrow X \cup \{ q \}$</alg-step>
+                    </alg-else-if>
+                    <alg-else>
+                        <alg-step>$x \leftarrow$ Aux-Method$(q, r)$</alg-step>
+                        <alg-return>$x \; + $ Prune$(q, r)$</alg-return>
+                    </alg-else>
+                </alg-foreach>
+            </alg-foreach>
+        </alg-algorithm>
+        </p>
+Aliquam pellentesque arcu nec metus interdum gravida. Pellentesque non vestibulum est. Nulla in maximus elit, in placerat sem. Maecenas hendrerit tincidunt nibh, ut vestibulum felis sollicitudin eu. Duis hendrerit tellus a ornare accumsan. Phasellus lacinia diam quis dui ullamcorper, eget ultricies odio consequat. Maecenas rutrum blandit felis sit amet sollicitudin. Pellentesque porttitor arcu ipsum, et finibus odio mollis in. Aliquam ut leo nibh. Duis varius porttitor orci, venenatis commodo ipsum euismod sed. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed malesuada imperdiet nunc eget malesuada. Morbi ipsum ante, cursus eu diam quis, luctus dapibus sapien. Aliquam erat volutpat. Vivamus iaculis tortor eu dui auctor facilisis. In tincidunt et tortor a maximus.
+
+Vestibulum venenatis tellus purus, ut euismod erat fermentum eget. Curabitur et ornare odio. Nam vulputate iaculis mi ac sagittis. Aliquam venenatis at nulla a imperdiet. Phasellus sodales metus non diam ultrices, ut feugiat eros maximus. Nullam egestas, lacus at fringilla feugiat, est dui cursus diam, at ultricies orci magna vel diam. In eros mi, aliquet sit amet sem at, venenatis imperdiet velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam ligula eros, mollis ut elementum nec, dictum a felis. In pharetra, velit id interdum vestibulum, dui risus ultrices neque, in consectetur urna lacus at ante. Cras id congue dui, eget gravida diam. Maecenas malesuada urna id arcu iaculis imperdiet eu quis nulla.
+
+Nunc sapien quam, volutpat eget sem sed, facilisis molestie nisl. Quisque efficitur luctus luctus. Fusce enim dolor, euismod id eros et, suscipit sollicitudin enim. Vestibulum vel eros turpis. Maecenas in viverra ligula. Vestibulum porta viverra odio at luctus. Nunc dignissim velit venenatis augue finibus fermentum in et dui. Vestibulum ante est, molestie quis ullamcorper nec, aliquam id eros. Vivamus tempus pharetra justo, nec ultrices arcu pretium non. In at imperdiet leo. Aenean dapibus et dui at venenatis. Donec a egestas metus. Praesent consectetur gravida tincidunt. Cras luctus tristique pellentesque.
+            </article>
+        </div>
     </body>
 </html>

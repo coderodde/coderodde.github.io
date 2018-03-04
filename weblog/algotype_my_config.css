@@ -1,0 +1,51 @@
+#step_id1 {
+    color: black;
+}
+
+#comment_id1 {
+    color: black;
+}
+
+#step_id2 {
+    color: brown;
+}
+
+#comment_id2 {
+    color: black;
+}
+
+#step_id3 {
+    color: black;
+}
+
+#comment_id3 {
+    color: blue;
+}
+
+#step_id4 {
+    color: brown;
+}
+
+#comment_id4 {
+    color: blue;
+}
+
+#yield_id {
+    color: blueviolet;
+}
+
+.upper_header_bar {
+    border-top: 3px solid #ffaa33 !important;
+    width: 474px;
+}
+
+.lower_header_bar {
+    border-bottom: 2px solid black !important; 
+    width: 474px;
+}
+
+.footer_bar {
+    background-color: #ffaa33;
+    width: 474px; 
+    height: 3px;
+}
