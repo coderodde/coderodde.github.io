@@ -32,16 +32,41 @@
                 font-weight: bold;
                 font-style: italic;
             }
+            
+            #browser_note {
+                width: 350px;
+                border: 2px solid black;
+                background-color: #ff5555;
+                padding: 5px;
+                margin: auto;
+                font-weight: bold;
+                font-size: 10pt;
+            }
+            
+            #contents {
+                text-align: center;
+            }
         </style>
-        <link rel="stylesheet" type="text/css" href="weblog/algotype_my_config.css">
-        <script src="weblog/algotype.js"></script>
+        <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
+        <script src="algotype.js"></script>
     </head>
     <body>
         <div id="main">
             <h1>coderodde's technical weblog</h1>
-            <h3>Solving most cost-effective loan problem</h3>
+            <div id="browser_note">For best rendering of formal text, <br/> it is advised to view this page via desktop browsers.</div>
+            <div id="contents">
+                <h2>Contents</h2>
+                <h3><a href="#mcelp">Solving most cost-effective loan problem</a></h3>
+                <h4><a href="#mcelp.1">1 Introduction</a></h4>
+                <h4><a href="#mcelp.2">2 Interest rate model</a></h4>
+                <h4><a href="#mcelp.3">3 Problem statement</a></h4>
+                <h4><a href="#mcelp.4">4 Solution algorithm</a></h4>
+                <h4><a href="#mcelp.5">5 Proof of correctness</a></h4>
+                <h4><a href="#mcelp.6">6 Future work</a></h4>
+            </div>
+            <h3 id="mcelp">Solving most cost-effective loan problem</h3>
             <article>
-                <h4>1 Introduction</h4>
+                <h4 id="mcelp.1">1 Introduction</h4>
                 <p>
                 In the most cost-effective loan problem, we are given a directed
                 graph of actors where each actor may lend some amount of resources
@@ -76,7 +101,7 @@
                 with minimized interest rate.
                 </p>
                 
-                <h4>2 Interest rate model</h4>
+                <h4 id="mcelp.2">2 Interest rate model</h4>
                 
                 <p>
                 Throught the post, we assume a simple interest rate mode. The
@@ -118,7 +143,7 @@
                 of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$
                 </p>
                 
-                <h4>3 Problem statement</h4>
+                <h4 id="mcelp.3">3 Problem statement</h4>
                 <p>
                 Given a problem instance $(G, a, \mathfrak{P}, \mathfrak{I}, P, i)$,
                 we wish to compute two additional functions: $\pi$ and $d$.
@@ -160,7 +185,7 @@
                 \]
                 </p>
                 
-                <h4>4 Solution algorithm</h4>
+                <h4 id="mcelp.4">4 Solution algorithm</h4>
                 <p>
                 Since the effective interest rate does not decrease with adding
                 more directed arcs, we must have that for any actor $a \in V$ the
@@ -216,7 +241,7 @@
                     </alg-algorithm>
                 </p>
                 
-                <h4>5 Proof of correctness</h4>
+                <h4 id="mcelp.5">5 Proof of correctness</h4>
                 <p>
                 <span class="lemma_name">Lemma 1 (Termination)</span>
                 <span class="lemma_claim">The algorithm terminates.</span><br/>
@@ -244,9 +269,17 @@
                 such that $d(u_1) = u_2, d(u_2) = u_3, \dots d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$</span><br/>
                 The only way for such a cycle to emerge is to have $\mathfrak{I}(u_1, u_2) =
                 \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$.
+                Without loss of generality, suppose the search enters the cycle via $u_1$. When $u_k$ will be
+                removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 20, and
+                so there is no way $d(u_k)$ could be mapped to $u_1$.
+                </p>
+                <p>
+                <span class="lemma_name">Lemma 4</span>
+                <span class="lemma_claim">The sum of all solution potentials cannot exceed $P$.</span><br/>
+                This is trivially guaranteed by the line 14 and the second test at line 12.
                 </p>
                 
-                <h4>6 Future work</h4>
+                <h4 id="mcelp.6">6 Future work</h4>
                 We used a very simple interest rate model in our solution, and
                 so it leaves the case where the used interest rate model is more
                 realistic. In general, with initial principal $\mathfrak{A}$,
