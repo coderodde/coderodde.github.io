@@ -852,7 +852,7 @@ Algotype.setCSSRules = function() {
 .algotype-text {                  \n\
     padding-bottom: 2px;          \n\
     font-family: Times New Roman; \n\
-    font-size: 18px;              \n\
+    font-size: 15px;              \n\
 } \n\
 \n\
 .algotype-keyword {    \n\
