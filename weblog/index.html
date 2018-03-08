@@ -76,7 +76,8 @@
                 node has at its disposal. Finally, we are given an <i>interest rate function</i>
                 $\mathfrak{I} \colon A \to \mathbb{R}_{\geq 0}$ that maps each arc
                 $(u, v) \in A$ to the interest rate the actor $u$ can offer $v$
-                when $v$ decides to lend from $u$.
+                when $v$ decides to lend from $u$. From now on, we will call the
+                aforementioned amount of resources of equity simply <i>potential</i>.
                 </p>
                 
                 <p>
@@ -91,7 +92,7 @@
                 <h4 id="mcelp.2">2 Interest rate model</h4>
                 
                 <p>
-                Throught the post, we assume a simple interest rate mode. The
+                Throughout the post, we assume a simple interest rate model. The
                 accumulated balance at time $t$ since the time point at which the
                 loan was issued, with initial principal $\mathfrak{A}$ and interest
                 rate $r$ is given by
@@ -116,7 +117,7 @@
                 </p>
                 
                 <p>
-                Since we may deal with entire &guot;loan chains&guot;, we need 
+                Since we may deal with entire &quot;loan chains&quot;, we need 
                 to define the concept of <i>effective interest rate</i>.
                 Effective interest rate is given by 
                 \[
@@ -164,7 +165,7 @@
                 <p>
                 Now, we can state the objective formally:
                 \[
-                \pi = \underset{\pi' \in \mathfrak{V}}{\Bigg[ P - \sum_{u \in V} \pi'(u) \Bigg]},
+                \pi = \underset{\pi' \in \mathfrak{V}}{\arg \min}{\Bigg[ P - \sum_{u \in V} \pi'(u) \Bigg]},
                 \]
                 and
                 \[
@@ -176,13 +177,13 @@
                 <p>
                 Since the effective interest rate does not decrease with adding
                 more directed arcs, we must have that for any actor $a \in V$ the
-                most cos-efficient lenders are its immediate parents. This observation
+                most cost-efficient lenders are its immediate parents. This observation
                 implies that we basically wish to compute a directed &quot;minimum spanning tree&quot;
                 in which each other node (except $a$) has a unique directed path to $a$.
-                In the very beginning, the tree is trivial and consists of only $a$.
+                In the very beginning, the tree is trivial and consists only of $a$.
                 Then a most cost-effective parent $u_1$ is selected and the arc $(u_1, a)$
                 is introduced to the tree. Then $u_2$ is selected. It must not
-                belong to \{a, u_1\} while have the lowest possible effective rate
+                belong to $\{a, u_1\}$ while have the lowest possible effective rate
                 among all nodes in $V \setminus \{ a, u_1 \}$. This procedure continues
                 until a desired potential $P$ is collected or until there is no more nodes 
                 left with affordable effective interest rates. Below 
@@ -246,7 +247,7 @@
                 parents (immediate or intermediate) in a greedy fashion: lend as much as possible
                 from the most affordable actor, then lend as much as possible from the second most
                 affordable actor, and so on until the requested potential is collected or there are
-                no more affordable lenders left. It is easy to see, that such strategy minimizes
+                no more affordable lenders left. It is easy to see that such strategy minimizes
                 interest expenses.
                 </p>
                 <p>
@@ -257,7 +258,7 @@
                 The only way for such a cycle to emerge is to have $\mathfrak{I}(u_1, u_2) =
                 \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$.
                 Without loss of generality, suppose the search enters the cycle via $u_1$. When $u_k$ will be
-                removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 20, and
+                removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 20 since $u_1$ is in $C$, and
                 so there is no way $d(u_k)$ could be mapped to $u_1$.
                 </p>
                 <p>
