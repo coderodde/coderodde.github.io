@@ -17,9 +17,24 @@
                 width: 800px;
                 margin: auto;
             }
+            
+            .lemma_name {
+                font-variant: small-caps;
+                font-weight: bold;
+            }
+            
+            .exclude_from_lemma_name {
+                font-variant: normal;
+                font-weight: normal;
+            }
+            
+            .lemma_claim {
+                font-weight: bold;
+                font-style: italic;
+            }
         </style>
-        <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
-        <script src="algotype.js"></script>
+        <link rel="stylesheet" type="text/css" href="weblog/algotype_my_config.css">
+        <script src="weblog/algotype.js"></script>
     </head>
     <body>
         <div id="main">
@@ -158,7 +173,8 @@
                 belong to \{a, u_1\} while have the lowest possible effective rate
                 among all nodes in $V \setminus \{ a, u_1 \}$. This procedure continues
                 until a desired potential $P$ is collected or until there is no more nodes 
-                left with affordable effective interest rates. Below, ${\rm P{\small RIORITY}-Q{\small UEUE}-I{\small NSERT}}(Q, \langle a, b, c \rangle)$
+                left with affordable effective interest rates. Below 
+                <span style="font-variant: small-caps; font-weight: bolder;">Priority-Queue-Insert</span>$(Q, \langle a, b, c \rangle)$
                 stores the triple $\langle a, b, c \rangle$ in priority queue $Q$ and uses $c$ as the priority key.
                 </p>
                 <p>
@@ -199,7 +215,36 @@
                         <alg-return>$(\pi, d)$</alg-return>
                     </alg-algorithm>
                 </p>
+                
                 <h4>5 Proof of correctness</h4>
+                <p>
+                <span class="lemma_name">Lemma 1 (Termination)</span>
+                <span class="lemma_claim">The algorithm terminates.</span><br/>
+                Note that each node removed from the priority queue at line 13 is
+                inserted into the closed set $C$ at line 18. Now, the line 23 will not
+                reintroduce the same node to $Q$ and so, $Q$ eventually becomes empty (unless
+                the algorithm terminates earlier in case the required potential is collected).
+                </p>
+                <p>
+                <span class="lemma_name">Lemma 2 (Optimality)</span>
+                <span class="lemma_claim">The algorithm finds most cost-effective loans.</span><br/>
+                The effective interest rate function $I$ implicitly defines a transitive closure
+                from any actor $u \neq a$ to $a$ assuming the effective interest rate of $u$ is
+                within the constraint $I(u, a) \leq i$. That way, $a$ loans from all affordable
+                parents (immediate or intermediate) in a greedy fashion: lend as much as possible
+                from the most affordable actor, then lend as much as possible from the second most
+                affordable actor, and so on until the requested potential is collected or there are
+                no more affordable lenders left. It is easy to see, that such strategy minimizes
+                interest expenses.
+                </p>
+                <p>
+                <span class="lemma_name">Lemma 3 (<span class="exclude_from_lemma_name">$d$</span> is acyclic)</span>
+                <span class="lemma_claim">Given a solution direction function $d$, 
+                there exist no actor sequence $\langle u_1, u_2, \dots, u_k \rangle$
+                such that $d(u_1) = u_2, d(u_2) = u_3, \dots d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$</span><br/>
+                The only way for such a cycle to emerge is to have $\mathfrak{I}(u_1, u_2) =
+                \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$.
+                </p>
                 
                 <h4>6 Future work</h4>
                 We used a very simple interest rate model in our solution, and
@@ -213,7 +258,7 @@
                 \]
                 Also, as $n \to \infty$, $\mathfrak{C} \to \mathfrak{A}e^{rt}$.
                 Combining loans with different parameters in a meaningful way 
-                seems to be a non-trivial task and we might address it later.
+                seems to be a non-trivial task but we might address it later.
             </article>
         </div>
     </body>
