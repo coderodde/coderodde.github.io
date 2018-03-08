@@ -35,17 +35,17 @@
 }
 
 .upper_header_bar {
-    border-top: 3px solid #ffaa33 !important;
-    width: 474px;
+    border-top: 3px solid black !important;
+    width: 800px;
 }
 
 .lower_header_bar {
     border-bottom: 2px solid black !important; 
-    width: 474px;
+    width: 800px;
 }
 
 .footer_bar {
-    background-color: #ffaa33;
-    width: 474px; 
+    background-color: black;
+    width: 800px; 
     height: 3px;
 }

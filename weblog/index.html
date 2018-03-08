@@ -18,45 +18,92 @@
                 margin: auto;
             }
         </style>
-        <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
-        <script src="algotype.js"></script>
+        <link rel="stylesheet" type="text/css" href="weblog/algotype_my_config.css">
+        <script src="weblog/algotype.js"></script>
     </head>
     <body>
         <div id="main">
             <h1>coderodde's technical weblog</h1>
             <h3>Solving most cost-effective loan problem</h3>
             <article>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mi leo, vestibulum id ante ut, sollicitudin pretium risus. Morbi sed ipsum mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent posuere, nibh at pulvinar vehicula, dui est laoreet nisl, sed euismod libero lacus eu risus. Aenean sodales, ex vitae auctor convallis, est ipsum aliquam nisl, a tempus lorem sem sed neque. Suspendisse lectus nisi, rhoncus vel interdum in, posuere sed mi.
-
-Nullam at posuere nisi. Quisque libero metus, tempor quis ex eget, ultricies molestie neque. Nam laoreet purus sit amet metus ultricies luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras facilisis facilisis elementum. Nam vitae turpis id velit tempus aliquet vel in nisl. Fusce elementum mauris sed nisi porttitor hendrerit. In hac habitasse platea dictumst. Duis tincidunt, quam eleifend convallis hendrerit, dolor sapien rhoncus eros, vel iaculis lorem ligula ac enim. Nunc a mi ut arcu lobortis bibendum. Nam at tellus quis purus lobortis mollis blandit nec nunc.
-<p>
-        <alg-algorithm header="Compute-Sumthing-Interesting$(Q, R)$" 
-                       comment="Interesting comment" 
-                       algorithm-upper-header-class="upper_header_bar"
-                       algorithm-lower-header-class="lower_header_bar"
-                       algorithm-footer-class="footer_bar">
-            <alg-step>$X \leftarrow \varnothing$</alg-step>
-            <alg-foreach condition="$q \in Q$" label="outer">
-                <alg-foreach condition="$r \in R$">
-                    <alg-if condition="$q = r$">
-                        <alg-continue>outer</alg-continue>
-                    </alg-if>
-                    <alg-else-if condition="$q < r$">
-                        <alg-step comment="Important step">$X \leftarrow X \cup \{ q \}$</alg-step>
-                    </alg-else-if>
-                    <alg-else>
-                        <alg-step>$x \leftarrow$ Aux-Method$(q, r)$</alg-step>
-                        <alg-return>$x \; + $ Prune$(q, r)$</alg-return>
-                    </alg-else>
-                </alg-foreach>
-            </alg-foreach>
-        </alg-algorithm>
-        </p>
-Aliquam pellentesque arcu nec metus interdum gravida. Pellentesque non vestibulum est. Nulla in maximus elit, in placerat sem. Maecenas hendrerit tincidunt nibh, ut vestibulum felis sollicitudin eu. Duis hendrerit tellus a ornare accumsan. Phasellus lacinia diam quis dui ullamcorper, eget ultricies odio consequat. Maecenas rutrum blandit felis sit amet sollicitudin. Pellentesque porttitor arcu ipsum, et finibus odio mollis in. Aliquam ut leo nibh. Duis varius porttitor orci, venenatis commodo ipsum euismod sed. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed malesuada imperdiet nunc eget malesuada. Morbi ipsum ante, cursus eu diam quis, luctus dapibus sapien. Aliquam erat volutpat. Vivamus iaculis tortor eu dui auctor facilisis. In tincidunt et tortor a maximus.
-
-Vestibulum venenatis tellus purus, ut euismod erat fermentum eget. Curabitur et ornare odio. Nam vulputate iaculis mi ac sagittis. Aliquam venenatis at nulla a imperdiet. Phasellus sodales metus non diam ultrices, ut feugiat eros maximus. Nullam egestas, lacus at fringilla feugiat, est dui cursus diam, at ultricies orci magna vel diam. In eros mi, aliquet sit amet sem at, venenatis imperdiet velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam ligula eros, mollis ut elementum nec, dictum a felis. In pharetra, velit id interdum vestibulum, dui risus ultrices neque, in consectetur urna lacus at ante. Cras id congue dui, eget gravida diam. Maecenas malesuada urna id arcu iaculis imperdiet eu quis nulla.
-
-Nunc sapien quam, volutpat eget sem sed, facilisis molestie nisl. Quisque efficitur luctus luctus. Fusce enim dolor, euismod id eros et, suscipit sollicitudin enim. Vestibulum vel eros turpis. Maecenas in viverra ligula. Vestibulum porta viverra odio at luctus. Nunc dignissim velit venenatis augue finibus fermentum in et dui. Vestibulum ante est, molestie quis ullamcorper nec, aliquam id eros. Vivamus tempus pharetra justo, nec ultrices arcu pretium non. In at imperdiet leo. Aenean dapibus et dui at venenatis. Donec a egestas metus. Praesent consectetur gravida tincidunt. Cras luctus tristique pellentesque.
+                <h4>1 Introduction</h4>
+                <p>
+                In the most cost-effective loan problem, we are given a directed
+                graph of actors where each actor may lend some amount of resources
+                it possesses to its child nodes. In case an actor needs more than
+                his immediate parents can lend, the parents might need to lend from
+                their parents, adjust the interest rate to cover their own expenses,
+                and pass the funds to the original lending actor.
+                </p>
+                
+                <p>
+                Formally, we are given a directed graph $G = (V, A)$, where $V$
+                is the set of actors, and $A \subseteq V^2$ is the set of directed
+                arcs. By $V(G)$ we denote the actor set of $G$, and likewise, by
+                $A(G)$ we denote the arc set of $G$. Given an arc $(u, v) \in A$,
+                we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$. 
+                Existence of such an arc indicates that $u$ may lend some or all
+                of its resources to $v$. Along the graph, we are given a
+                <i>potential function</i> $\mathfrak{P} \colon V \to [0, \infty) = \mathbb{R}_{\geq 0}$
+                that maps each actor in the graph to the (non-negative) equity that that very
+                node has at its disposal. Finally, we are given an <i>interest rate function</i>
+                $\mathfrak{I} \colon A \to \mathbb{R}_{\geq 0}$ that maps each arc
+                $(u, v) \in A$ to the interest rate the actor $u$ can offer $v$
+                when $v$ decides to lend from $u$.
+                </p>
+                
+                <p>
+                Apart from the target data structure, in a problem instance, we
+                are given an actor $a \in V$ that applies for a loan, a required
+                potential $P \in \mathbb{R}_{\geq 0}$ and a maximum tolerable 
+                interest rate $i \in \mathbb{R}_{\geq 0}$. Our aim, then, is to 
+                compute a loan (which may involve more than one lending actor) 
+                with minimized interest rate.
+                </p>
+                
+                <h4>2 Interest rate model</h4>
+                
+                <p>
+                Throught the post, we assume a simple interest rate mode. The
+                accumulated balance at time $t$ since the time point at which the
+                loan was issued, with initial principal $\mathfrak{A}$ and interest
+                rate $r$ is given by
+                \[
+                \mathfrak{A}(1 + r)^t.
+                \]
+                If we have in the graph, for instance, a directed acyclic path 
+                $\langle u, v, z \rangle$ with $r_{u,v}$ being the interest rate
+                of $(u, v)$, and $r_{v, z}$ being the interest rate of $(v, z)$,
+                the interest rate equation becomes
+                \[
+                \mathfrak{A}(1 + r_{u,v})^t (1 + r_{v,z})^t = \mathfrak{A}\big[ (1 + r_{u,v})(1 + r_{v,z}) \big]^t = \mathfrak{A}(1 + R)^t.
+                \]
+                Above, $R$ is the <i>combined</i> interest rate. Dividing both 
+                sides by $\mathfrak{A}$ and taking $t$-th root, we obtain
+                \begin{aligned}
+                    (1 + r_{u,v})(1 + r_{v,z}) &= 1 + R \\
+                    R + 1 &= 1 + r_{u,v} + r_{v,z} + r_{u,v}r_{v,z} \\
+                    R &= r_{u,v} + r_{v,z} + r_{u,v}r_{v,z}. 
+                \end{aligned}
+                In general, we write $r_1 + r_2 + r_1 r_2 = \mathfrak{C}(r_1, r_2).$
+                </p>
+                
+                <p>
+                Since we may deal with entire &guot;loan chains&guot;, we need 
+                to define the concept of <i>effective interest rate</i>.
+                Effective interest rate is given by 
+                \[
+                    I(u, v) = 
+                    \begin{cases}
+                    0 &\mbox{if } u = v, \\
+                    \underset{z \in {\rm C{\small HILDREN}}(G, u)}{\min} \, \mathfrak{C}\big(\mathfrak{I}(u, z), I(z, v)\big) &\mbox{otherwise,}
+                    \end{cases}
+                \]
+                where ${\rm C{\small HILDREN}}(G, z)$ is the set of child nodes
+                of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$
+                </p>
+                
+                <h4>3 Problem statement</h4>
             </article>
         </div>
     </body>
