@@ -882,7 +882,7 @@ td.algotype-algorithm-line-number { \n\
     padding: 0;                     \n\
     margin: 0;                      \n\
     font-family: Times New Roman;   \n\
-    font-size: 16px;                \n\
+    font-size: 14px;                \n\
     font-weight: bold;              \n\
     width: 20px;                    \n\
     text-align: right;              \n\
