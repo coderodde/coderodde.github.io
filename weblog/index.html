@@ -290,14 +290,13 @@
                 <p>
                 What comes to priority queue $Q$, it clearly stores graph actors without copies
                 of a same actor. Now, if we choose a binary heap, both run in $\mathcal{O}(\log V)$ time.
-                <span class="sc"><b>Priority-Queue-Insert</b></span> is called no more than $|V|$
+                <span class="sc"><b>Priority-Queue-Insert</b></span> is called no more than $|E|$
                 times, and <span class="sc"><b>Priority-Queue-Extract-Minimum</b></span> is called once per
-                arc, and so we have the running time $\mathcal{O}(E \log V + V \log V) = \mathcal{O}(E \log V)$. By deploying 
+                node, and so we have the running time $\mathcal{O}(E \log V + V \log V) = \mathcal{O}(E \log V)$. By deploying 
                 a Fibonacci heap instead, we may reduce this to $\mathcal{O}(E + V \log V)$.
                 </p>
-                <h4 id="most-cost-effective-loan-problem.7.experiments">7 Experiments</h4>
                 
-                <h4 id="most-cost-effective-loan-problem.8.future-work">8 Future work</h4>
+                <h4 id="most-cost-effective-loan-problem.7.future-work">7 Future work</h4>
                 We used a very simple interest rate model in our solution, and
                 so it leaves the case where the used interest rate model is more
                 realistic. In general, with initial principal $\mathfrak{A}$,
@@ -311,8 +310,8 @@
                 Combining loans with different parameters in a meaningful way 
                 seems to be a non-trivial task but we might address it later.
                 
-                <h4 id="most-cost-effective-loan-problem.9.references">9 References</h4>
-                <b>[1]</b> <a id="ref1" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
+                <h4 id="most-cost-effective-loan-problem.8.references">8 References</h4>
+                <b>[1]</b> <a id="ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
         </div>
     </body>
