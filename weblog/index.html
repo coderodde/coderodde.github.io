@@ -123,7 +123,7 @@
                 \[
                     I(u, v) = 
                     \begin{cases}
-                    0 &\mbox{if } u = v, \\
+                    \mathfrak{I}(u, v) &\mbox{if } (u, v) \in A \\
                     \underset{z \in {\rm C{\small HILDREN}}(G, u)}{\min} \, \mathfrak{C}\big(\mathfrak{I}(u, z), I(z, v)\big) &\mbox{otherwise,}
                     \end{cases}
                 \]
@@ -228,6 +228,12 @@
                         <alg-return>$(\pi, d)$</alg-return>
                     </alg-algorithm>
                 </p>
+                <p>
+                What comes to time complexity of the algorithm, it is sufficient 
+                to observe that all the operations can be implemented to run in
+                $\Theta(1)$ time. In particular, this applies to operating on $\pi, d, C$:
+                we can use hash-table based sets and maps which run the basic operations
+                in average constant time.</p>
                 
                 <h4 id="mcelp.5">5 Proof of correctness</h4>
                 <p>
