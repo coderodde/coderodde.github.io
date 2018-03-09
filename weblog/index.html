@@ -42,6 +42,10 @@
                 font-weight: bold;
                 font-size: 10pt;
             }
+            
+            .sc {
+                font-variant: small-caps;
+            }
         </style>
         <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
         <script src="algotype.js"></script>
@@ -53,7 +57,7 @@
             
             <h3 id="mcelp">Solving most cost-effective loan problem</h3>
             <article>
-                <h4 id="mcelp.1">1 Introduction</h4>
+                <h4 id="most-cost-effective-loan-problem.1.introduction">1 Introduction</h4>
                 <p>
                 In the most cost-effective loan problem, we are given a directed
                 graph of actors where each actor may lend some amount of resources
@@ -89,7 +93,7 @@
                 with minimized interest rate.
                 </p>
                 
-                <h4 id="mcelp.2">2 Interest rate model</h4>
+                <h4 id="most-cost-effective-loan-problem.2.interest-rate-model">2 Interest rate model</h4>
                 
                 <p>
                 Throughout the post, we assume a simple interest rate model. The
@@ -131,7 +135,7 @@
                 of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$
                 </p>
                 
-                <h4 id="mcelp.3">3 Problem statement</h4>
+                <h4 id="most-cost-effective-loan-problem.3.problem-statement">3 Problem statement</h4>
                 <p>
                 Given a problem instance $(G, a, \mathfrak{P}, \mathfrak{I}, P, i)$,
                 we wish to compute two additional functions: $\pi$ and $d$.
@@ -173,7 +177,7 @@
                 \]
                 </p>
                 
-                <h4 id="mcelp.4">4 Solution algorithm</h4>
+                <h4 id="most-cost-effective-loan-problem.4.solution-algorithm">4 Solution algorithm</h4>
                 <p>
                 Since the effective interest rate does not decrease with adding
                 more directed arcs, we must have that for any actor $a \in V$ the
@@ -235,7 +239,7 @@
                 we can use hash-table based sets and maps which run the basic operations
                 in average constant time.</p>
                 
-                <h4 id="mcelp.5">5 Proof of correctness</h4>
+                <h4 id="most-cost-effective-loan-problem.5.proof-of-correctness">5 Proof of correctness</h4>
                 <p>
                 <span class="lemma_name">Lemma 1 (Termination)</span>
                 <span class="lemma_claim">The algorithm terminates.</span><br/>
@@ -273,7 +277,27 @@
                 This is trivially guaranteed by the line 14 and the second test at line 12.
                 </p>
                 
-                <h4 id="mcelp.6">6 Future work</h4>
+                <h4 id="most-cost-effective-loan-problem.6.running-time-analysis">6 Running time analysis</h4>
+                <p>
+                All the operations except <span class="sc"><b>Priority-Queue-Insert</b></span>
+                and <span class="sc"><b>Priority-Queue-Extract-Minimum</b></span> run in $\mathcal{O}(1)$ time.
+                In particular, operations on $\pi, d$ and $C$ may be expected to run in $\mathcal{O}(1)$
+                on average by resorting to hash-table based maps and sets. With geometric expansion
+                scheme <a href="#ref1"><b>[1]</b></a>, adding an element to a hash-table based data
+                structure runs in <b>amortized</b> $\mathcal{O}(1)$. (If the load factor reaches its
+                upper bound, the underlying storage array must be made larger.)
+                </p>
+                <p>
+                What comes to priority queue $Q$, it clearly stores graph actors without copies
+                of a same actor. Now, if we choose a binary heap, both run in $\mathcal{O}(\log V)$ time.
+                <span class="sc"><b>Priority-Queue-Insert</b></span> is called no more than $|V|$
+                times, and <span class="sc"><b>Priority-Queue-Extract-Minimum</b></span> is called once per
+                arc, and so we have the running time $\mathcal{O}(E \log V + V \log V) = \mathcal{O}(E \log V)$. By deploying 
+                a Fibonacci heap instead, we may reduce this to $\mathcal{O}(E + V \log V)$.
+                </p>
+                <h4 id="most-cost-effective-loan-problem.7.experiments">7 Experiments</h4>
+                
+                <h4 id="most-cost-effective-loan-problem.8.future-work">8 Future work</h4>
                 We used a very simple interest rate model in our solution, and
                 so it leaves the case where the used interest rate model is more
                 realistic. In general, with initial principal $\mathfrak{A}$,
@@ -286,6 +310,9 @@
                 Also, as $n \to \infty$, $\mathfrak{C} \to \mathfrak{A}e^{rt}$.
                 Combining loans with different parameters in a meaningful way 
                 seems to be a non-trivial task but we might address it later.
+                
+                <h4 id="most-cost-effective-loan-problem.9.references">9 References</h4>
+                <b>[1]</b> <a id="ref1" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
         </div>
     </body>
