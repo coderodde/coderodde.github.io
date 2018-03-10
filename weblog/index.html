@@ -81,7 +81,7 @@
                 $\mathfrak{I} \colon A \to \mathbb{R}_{\geq 0}$ that maps each arc
                 $(u, v) \in A$ to the interest rate the actor $u$ can offer $v$
                 when $v$ decides to lend from $u$. From now on, we will call the
-                aforementioned amount of resources of equity simply <i>potential</i>.
+                aforementioned amount of resources or equity simply <i>potential</i>.
                 </p>
                 
                 <p>
@@ -90,7 +90,7 @@
                 potential $P \in \mathbb{R}_{\geq 0}$ and a maximum tolerable 
                 interest rate $i \in \mathbb{R}_{\geq 0}$. Our aim, then, is to 
                 compute a loan (which may involve more than one lending actor) 
-                with minimized interest rate.
+                with minimized interest rates.
                 </p>
                 
                 <h4 id="most-cost-effective-loan-problem.2.interest-rate-model">2 Interest rate model</h4>
@@ -121,7 +121,7 @@
                 </p>
                 
                 <p>
-                Since we may deal with entire &quot;loan chains&quot;, we need 
+                Since we may deal with entire &quot;loan chains,&quot; we need 
                 to define the concept of <i>effective interest rate</i>.
                 Effective interest rate is given by 
                 \[
@@ -181,9 +181,11 @@
                 <p>
                 Since the effective interest rate does not decrease with adding
                 more directed arcs, we must have that for any actor $a \in V$ the
-                most cost-efficient lenders are its immediate parents. This observation
-                implies that we basically wish to compute a directed &quot;minimum spanning tree&quot;
-                in which each other node (except $a$) has a unique directed path to $a$.
+                most cost-efficient lender is an immediate parent. Whether the second most cost-efficient lender
+                is an immediate parent or not depends on effective interest rates.
+                Regardless, since we consider effective interest rates, basically we 
+                are growing a directed &quot;minimum spanning tree&quot; which we
+                extend in a greedy fashion one arc at a time:
                 In the very beginning, the tree is trivial and consists only of $a$.
                 Then a most cost-effective parent $u_1$ is selected and the arc $(u_1, a)$
                 is introduced to the tree. Then $u_2$ is selected. It must not
@@ -192,7 +194,7 @@
                 until a desired potential $P$ is collected or until there is no more nodes 
                 left with affordable effective interest rates. Below 
                 <span style="font-variant: small-caps; font-weight: bolder;">Priority-Queue-Insert</span>$(Q, \langle a, b, c \rangle)$
-                stores the triple $\langle a, b, c \rangle$ in priority queue $Q$ and uses $c$ as the priority key.
+                stores the triple $\langle a, b, c \rangle$ in the priority queue $Q$ and uses $c$ as a priority key.
                 </p>
                 <p>
                     <alg-algorithm header="Most-Cost-Effective-Loans$(G, a, \mathfrak{P}, \mathfrak{I}, P, i)$"
@@ -203,7 +205,7 @@
                         <alg-step>$\text{let } \pi \text{ be an empty solution potential function}$</alg-step>          
                         <alg-step>$\text{let } d \text{ be an empty direction function}$</alg-step>          
                         <alg-step>$C \leftarrow \emptyset$</alg-step>          
-                        <alg-step>$P_{\text{current}} \leftarrow 0$</alg-step>
+                        <alg-step>$P_{\text{collected}} \leftarrow 0$</alg-step>
                         <alg-foreach condition="$u \in V(G)$">
                             <alg-step>$\pi(u) \leftarrow 0$</alg-step>
                             <alg-step>$d(u) \leftarrow \Nil$</alg-step>
@@ -213,10 +215,10 @@
                                 <alg-step>Priority-Queue-Insert$(Q, \langle u, a, \mathfrak{I}(u, a) \rangle)$</alg-step>
                             </alg-if>
                         </alg-foreach>
-                        <alg-while condition="$|Q| > 0 \; \And \; P_{\text{current}} < P$">
+                        <alg-while condition="$|Q| > 0 \; \And \; P_{\text{collected}} < P$">
                             <alg-step>$\langle u, v, i_{\text{current}} \rangle \leftarrow $ Priority-Queue-Extract-Minimum$(Q)$</alg-step>
-                            <alg-step>$p_\Delta \leftarrow \min (P - P_{current}, \mathfrak{P}(u)$</alg-step>
-                            <alg-step>$P_{\text{current}} \leftarrow P_{\text{current}} + P_\Delta$</alg-step>
+                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u)$</alg-step>
+                            <alg-step>$P_{\text{collected}} \leftarrow P_{\text{collected}} + P_\Delta$</alg-step>
                             <alg-step>$\pi(u) \leftarrow P_\Delta$</alg-step>
                             <alg-step>$d(u) \leftarrow v$</alg-step>
                             <alg-step>$C \leftarrow C \cup \{ u \}$</alg-step>
@@ -258,12 +260,12 @@
                 <span class="lemma_name">Lemma 3 (<span class="exclude_from_lemma_name">$d$</span> is acyclic)</span>
                 <span class="lemma_claim">Given a solution direction function $d$, 
                 there exist no actor sequence $\langle u_1, u_2, \dots, u_k \rangle$
-                such that $d(u_1) = u_2, d(u_2) = u_3, \dots d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$</span><br/>
+                such that $d(u_1) = u_2$, $d(u_2) = u_3$, $\dots$, $d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$.</span><br/>
                 The only way for such a cycle to emerge is to have $\mathfrak{I}(u_1, u_2) =
                 \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$.
                 Without loss of generality, suppose the search enters the cycle via $u_1$. When $u_k$ will be
                 removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 20 since $u_1$ is in $C$, and
-                so there is no way $d(u_k)$ could be mapped to $u_1$.
+                so, there is no way $d(u_k)$ could be mapped to $u_1$.
                 </p>
                 <p>
                 <span class="lemma_name">Lemma 4</span>
@@ -282,7 +284,7 @@
                 upper bound, the underlying storage array must be made larger.)
                 </p>
                 <p>
-                What comes to priority queue $Q$, it clearly stores graph actors without copies
+                What comes to the priority queue $Q$, it clearly stores graph actors without copies
                 of a same actor. Now, if we choose a binary heap, both run in $\mathcal{O}(\log V)$ time.
                 <span class="sc"><b>Priority-Queue-Insert</b></span> is called no more than $|E|$
                 times, and <span class="sc"><b>Priority-Queue-Extract-Minimum</b></span> is called once per
