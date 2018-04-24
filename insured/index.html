@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Insured - Sieve</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>1. Introduction</h1>
+        <h2>1.1 What this page is about?</h2>
+        <p>
+            This page will describe the sieve task you need to complete in order to qualify as a front-end developer at Insured Oy for the vakuutustiedot.fi web service.
+        </p>
+
+        <h2>1.2 General description of the task</h2>
+        <p>
+            Informally, you need to create a web page that communicates with the backend via a WebSocket. 
+            The idea is that all the users visiting your page can modify a shared list of devices. Each user can:
+        </p>
+
+        <ul>
+            <li>add a new device to the shared list,</li>
+            <li>edit the details of a device,</li>
+            <li>remove a device from the shared list.</li>
+        </ul>
+
+        <p>
+            Most important requirement is that when any user works on the list, the remaining users see the changes immediately.
+        </p>
+        
+        <h2>1.3 Device description</h2>
+        <p>Each device is described by four fields:</p>
+        <ol>
+            <li>device ID,</li>
+            <li>device name,</li>
+            <li>device description,</li>
+            <li>device status (on/off).</li>
+        </ol>
+        
+        <p>All fields except the device ID are visible to the users.</p>
+        
+        <h1>2. The backend specification</h1>
+        
+        <p>The WebSocket endpoint is deployed at 
+            <a href="wss://device-endpoint.herokuapp.com/devices">wss://device-endpoint.herokuapp.com/devices</a>. It communicates with the endpoint via JSON-formatted text.
+        </p> 
+        
+        <h2>2.1 Operation specifications</h2>
+        
+        <!--////////////////////////////-->
+        <h4>2.1.1 Adding a new device</h4>
+        <h5>2.1.1.1 Description</h5>
+        <p>In order to request the endpoint to create a new device, you need to pass the following JSON-formatted message to it:</p>
+        
+        <h5>2.1.1.2 Synopsis</h5>
+        <blockquote>
+            <code>{"action":"create",
+                   "deviceName":"Your device name",
+                   "deviceDescription":"Your device description",
+                   "deviceStatus":true}</code>
+        </blockquote>
+        <p>Above, <code>"action":"create"</code> tells the endpoint that we are adding a 
+            new device, the values of the keys <code>"deviceName"</code> and 
+            <code>"deviceDescription"</code> are the device name and description, 
+            respectively. Whether to allow empty strings for the aforementioned values, 
+            is up to you. Finally, the value of <code>"deviceStatus"</code> is a boolean value <code>true/false</code> corresponding whether the device is toggled off or on.</p>
+        
+        <h5>2.1.1.3 Endpoint response</h5>
+        After sending an above message to the endpoint, the endpoint will respond with
+        <blockquote>
+            <code>{"succeeded":true,"message":"A device \"Your device name\" is successfully added.","action":"create","deviceId":10,"deviceName":"Your device name","deviceDescription":"Your device description","deviceStatus":true}</code>
+        </blockquote>
+        Since endpoint will never fail to create a device, the value of <code>"succeeded"</code> will be always <code>true</code>.
+        The value of <code>"deviceId"</code> will, however, vary.
+        
+        <h5>2.1.1.4 Additional requirements</h5>
+        <p>When any user adds a new device, the device in question appears in the view of any other user.</p>
+        
+        
+        
+        
+        <!--///////////////////////////////////-->
+        <h4>2.1.2 Editing an existing device</h4>
+        <h5>2.1.2.1 Description</h5>
+        <p>When a user edits any information field of a device (device name, device description or device status), all the other users can see the change.</p>
+        
+        <h5>2.1.2.2 Synopsis</h5>
+        <blockquote>
+            <code>{"action":"update",
+                   "deviceId":10,
+                   "deviceName":"Your device name",
+                   "deviceDescription":"Your device description2",
+                   "deviceStatus":true}</code>
+        </blockquote>
+        <p>Above, <code>"action":"update"</code> tells the endpoint that we are 
+            updating the information of an existing device with ID 10. Beyond ID 
+            and action, the three other fields just specify the new values.</p>
+        
+        <h5>2.1.2.3 Endpoint response</h5>
+        Upon success (the device with a specified ID is on the shared list), the endpoint will respond with
+        <blockquote>
+            <code>{"succeeded":true,"message":"Information of the device \"Your device name\" is successfully updated.","action":"update","deviceId":10,"deviceName":"Your device name","deviceDescription":"Your device description2","deviceStatus":true}</code>
+        </blockquote>
+        In case there is no device with a given ID, the endpoint will respond with
+        <blockquote>
+            <code>{"succeeded":false,"message":"There is no device with ID 11.","action":"update","deviceId":11}</code>
+        </blockquote>
+        
+        <h5>2.1.2.4 Additional requirements</h5>
+        <p>Whenever a user inserts/removes a single character from a device's name or description, or toggles the device status, the changes are immediately propagated
+        to any other user's view.</p>
+        
+        
+        
+        
+        <!--//////////////////////////////////-->
+        <h4>2.1.3 Removing an existing device</h4>
+        <h5>2.1.3.1 Description</h5>
+        <p>Within a view of each device, there should be a button that, once being pressed, removes the device from the shared list.</p>
+        
+        <h5>2.1.3.2 Synopsis</h5>
+        <blockquote>
+            <code>{"action":"remove","deviceId":10}</code>
+        </blockquote>
+        
+        <h5>2.1.3.3 Endpoint response</h5>
+        Upon success (the device with a specified ID is on the shared list), the endpoint will respond with
+        <blockquote>
+            <code>{"succeeded":true,"message":"Device \"Your device name\" is successfully removed.","action":"remove","deviceId":10}</code>
+        </blockquote>
+        
+        In the case there is no device with a given ID, the endpoint will respond with 
+        <blockquote>
+            <code>{"succeeded":false,"message":"No device with ID 11.","action":"remove","deviceId":11}</code>
+        </blockquote>
+        
+        <h5>2.1.3.4 Additional requirements</h5>
+        <p>Whenever a user successfully removes a device, the device disappears from the list of all other users.</p>
+        
+        
+        <!--/////////////////////////////-->
+        <h4>2.1.4 Opening the page</h4>
+        When a new user appears by opening the page, the frontend code must load the entire device list.
+    </body>
+</html>
