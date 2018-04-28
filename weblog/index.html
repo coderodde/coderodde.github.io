@@ -217,7 +217,7 @@
                         </alg-foreach>
                         <alg-while condition="$|Q| > 0 \; \And \; P_{\text{collected}} < P$">
                             <alg-step>$\langle u, v, i_{\text{current}} \rangle \leftarrow $ Priority-Queue-Extract-Minimum$(Q)$</alg-step>
-                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u)$</alg-step>
+                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u))$</alg-step>
                             <alg-step>$P_{\text{collected}} \leftarrow P_{\text{collected}} + P_\Delta$</alg-step>
                             <alg-step>$\pi(u) \leftarrow P_\Delta$</alg-step>
                             <alg-step>$d(u) \leftarrow v$</alg-step>
