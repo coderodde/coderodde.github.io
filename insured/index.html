@@ -8,7 +8,7 @@
         <h1>1. Introduction</h1>
         <h2>1.1 What this page is about?</h2>
         <p>
-            This page will describe the sieve task you need to complete in order to qualify as a front-end developer at Insured Oy for the vakuutustiedot.fi web service.
+            This page will describe the sieve task you need to complete in order to qualify as a front-end developer at Insured Oy for the <code>vakuutustiedot.fi</code> web service.
         </p>
 
         <h2>1.2 General description of the task</h2>
@@ -19,7 +19,7 @@
 
         <ul>
             <li>add a new device to the shared list,</li>
-            <li>edit the details of a device,</li>
+            <li>edit the details of an existing device,</li>
             <li>remove a device from the shared list.</li>
         </ul>
 
@@ -37,11 +37,11 @@
         </ol>
         
         <p>All fields except the device ID are visible to the users.</p>
-        
+		
         <h1>2. The backend specification</h1>
         
         <p>The WebSocket endpoint is deployed at 
-            <a href="wss://device-endpoint.herokuapp.com/devices">wss://device-endpoint.herokuapp.com/devices</a>. It communicates with the endpoint via JSON-formatted text.
+            <code>wss://device-endpoint.herokuapp.com/devices</code>. The communication with the endpoint is done via JSON-formatted messages.
         </p> 
         
         <h2>2.1 Operation specifications</h2>
@@ -49,27 +49,42 @@
         <!--////////////////////////////-->
         <h4>2.1.1 Adding a new device</h4>
         <h5>2.1.1.1 Description</h5>
-        <p>In order to request the endpoint to create a new device, you need to pass the following JSON-formatted message to it:</p>
+        <p>Adds the a new device to the shared list. The name, description and toggle status of the new device are not required to be unique over the entire device list.</p>
         
         <h5>2.1.1.2 Synopsis</h5>
+		<p>In order to add a new device, send to the endpoint a JSON-formatted text message in the following format.</p>
         <blockquote>
-            <code>{"action":"create",
-                   "deviceName":"Your device name",
-                   "deviceDescription":"Your device description",
-                   "deviceStatus":true}</code>
+			<pre>
+				<code>
+{"action":"create",
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description",
+ "deviceStatus":true}
+				</code>
+			</pre>
         </blockquote>
         <p>Above, <code>"action":"create"</code> tells the endpoint that we are adding a 
             new device, the values of the keys <code>"deviceName"</code> and 
             <code>"deviceDescription"</code> are the device name and description, 
             respectively. Whether to allow empty strings for the aforementioned values, 
-            is up to you. Finally, the value of <code>"deviceStatus"</code> is a boolean value <code>true/false</code> corresponding whether the device is toggled off or on.</p>
+            is up to you and don't affect your score. Finally, the value of <code>"deviceStatus"</code> is a boolean value <code>true/false</code> corresponding whether the device is toggled off or on.</p>
         
         <h5>2.1.1.3 Endpoint response</h5>
         After sending an above message to the endpoint, the endpoint will respond with
         <blockquote>
-            <code>{"succeeded":true,"message":"A device \"Your device name\" is successfully added.","action":"create","deviceId":10,"deviceName":"Your device name","deviceDescription":"Your device description","deviceStatus":true}</code>
+			<pre>
+				<code>
+{"succeeded":true,
+ "message":"A device \"Your device name\" is successfully added.",
+ "action":"create",
+ "deviceId":10,
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description",
+ "deviceStatus":true}
+				</code>
+			</pre>
         </blockquote>
-        Since endpoint will never fail to create a device, the value of <code>"succeeded"</code> will be always <code>true</code>.
+        Since endpoint will never fail to create a device, the value of <code>"succeeded"</code> will always be <code>true</code>.
         The value of <code>"deviceId"</code> will, however, vary.
         
         <h5>2.1.1.4 Additional requirements</h5>
@@ -85,11 +100,15 @@
         
         <h5>2.1.2.2 Synopsis</h5>
         <blockquote>
-            <code>{"action":"update",
-                   "deviceId":10,
-                   "deviceName":"Your device name",
-                   "deviceDescription":"Your device description2",
-                   "deviceStatus":true}</code>
+			<pre>
+				<code>
+{"action":"update",
+ "deviceId":10,
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description2",
+ "deviceStatus":true}
+				</code>
+			</pre>
         </blockquote>
         <p>Above, <code>"action":"update"</code> tells the endpoint that we are 
             updating the information of an existing device with ID 10. Beyond ID 
@@ -98,11 +117,28 @@
         <h5>2.1.2.3 Endpoint response</h5>
         Upon success (the device with a specified ID is on the shared list), the endpoint will respond with
         <blockquote>
-            <code>{"succeeded":true,"message":"Information of the device \"Your device name\" is successfully updated.","action":"update","deviceId":10,"deviceName":"Your device name","deviceDescription":"Your device description2","deviceStatus":true}</code>
+			<pre>
+				<code>
+{"succeeded":true,
+ "message":"Information of the device \"Your device name\" is successfully updated.",
+ "action":"update",
+ "deviceId":10,
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description2",
+ "deviceStatus":true}
+				</code>
+			</pre>
         </blockquote>
         In case there is no device with a given ID, the endpoint will respond with
         <blockquote>
-            <code>{"succeeded":false,"message":"There is no device with ID 11.","action":"update","deviceId":11}</code>
+			<pre>
+				<code>
+{"succeeded":false,
+ "message":"There is no device with ID 11.",
+ "action":"update",
+ "deviceId":11}
+				</code>
+			</pre>
         </blockquote>
         
         <h5>2.1.2.4 Additional requirements</h5>
@@ -119,18 +155,37 @@
         
         <h5>2.1.3.2 Synopsis</h5>
         <blockquote>
-            <code>{"action":"remove","deviceId":10}</code>
+            <pre>
+				<code>
+{"action":"remove",
+ "deviceId":10}
+				</code>
+			</pre>
         </blockquote>
         
         <h5>2.1.3.3 Endpoint response</h5>
         Upon success (the device with a specified ID is on the shared list), the endpoint will respond with
         <blockquote>
-            <code>{"succeeded":true,"message":"Device \"Your device name\" is successfully removed.","action":"remove","deviceId":10}</code>
+			<pre>
+				<code>
+{"succeeded":true,
+ "message":"Device \"Your device name\" is successfully removed.",
+ "action":"remove",
+ "deviceId":10}
+				</code>
+			<pre>
         </blockquote>
         
         In the case there is no device with a given ID, the endpoint will respond with 
         <blockquote>
-            <code>{"succeeded":false,"message":"No device with ID 11.","action":"remove","deviceId":11}</code>
+			<pre>
+				<code>
+{"succeeded":false,
+ "message":"No device with ID 11.",
+ "action":"remove",
+ "deviceId":11}
+				</code>
+			</pre>
         </blockquote>
         
         <h5>2.1.3.4 Additional requirements</h5>
@@ -139,6 +194,6 @@
         
         <!--/////////////////////////////-->
         <h4>2.1.4 Opening the page</h4>
-        When a new user appears by opening the page, the frontend code must load the entire device list.
+        When a new user appears by opening the page, the frontend code must load the entire device list. (Hint: You don't actually need any explicit code to implement this.)
     </body>
 </html>
