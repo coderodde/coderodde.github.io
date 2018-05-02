@@ -74,11 +74,6 @@
  "deviceName":"Your device name",
  "deviceDescription":"Your device description",
  "deviceStatus":true}</code></pre></blockquote>
-        <!--Since endpoint will never fail to create a device, the value of <code>"succeeded"</code> will always be <code>true</code>.
-        The value of <code>"deviceId"</code> will, however, vary.
-        
-        <h5>2.1.1.4 Additional requirements</h5>
-        <p>When any user adds a new device, the device in question appears in the view of any other user.</p>-->
         
         
         
@@ -112,22 +107,6 @@
  "deviceDescription":"Your device description2",
  "deviceStatus":true}</code></pre>
         </blockquote>
-		<!--
-        In case there is no device with a given ID, the endpoint will respond with
-        <blockquote>
-			<pre>
-				<code>
-{"succeeded":false,
- "message":"There is no device with ID 11.",
- "action":"update",
- "deviceId":11}
-				</code>
-			</pre>
-        </blockquote>
-        
-        <h5>2.1.2.4 Additional requirements</h5>
-        <p>Whenever a user inserts/removes a single character from a device's name or description, or toggles the device status, the changes are immediately propagated
-        to any other user's view.</p>-->
         
         
         
@@ -151,23 +130,16 @@
  "action":"remove",
  "deviceId":10}</code></pre>
         </blockquote>
-        
-		<!--
-        In the case there is no device with a given ID, the endpoint will respond with 
-        <blockquote>
-			<pre>
-				<code>
-{"succeeded":false,
- "message":"No device with ID 11.",
- "action":"remove",
- "deviceId":11}
-				</code>
-			</pre>
-        </blockquote>
-        
-        <h5>2.1.3.4 Additional requirements</h5>
-        <p>Whenever a user successfully removes a device, the device disappears from the list of all other users.</p>-->
-        
+		
+        <h4>2.1.4 Leaving the page</h4>
+		<h5>2.1.4.1 Description</h5>
+		<p>When the user leaves the page, a message should be sent to the endpoint. Unlike in the previous scenarios, the endpoint will not respond.</p>
+		
+		<h5>2.1.4.2 Synopsis</h5>
+		<blockquote>
+			<pre><code>{"action":"unload"}</code></pre>
+		</blockquote>
+		
         
         <!--/////////////////////////////-->
 		<h1>3 Other specifications</h1>
@@ -175,16 +147,19 @@
         <p>When a new user appears by opening the page, the frontend code must load the entire device list. (Hint: You don't actually need any explicit code to implement this.)</p>
 		
 		<h2>3.2 Message text</h2>
-		<p>In addition, you should create a text container that shows all the messages the endpoint responds with.</p>
+		<p>In addition, you should create a text container that shows all the messages the endpoint responds with. Whether to view only the last response message or all of them is up to you.</p>
         
 		<!--/////////////////////////////-->
 		<h1>4 Submission instructions</h1>
-		<p>Please implement and write all the HTML, CSS and Javascript code in a single <code>firstname.lastname.html</code> file. Also, in the end of that file, add a 
-		   comment section that mentions:</p>
+		<p>Please package all the code in a ZIP file called <code>Firstname.Lastname.zip</code>. 
+		   You are allowed to use any (freely) available framework if you wish.</p>
+		
+		<p>Also, add to the ZIP package a PDF file that mentions:</p>
 		<ul>
 			<li>how much time it roughly took to complete the task,</li>
 			<li>whether you had to learn new techniques,</li>
 			<li>what was hard, what was easy.</li>
 		</ul>
+		<p>Send the <code>Firstname.Lastname.zip</code> as an attachment to <a href="mailto:rodion.efremov@helsinki.fi" target="_top">rodion.efremov@helsinki.fi</a></p>
 	</body>
 </html>
