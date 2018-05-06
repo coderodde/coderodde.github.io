@@ -24,7 +24,7 @@
         </ul>
 
         <p>
-            Most important requirement is that when any user works on the list, the remaining users see the changes <b><i>immediately</i></b>.
+            The most important requirement is that when any user works on the list, all the other users see the changes <b><i>immediately</i></b>.
         </p>
         
         <h2>1.3 Device description</h2>
@@ -49,7 +49,7 @@
         <!--////////////////////////////-->
         <h4>2.1.1 Adding a new device</h4>
         <h5>2.1.1.1 Description</h5>
-        <p>Adds a new device to the shared list. The tuple consisting of name, description and toggle status of the new device is not required to be unique over the entire device list.</p>
+        <p>Adds a new device to the shared list. The tuple consisting of a name, a description and a toggle status of a new device is not required to be unique over the entire device list.</p>
         
         <h5>2.1.1.2 Synopsis</h5>
 		<p>In order to add a new device, send to the endpoint a JSON-formatted text message in the following format:</p>
@@ -60,10 +60,10 @@
  "deviceStatus":true}</code></pre>
         </blockquote>
         <p>Above, <code>"action":"create"</code> tells the endpoint that we are adding a 
-            new device, the values of the keys <code>"deviceName"</code> and 
-            <code>"deviceDescription"</code> are the device name and description, 
+            new device. The values of the keys <code>deviceName</code> and 
+            <code>deviceDescription</code> are the device name and description, 
             respectively. Whether to allow empty strings for the aforementioned values, 
-            is up to you and doesn't affect your score. Finally, the value of <code>"deviceStatus"</code> is a boolean value <code>true/false</code> corresponding to whether the device is toggled on or off.</p>
+            is up to you and doesn't affect your score. Finally, the value of <code>deviceStatus</code> is a boolean value <code>true/false</code> corresponding to whether the device is toggled on or off.</p>
         
         <h5>2.1.1.3 Endpoint response</h5>
         After sending the above message to the endpoint, the endpoint will send the following message to <b>all</b> the connected clients:
@@ -81,7 +81,7 @@
         <!--///////////////////////////////////-->
         <h4>2.1.2 Editing an existing device</h4>
         <h5>2.1.2.1 Description</h5>
-        <p>When a user edits any information field of a device (device name, device description or device status), all the other users can see the change.</p>
+        <p>When a user edits any information field of a device (device name, device description or device status), all the other users can see the change. A change should be sent to the endpoint after inserting and deleting a single character in the fields or after the change of the toggle status of a device.</p>
         
         <h5>2.1.2.2 Synopsis</h5>
         <blockquote>
@@ -92,8 +92,8 @@
  "deviceStatus":true}</code></pre>
         </blockquote>
         <p>Above, <code>"action":"update"</code> tells the endpoint that we are 
-            updating the information of an existing device with ID 10. Beyond ID 
-            and action, the three other fields just specify the new values.</p>
+            updating the information of an existing device with ID 10. Beyond the ID 
+            and the action, the three other fields just specify the new values.</p>
         
         <h5>2.1.2.3 Endpoint response</h5>
         <!--Upon success (the device with a specified ID is on the shared list), the endpoint will respond with-->
