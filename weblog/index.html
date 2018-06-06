@@ -331,7 +331,13 @@
                     $$
                     \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B = \bigcup_{i = 1}^n (A_i \cap B).
                     $$
-                    </span><br/>    
+                    </span><br/>
+                    First, let us verify the base case $n = 2$:
+                    \begin{aligned}
+                    \Bigg( \bigcup_{i = 1}^2 A_i \Bigg) \cap B &= (A_1 \cup A_2) \cap B \\
+                                                               &= (A_1 \cap B) \cup (A_2 \cap B)
+                    \end{aligned}
+                    according to the distributive law.
                     Suppose the identity holds for $A_1, \dots, A_n$. Now, 
                     \begin{aligned}
                     \Bigg( \bigcup_{i = 1}^{n + 1} A_i \Bigg) \cap B &= \Bigg( \bigg( \bigcup_{i = 1}^n A_i \bigg) \cup A_{n + 1} \Bigg) \cap B 
