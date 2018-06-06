@@ -314,15 +314,26 @@
             <article>
                 <p>It is easy to check that given two sets, $A$ and $B$, $|A \cup B| = |A| + |B| - |A \cap B|$. The <b>inclusion-exclusion principle</b> generalizes the previous identity to a collection of sets $A_1, A_2, \dots, A_n$, and is given by</p>
                 \begin{aligned}
-                    \Bigg\lvert \bigcup_{i = 1}^n \Bigg\rvert &= \sum_{i = 1}^n \Bigg\lvert A_i \Bigg\rvert \\
-                                                              &- \sum_{1 \leq i < j \leq n} \Bigg\lvert A_i \cap A_j \Bigg\rvert \\
-                                                              &+ \sum_{1 \leq i < j < k \leq n} \Bigg\lvert A_i \cap A_j \cap A_k \Bigg\rvert \\
-                                                              &\dots \\
-                                                              &(-1)^{n + 1}\Bigg\lvert \bigcap_{i = 1}^n A_i \Bigg\rvert.\\
+                    \Bigg\lvert \bigcup_{i = 1}^n \Bigg\rvert = \sum_{i = 1}^n \lvert A_i \rvert &- \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert \\
+                                                                                                 &+ \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert \\
+                                                                                                 &\dots \\
+                                                                                                 &(-1)^{n + 1}\Bigg\lvert \bigcap_{i = 1}^n A_i \Bigg\rvert.\\
                 \end{aligned}
-                \begin{aligned}
-                    \Bigg\lvert A\Bigg\rvert                                            
-                \end{aligned}
+                <p>We will use induction to prove any case $n > 2$. Let $B = \bigcup_{i = 1}^n A_i$, and $A_{n + 1}$ given. Using the same principle for the case of only two sets, we must have
+                \[
+                    |B \cup A_{n + 1}| = |B| + |A_{n + 1}| - |B \cap A_{n + 1}|.
+                \]
+                Next, we need a simple lemma for extending distributive law to multiple sets:
+                </p> 
+                <p>
+                    <span class="lemma_name">Lemma 1 (Distributive law for multiple sets)</span>
+                    <span class="lemma_claim">For any sets $A_1, \dots, A_n, B$, we must have
+                    $$
+                    \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B = \bigcup_{i = 1}^n (A_i \cap B).
+                    $$
+                    </span><br/>    
+                    
+                </p>
             </article>
         </div>
     </body>
