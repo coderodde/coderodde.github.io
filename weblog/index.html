@@ -358,10 +358,8 @@
                     \begin{aligned}
                         \Bigg\lvert \bigcup_{i = 1}^{n + 1} A_i \Bigg\rvert &= \Bigg\lvert \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cup A_{n + 1} \Bigg\rvert \\
                                                                             &= \Bigg\lvert \bigcup_{i = 1}^n A_i \Bigg\rvert + \Bigg\lvert A_{n + 1} \Bigg\rvert - \Bigg\lvert \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap A_{n + 1}\Bigg\rvert\\
-                                                                            %&= \Bigg(\sum_{i = 1}^n \lvert A_i \rvert + \lvert A_{n + 1} \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert \dots (-1)^{n + 1}\Bigg\lvert \bigcap_{i = 1}^n A_i \Bigg\rvert \Bigg) - \Bigg\lvert \bigcup_{i = 1}^n (A_i \cap A_{n + 1}) \Bigg\rvert\\
-                                                                            
-                                                                            %&= \sum_{i = 1}^{n + 1} \lvert A_i \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert - \sum_{i = 1}^n \lvert A_i \cap A_{n + 1} \rvert + \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert  + \sum_{1 \leq i < j \leq n} \lvert (A_i \cap A_{n + 1}) \cap (A_j \cap A_{n + 1}) \rvert \\
-                                                                            %&+ \sum_{1 \leq i < j < k \leq n}\lvert A_i \cap A_j \cap A_k \rvert + \sum_{1 \leq i < j \leq n} \lvert (A_i \cap A_{n + 1}) \cap (A_j \cap A_{n + 1}jikljkl) \rvert
+                         &= \sum_{i = 1}^n \lvert A_i \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert + \dots (-1)^{n + 1} \lvert A_1 \cap \dots \cap A_n\rvert \\
+                         & \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n (A_i \cap A_{n + 1}) - \sum_{1 \leq i < j \leq n} \lvert (A_i \cap A_{n + 1}) \cap (A_j \cap A_{n + 1})\rvert\Bigg]
                     \end{aligned}
                 </p>
             </article>
