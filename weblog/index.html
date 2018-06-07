@@ -340,7 +340,10 @@
                     according to the distributive law.
                     Suppose the identity holds for $A_1, \dots, A_n$. Now, 
                     \begin{aligned}
-                    \Bigg( \bigcup_{i = 1}^{n + 1} A_i \Bigg) \cap B &= \Bigg( \bigg( \bigcup_{i = 1}^n A_i \bigg) \cup A_{n + 1} \Bigg) \cap B 
+                    \Bigg( \bigcup_{i = 1}^{n + 1} A_i \Bigg) \cap B &= \Bigg( \bigg( \bigcup_{i = 1}^n A_i \bigg) \cup A_{n + 1} \Bigg) \cap B \\
+                                                                     &= \Bigg[ \Bigg( \bigcup_{i = 1}^n \Bigg) \cap B \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] \\
+                                                                     &= \Bigg[ \bigcup_{i = 1}^n (A_i \cap B) \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] \\
+                                                                     &= \bigcup_{i = 1}^{n + 1} (A_i \cap B).
                     \end{aligned}
                 </p>
             </article>
