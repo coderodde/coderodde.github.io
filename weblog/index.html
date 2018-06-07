@@ -315,7 +315,7 @@
             <a href="#inclusion-exclusion-principle"><h3 id="inclusion-exclusion-principle">Proving inclusion-exclusion principle</h3></a>
             
             <article>
-                <p>It is easy to check pictorially using a Venn diagram that given two sets, $A$ and $B$, $|A \cup B| = |A| + |B| - |A \cap B|$. 
+                <p>It is easy to check pictorially using a Venn diagram that given two sets, $A_1$ and $A_2$, $|A_1 \cup A_2| = |A_1| + |A_2| - |A_1 \cap A_2|$. 
                    The <b>inclusion-exclusion principle</b> generalizes the previous identity to a collection of sets $A_1, A_2, \dots, A_n$, and is given by</p>
                 \begin{aligned}
                     \Bigg\lvert \bigcup_{i = 1}^n \Bigg\rvert = \sum_{i = 1}^n \lvert A_i \rvert &- \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert \\
@@ -348,7 +348,16 @@
                     \Bigg( \bigcup_{i = 1}^{n + 1} A_i \Bigg) \cap B &= \Bigg[ \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cup A_{n + 1} \Bigg] \cap B \\
                                                                      &= \Bigg[ \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] && \text{by distributive law}\\
                                                                      &= \Bigg[ \bigcup_{i = 1}^n (A_i \cap B) \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] && \text{by induction hypothesis} \\
-                                                                     &= \bigcup_{i = 1}^{n + 1} (A_i \cap B).
+                                                                     &= \bigcup_{i = 1}^{n + 1} (A_i \cap B)
+                    \end{aligned}
+                    as desired.
+                </p>
+            
+                <p>
+                    In order to prove the inclusion-exclusion principle, we set $B = \bigcup_{i = 1}^n A_i$. Now,
+                    \begin{aligned}
+                        \Bigg\lvert \bigcup_{i = 1}^{n + 1} A_i\Bigg\rvert &= \Bigg\lvert \bigcup_{i = 1}^n \cup A_{n + 1} \Bigg\rvert \\
+                                                                           &= 
                     \end{aligned}
                 </p>
             </article>
