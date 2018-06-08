@@ -363,6 +363,7 @@
                          &+ \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n (A_i \cap A_{n + 1}) - \sum_{1 \leq i < j \leq n} \lvert (A_i \cap A_{n + 1}) \cap (A_j \cap A_{n + 1}) \rvert \dots (-1)^n \sum_{1 \leq x_1 < x_2 < \dots x_{n - 1} \leq n} \lvert (A_{x_1} \cap A_{n + 1}) \cap \dots \cap (A_{x_{n - 1}} \cap A_{n + 1}) \rvert + (-1)^{n + 1} \Bigg\lvert \bigcap_{i = 1}^n (A_i \cap A_{n + 1}) \Bigg\rvert\Bigg] \\
                          &= \sum_{i = 1}^n \lvert A_i \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert \dots (-1)^{n + 1} \lvert A_1 \cap \dots \cap A_n\rvert \\
                          &+ \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n \lvert A_i \cap A_{n + 1} \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \cap A_{n + 1} \rvert \dots (-1)^n \sum_{1 \leq x_1 < x_2 < \dots < x_{n - 1} \leq n} \lvert A_{x_1} \cap A_{x_2} \dots A_{x_{n - 1}} \cap A_{n + 1} \rvert + (-1)^{n + 1} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert \Bigg] \\
+                         &= \sum_{i = 1}^{n + 1} - \sum_{1 \leq i < j \leq n + 1} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n + 1} \lvert A_i \cap A_j \cap A_k \rvert \dots (-1)^{n + 2} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert.
                     \end{aligned}
                 </p>
             </article>
