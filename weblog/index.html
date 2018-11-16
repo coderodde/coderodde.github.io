@@ -55,9 +55,9 @@
             <h1>coderodde's technical weblog</h1>
             <div id="browser_note">For best rendering of formal text, <br/> it is advised to view this page via desktop browsers.</div>
             
-            <h3 id="mcelp">Solving most cost-effective loan problem</h3>
+            <a href="#mcelp"><h3 id="mcelp">Solving most cost-effective loan problem</h3></a>
             <article>
-                <h4 id="most-cost-effective-loan-problem.1.introduction">1 Introduction</h4>
+                <a href="#most-cost-effective-loan-problem.1.introduction"><h4 id="most-cost-effective-loan-problem.1.introduction">1 Introduction</h4></a>
                 <p>
                 In the most cost-effective loan problem, we are given a directed
                 graph of actors where each actor may lend some amount of resources
@@ -93,7 +93,7 @@
                 with minimized interest rates.
                 </p>
                 
-                <h4 id="most-cost-effective-loan-problem.2.interest-rate-model">2 Interest rate model</h4>
+                <a href="#most-cost-effective-loan-problem.2.interest-rate-model"><h4 id="most-cost-effective-loan-problem.2.interest-rate-model">2 Interest rate model</h4></a>
                 
                 <p>
                 Throughout the post, we assume a simple interest rate model. The
@@ -135,7 +135,7 @@
                 of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$
                 </p>
                 
-                <h4 id="most-cost-effective-loan-problem.3.problem-statement">3 Problem statement</h4>
+                <a href="#most-cost-effective-loan-problem.3.problem-statement"><h4 id="most-cost-effective-loan-problem.3.problem-statement">3 Problem statement</h4></a>
                 <p>
                 Given a problem instance $(G, a, \mathfrak{P}, \mathfrak{I}, P, i)$,
                 we wish to compute two additional functions: $\pi$ and $d$.
@@ -177,7 +177,7 @@
                 \]
                 </p>
                 
-                <h4 id="most-cost-effective-loan-problem.4.solution-algorithm">4 Solution algorithm</h4>
+                <a href="#most-cost-effective-loan-problem.4.solution-algorithm"><h4 id="most-cost-effective-loan-problem.4.solution-algorithm">4 Solution algorithm</h4></a>
                 <p>
                 Since the effective interest rate does not decrease with adding
                 more directed arcs, we must have that for any actor $a \in V$ the
@@ -217,7 +217,7 @@
                         </alg-foreach>
                         <alg-while condition="$|Q| > 0 \; \And \; P_{\text{collected}} < P$">
                             <alg-step>$\langle u, v, i_{\text{current}} \rangle \leftarrow $ Priority-Queue-Extract-Minimum$(Q)$</alg-step>
-                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u)$</alg-step>
+                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u))$</alg-step>
                             <alg-step>$P_{\text{collected}} \leftarrow P_{\text{collected}} + P_\Delta$</alg-step>
                             <alg-step>$\pi(u) \leftarrow P_\Delta$</alg-step>
                             <alg-step>$d(u) \leftarrow v$</alg-step>
@@ -235,7 +235,7 @@
                     </alg-algorithm>
                 </p>
                 
-                <h4 id="most-cost-effective-loan-problem.5.proof-of-correctness">5 Proof of correctness</h4>
+                <a href="#most-cost-effective-loan-problem.5.proof-of-correctness"><h4 id="most-cost-effective-loan-problem.5.proof-of-correctness">5 Proof of correctness</h4></a>
                 <p>
                 <span class="lemma_name">Lemma 1 (Termination)</span>
                 <span class="lemma_claim">The algorithm terminates.</span><br/>
@@ -273,7 +273,7 @@
                 This is trivially guaranteed by the line 14 and the second test at line 12.
                 </p>
                 
-                <h4 id="most-cost-effective-loan-problem.6.running-time-analysis">6 Running time analysis</h4>
+                <a href="#most-cost-effective-loan-problem.6.running-time-analysis"><h4 id="most-cost-effective-loan-problem.6.running-time-analysis">6 Running time analysis</h4></a>
                 <p>
                 All the operations except <span class="sc"><b>Priority-Queue-Insert</b></span>
                 and <span class="sc"><b>Priority-Queue-Extract-Minimum</b></span> run in $\mathcal{O}(1)$ time.
@@ -292,7 +292,7 @@
                 a Fibonacci heap instead, we may reduce this to $\mathcal{O}(E + V \log V)$.
                 </p>
                 
-                <h4 id="most-cost-effective-loan-problem.7.future-work">7 Future work</h4>
+                <a href="#most-cost-effective-loan-problem.7.future-work"><h4 id="most-cost-effective-loan-problem.7.future-work">7 Future work</h4></a>
                 We used a very simple interest rate model in our solution, and
                 so it leaves the case where the used interest rate model is more
                 realistic. In general, with initial principal $\mathfrak{A}$,
@@ -306,7 +306,7 @@
                 Combining loans with different parameters in a meaningful way 
                 seems to be a non-trivial task but we might address it later.
                 
-                <h4 id="most-cost-effective-loan-problem.8.references">8 References</h4>
+                <a href="#most-cost-effective-loan-problem.8.references"><h4 id="most-cost-effective-loan-problem.8.references">8 References</h4></a>
                 <b>[1]</b> <a id="ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
             
@@ -324,6 +324,58 @@
                                algorithm-footer-class="footer_bar">
                     <alg-step>$x \leftarrow y + 1$</alg-step>
                 </alg-algorithm>
+            <hr/>
+            
+            <a href="#inclusion-exclusion-principle"><h3 id="inclusion-exclusion-principle">Proving inclusion-exclusion principle</h3></a>
+            
+            <article>
+                <p>It is easy to check pictorially using a Venn diagram that given two sets, $A_1$ and $A_2$, $|A_1 \cup A_2| = |A_1| + |A_2| - |A_1 \cap A_2|$. 
+                   The <b>inclusion-exclusion principle</b> generalizes the previous identity to a collection of sets $A_1, A_2, \dots, A_n$, and is given by</p>
+                \begin{aligned}
+                    \Bigg\lvert \bigcup_{i = 1}^n \Bigg\rvert = \sum_{i = 1}^n \lvert A_i \rvert &- \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert \\
+                                                                                                 &+ \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert \\
+                                                                                                 &\dots \\
+                                                                                                 &(-1)^{n + 1}\Bigg\lvert \bigcap_{i = 1}^n A_i \Bigg\rvert.\\
+                \end{aligned}
+                <p>We will use induction to prove also any case $n > 2$. Let $B = \bigcup_{i = 1}^n A_i$, and $A_{n + 1}$ given. Using the same principle for the case of only two sets, we must have
+                \[
+                    |B \cup A_{n + 1}| = |B| + |A_{n + 1}| - |B \cap A_{n + 1}|.
+                \]
+                Next, we need a simple lemma for extending distributive law to multiple sets:
+                </p> 
+                <p>
+                    <span class="lemma_name">Lemma 1 (Distributive law for multiple sets)</span>
+                    <span class="lemma_claim">For any sets $A_1, \dots, A_n, B$, we must have
+                    $$
+                    \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B = \bigcup_{i = 1}^n (A_i \cap B).
+                    $$
+                    </span><br/>
+                    First, let us verify the base case $n = 2$:
+                    \begin{aligned}
+                    \Bigg( \bigcup_{i = 1}^2 A_i \Bigg) \cap B &= (A_1 \cup A_2) \cap B \\
+                                                               &= (A_1 \cap B) \cup (A_2 \cap B) && \text{by distributive law}\\
+                                                               &= \bigcup_{i = 1}^2 (A_i \cap B).
+                    \end{aligned}
+                    
+                    Suppose the identity holds for $A_1, \dots, A_n$. Now, 
+                    \begin{aligned}
+                    \Bigg( \bigcup_{i = 1}^{n + 1} A_i \Bigg) \cap B &= \Bigg[ \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cup A_{n + 1} \Bigg] \cap B \\
+                                                                     &= \Bigg[ \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] && \text{by distributive law}\\
+                                                                     &= \Bigg[ \bigcup_{i = 1}^n (A_i \cap B) \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] && \text{by induction hypothesis} \\
+                                                                     &= \bigcup_{i = 1}^{n + 1} (A_i \cap B)
+                    \end{aligned}
+                    as desired. Now
+                    \begin{aligned}
+                        \Bigg\lvert \bigcup_{i = 1}^{n + 1} A_i \Bigg\rvert &= \Bigg\lvert \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cup A_{n + 1} \Bigg\rvert \\
+                                                                            &= \Bigg\lvert \bigcup_{i = 1}^n A_i \Bigg\rvert + \Bigg\lvert A_{n + 1} \Bigg\rvert - \Bigg\lvert \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap A_{n + 1}\Bigg\rvert\\
+                                                                            &= \Bigg\lvert \bigcup_{i = 1}^n A_i \Bigg\rvert + \Bigg\lvert A_{n + 1} \Bigg\rvert - \Bigg\lvert \bigcup_{i = 1}^n (A_i \cap A_{n + 1}) \Bigg\rvert \quad \text{by distributive law} \\
+                         &= \sum_{i = 1}^n \lvert A_i \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert + \dots + (-1)^{n + 1} \lvert A_1 \cap \dots \cap A_n\rvert \quad \text{by induction hypothesis} \\
+                         &+ \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n | A_i \cap A_{n + 1} | - \sum_{1 \leq i < j \leq n} \lvert (A_i \cap A_{n + 1}) \cap (A_j \cap A_{n + 1}) \rvert + \dots + (-1)^n \sum_{1 \leq x_1 < x_2 < \dots x_{n - 1} \leq n} \lvert (A_{x_1} \cap A_{n + 1}) \cap \dots \cap (A_{x_{n - 1}} \cap A_{n + 1}) \rvert + (-1)^{n + 1} \Bigg\lvert \bigcap_{i = 1}^n (A_i \cap A_{n + 1}) \Bigg\rvert\Bigg] \\
+                         &= \sum_{i = 1}^n \lvert A_i \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert + \dots + (-1)^{n + 1} \lvert A_1 \cap \dots \cap A_n\rvert \\
+                         &+ \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n \lvert A_i \cap A_{n + 1} \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \cap A_{n + 1} \rvert + \dots + (-1)^n \sum_{1 \leq x_1 < x_2 < \dots < x_{n - 1} \leq n} \lvert A_{x_1} \cap A_{x_2} \dots A_{x_{n - 1}} \cap A_{n + 1} \rvert + (-1)^{n + 1} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert \Bigg] \\
+                         &= \sum_{i = 1}^{n + 1} \lvert A_i \rvert - \sum_{1 \leq i < j \leq n + 1} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n + 1} \lvert A_i \cap A_j \cap A_k \rvert + \dots + (-1)^{n + 2} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert.
+                    \end{aligned}
+                </p>
             </article>
         </div>
     </body>

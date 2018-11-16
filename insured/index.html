@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Insured - Sieve</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>1 Introduction</h1>
+        <h2>1.1 What this page is about?</h2>
+        <p>
+            This page will describe the sieve task you need to complete in order to qualify as a front end developer at Insured Oy for the <code>vakuutustiedot.fi</code> web service.
+        </p>
+
+        <h2>1.2 General description of the task</h2>
+        <p>
+            Informally, you need to create a web page that communicates with the backend via a WebSocket. 
+            The idea is that all the users visiting your page can modify a shared list of devices. Each user can:
+        </p>
+
+        <ul>
+            <li>add a new device to the shared list of devices,</li>
+            <li>edit the details of an existing device,</li>
+            <li>remove a device from the shared list.</li>
+        </ul>
+
+        <p>
+            The most important requirement is that when any user works on the list, all the other users see the changes <b><i>immediately</i></b>.
+        </p>
+        
+        <h2>1.3 Device description</h2>
+        <p>Each device is described by four fields:</p>
+        <ol>
+            <li>device ID,</li>
+            <li>device name,</li>
+            <li>device description,</li>
+            <li>device status (on/off).</li>
+        </ol>
+        
+        <p>All fields except the device ID are visible to the users.</p>
+		
+        <h1>2 The backend specification</h1>
+        
+        <p>The WebSocket endpoint is deployed at 
+            <code>wss://device-endpoint.herokuapp.com/devices</code>. The communication with the endpoint is done via JSON-formatted messages.
+        </p> 
+        
+        <h2>2.1 Operation specifications</h2>
+        
+        <!--////////////////////////////-->
+        <h4>2.1.1 Adding a new device</h4>
+        <h5>2.1.1.1 Description</h5>
+        <p>Adds a new device to the shared list. The tuple consisting of a name, a description and a toggle status of a new device is not required to be unique over the entire device list.</p>
+        
+        <h5>2.1.1.2 Synopsis</h5>
+		<p>In order to add a new device, send to the endpoint a JSON-formatted text message in the following format:</p>
+        <blockquote>
+				<pre><code>{"action":"create",
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description",
+ "deviceStatus":true}</code></pre>
+        </blockquote>
+        <p>Above, <code>"action":"create"</code> tells the endpoint that we are adding a 
+            new device. The values of the keys <code>deviceName</code> and 
+            <code>deviceDescription</code> are the device name and description, 
+            respectively. Whether to allow empty strings for the aforementioned values, 
+            is up to you and doesn't affect your score. Finally, the value of <code>deviceStatus</code> is a boolean value <code>true/false</code> corresponding to whether the device is toggled on or off.</p>
+        
+        <h5>2.1.1.3 Endpoint response</h5>
+        After sending the above message to the endpoint, the endpoint will send the following message to <b>all</b> the connected clients:
+        <blockquote><pre><code>{"succeeded":true,
+ "message":"A device \"Your device name\" is successfully added.",
+ "action":"create",
+ "deviceId":10,
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description",
+ "deviceStatus":true}</code></pre></blockquote>
+        
+        
+        
+        
+        <!--///////////////////////////////////-->
+        <h4>2.1.2 Editing an existing device</h4>
+        <h5>2.1.2.1 Description</h5>
+        <p>When a user edits any information field of a device (device name, device description or device status), all the other users can see the change. A change should be sent to the endpoint after inserting and deleting a single character in the fields or after the change of the toggle status of a device.</p>
+        
+        <h5>2.1.2.2 Synopsis</h5>
+        <blockquote>
+			<pre><code>{"action":"update",
+ "deviceId":10,
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description2",
+ "deviceStatus":true}</code></pre>
+        </blockquote>
+        <p>Above, <code>"action":"update"</code> tells the endpoint that we are 
+            updating the information of an existing device with ID 10. Beyond the ID 
+            and the action, the three other fields just specify the new values.</p>
+        
+        <h5>2.1.2.3 Endpoint response</h5>
+        <!--Upon success (the device with a specified ID is on the shared list), the endpoint will respond with-->
+		After sending the above message to the endpoint, the endpoint will send the following message to all the connected clients:
+        <blockquote>
+			<pre><code>{"succeeded":true,
+ "message":"Information of the device \"Your device name\" is successfully updated.",
+ "action":"update",
+ "deviceId":10,
+ "deviceName":"Your device name",
+ "deviceDescription":"Your device description2",
+ "deviceStatus":true}</code></pre>
+        </blockquote>
+        
+        
+        
+        
+        <!--//////////////////////////////////-->
+        <h4>2.1.3 Removing an existing device</h4>
+        <h5>2.1.3.1 Description</h5>
+        <p>Within a view of each device, there should be a button that, once being pressed, removes the device from the shared list.</p>
+        
+        <h5>2.1.3.2 Synopsis</h5>
+        <blockquote>
+            <pre><code>{"action":"remove",
+ "deviceId":10}</code></pre>
+        </blockquote>
+        
+        <h5>2.1.3.3 Endpoint response</h5>
+		After sending the above message to the endpoint, the endpoint will send the following message to all the connected clients:
+        <blockquote>
+			<pre><code>{"succeeded":true,
+ "message":"Device \"Your device name\" is successfully removed.",
+ "action":"remove",
+ "deviceId":10}</code></pre>
+        </blockquote>
+		
+        <h4>2.1.4 Leaving the page</h4>
+		<h5>2.1.4.1 Description</h5>
+		<p>When the user leaves the page, a message should be sent to the endpoint. Unlike in the previous scenarios, the endpoint will not respond.</p>
+		
+		<h5>2.1.4.2 Synopsis</h5>
+		<blockquote>
+			<pre><code>{"action":"unload"}</code></pre>
+		</blockquote>
+		
+        
+        <!--/////////////////////////////-->
+		<h1>3 Other specifications</h1>
+        <h2>3.1 Opening the page</h2>
+        <p>When a new user appears by opening the page, the frontend code must load the entire device list. (Hint: You don't actually need any explicit code to implement this.)</p>
+		
+		<h2>3.2 Message text</h2>
+		<p>In addition, you should create a text container that shows all the messages the endpoint responds with. Whether to view only the last response message or all of them is up to you.</p>
+        
+		<h2>3.3 Endpoint activation</h2>
+		<p>Heroku may retire the endpoint. If that is the case, the connection may be abrupt. The only remedy (yet) is to wait around 10 seconds for the endpoint to become deployed.</p>
+		
+		<!--/////////////////////////////-->
+		<h1>4 Submission instructions</h1>
+		<p>Please package all the code in a ZIP file called <code>Firstname.Lastname.zip</code>. 
+		   You are allowed to use any (freely) available framework if you wish.</p>
+		
+		<p>Also, add to the ZIP package a PDF file that mentions:</p>
+		<ul>
+			<li>how much time it roughly took to complete the task,</li>
+			<li>whether you had to learn new techniques,</li>
+			<li>what was hard, what was easy.</li>
+		</ul>
+		<p>Send the <code>Firstname.Lastname.zip</code> as an attachment to <a href="mailto:rodion.efremov@helsinki.fi" target="_top">rodion.efremov@helsinki.fi</a></p>
+	</body>
+</html>
