@@ -324,6 +324,44 @@
                                algorithm-footer-class="footer_bar">
                     <alg-step>$x \leftarrow y + 1$</alg-step>
                 </alg-algorithm>
+                 <p>
+                    <alg-algorithm header="Most-Cost-Effective-Loans$(G, a, \mathfrak{P}, \mathfrak{I}, P, i)$"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-calss="lower_header_bar"
+                        algorithm-footer-class="footer_bar">
+                        <alg-step>$\text{let } Q \text{ be an empty priority queue}$</alg-step>          
+                        <alg-step>$\text{let } \pi \text{ be an empty solution potential function}$</alg-step>          
+                        <alg-step>$\text{let } d \text{ be an empty direction function}$</alg-step>          
+                        <alg-step>$C \leftarrow \emptyset$</alg-step>          
+                        <alg-step>$P_{\text{collected}} \leftarrow 0$</alg-step>
+                        <alg-foreach condition="$u \in V(G)$">
+                            <alg-step>$\pi(u) \leftarrow 0$</alg-step>
+                            <alg-step>$d(u) \leftarrow \Nil$</alg-step>
+                        </alg-foreach>
+                        <alg-foreach condition="$u \in $ Parents$(G, a)$">
+                            <alg-if condition="$\mathfrak{I}(u, a) \leq i$">
+                                <alg-step>Priority-Queue-Insert$(Q, \langle u, a, \mathfrak{I}(u, a) \rangle)$</alg-step>
+                            </alg-if>
+                        </alg-foreach>
+                        <alg-while condition="$|Q| > 0 \; \And \; P_{\text{collected}} < P$">
+                            <alg-step>$\langle u, v, i_{\text{current}} \rangle \leftarrow $ Priority-Queue-Extract-Minimum$(Q)$</alg-step>
+                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u))$</alg-step>
+                            <alg-step>$P_{\text{collected}} \leftarrow P_{\text{collected}} + P_\Delta$</alg-step>
+                            <alg-step>$\pi(u) \leftarrow P_\Delta$</alg-step>
+                            <alg-step>$d(u) \leftarrow v$</alg-step>
+                            <alg-step>$C \leftarrow C \cup \{ u \}$</alg-step>
+                            <alg-foreach condition="$z \in$ Parents$(G, u)$">
+                                <alg-if condition="$z \not \in C$">
+                                    <alg-step>$i_{\text{next}} \leftarrow \mathfrak{C} \big( i_{\text{current}}, \mathfrak{I}(z, u) \big)$</alg-step>
+                                    <alg-if condition="$i_{\text{next}} \leq i$">
+                                        <alg-step>Priority-Queue-Insert$(Q, \langle z, u, i_{\text{next}}\rangle)$</alg-step>
+                                    </alg-if>
+                                </alg-if>
+                            </alg-foreach>
+                        </alg-while>
+                        <alg-return>$(\pi, d)$</alg-return>
+                    </alg-algorithm>
+                </p>
             <hr/>
             
             <a href="#inclusion-exclusion-principle"><h3 id="inclusion-exclusion-principle">Proving inclusion-exclusion principle</h3></a>
@@ -376,6 +414,12 @@
                          &= \sum_{i = 1}^{n + 1} \lvert A_i \rvert - \sum_{1 \leq i < j \leq n + 1} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n + 1} \lvert A_i \cap A_j \cap A_k \rvert + \dots + (-1)^{n + 2} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert.
                     \end{aligned}
                 </p>
+            </article>
+            
+            <h3 id="bidir-iterative-deepening-search">Bidirectional iterative deepening search</h3>
+            <article>
+                In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient and consumes a moderate amount of memory. 
+                The algorithm in question combines bidirectional search with iterative deepening. Bidirectionality buys us time-wise efficiency, whereas iterative deepening approach helps us save us some memory.
             </article>
         </div>
     </body>
