@@ -370,18 +370,18 @@
                 \[
                 W_1 = \sum_{i = 0}^N d^i,
                 \]
-                where $N$ is the number of arcs on the shortest path, and $d$ is the average out-degree. Of course, the above expression requires little variance in the node out-degree. If, however, we denote the average out-degree by $d_o$, and average in-degree by $d_i$, the work done by bidirectional breadth-first search is 
+                where $N$ is the number of arcs on the shortest path, and $d$ is the average out-degree. Of course, the above expression requires little variance in node out-degrees. If, however, we denote the average out-degree by $d_o$, and average in-degree by $d_i$, the work done by bidirectional breadth-first search is 
                 \[
                 W_2 = \sum_{j = 0}^{N / 2} d_i^j + \sum_{j = 0}^{N / 2} d_o^j.
                 \]
                 Now, if we set $d_i = d_o = d$, the speedup is roughly 
                 \begin{aligned}
                 \frac{W_1}{W_2} = \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
-                                = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2}}{1 - d}}
-                                = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2})}
-                                =\frac{d^{N + 1} - 1}{2(d^{N / 2} - 1)}
-                                \approx \frac{d^{N + 1}}{2(d^{N / 2})}
-                                = d^{N / 2 + 1},
+                                = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
+                                = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
+                                =\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
+                                \approx \frac{d^{N + 1}}{2(d^{N / 2 + 1})}
+                                = \frac{d^{N / 2}}{2},
                 \end{aligned}
                 which implies exponential speedup in shortest path length.
                 </p>
@@ -389,12 +389,99 @@
                 <p>
                 The bidirectional iterative deepening search works as follows. If the source node is the target node, halt and return a list containing only the node in question.
                 Otherwise, scan the child nodes of the source node, and scan the parent nodes of the target node. If there is a node scanned twice, we have found a shortest path.
-                If that does not produce a shortest path, go two steps deeper in both search directions. There is, however, a catch: this arrangement may return with no solution in case the shortest path consists of an odd number of arcs. 
+                If that does not produce a shortest path, go two steps deeper in both search directions starting from source and target nodes. There is, however, a catch: this arrangement may return with no solution in case the shortest path consists of an odd number of arcs. 
+                To remedy this, for each depth $\Delta$, the forward search goes one step deeper. 
                 
+               
                 </p>
-                <p align="center"> 
-                <img src="BIDNoPath.png"/><br/>
-                <span>Figure 1</h4>e
+                
+                <p align="center">
+                    <img src="BID1.png" width="400px"/>
+                </p>
+                
+                <p>
+                    The figures <b>1 (A)</b> and <b>1 (B)</b> demonstrate how the two search spaces go "through" each other, and the figure <b>1 (C)</b> shows how to address that issue.
+                </p>
+                
+                <p>
+                    <alg-algorithm header="Build-Path($s, \mu, B, G$)"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-class="lower_header_bar"
+                                   algorithm-footer-class="footer_bar">
+                        <alg-step>$\pi \leftarrow$ Find-Shortest-Path$(G, s, \mu)$</alg-step>
+                        <alg-step>$\text{remove the last node from } \pi$</alg-step>
+                        <alg-return>$\pi \circ B$</alg-return>
+                    </alg-algorithm>
+                </p>
+                
+                <p>
+                    <alg-algorithm header="Depth-Limited-Search-Forward$(G, u, \Delta, F)$"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-class="lower_header_bar"
+                                   algorithm-footer-class="footer_bar">
+                        <alg-if condition="$\Delta = 0$">
+                            <alg-step>$F \leftarrow F \cup u$</alg-step>
+                            <alg-return></alg-return>
+                        </alg-if>
+                        <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
+                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
+                        </alg-foreach>
+                    </alg-algorithm>
+                </p>
+                
+                <p>
+                    <alg-algorithm header="Depth-Limited-Search-Backward$(G, u, \Delta, B, F)$"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-class="lower_header_bar"
+                                   algorithm-footer-class="footer_bar">
+                        <alg-step>$\text{append } \pi \text{ to } B$</alg-step>
+                        <alg-if condition="$\Delta = 0$">
+                            <alg-if condition="$n \in F$">
+                                <alg-return>$n$</alg-return>
+                            </alg-if>
+                            <alg-step>$\text{remove the first node in }B$</alg-step>
+                            <alg-return>$\Nil$</alg-return>
+                        </alg-if>
+                        <alg-foreach condition="$v \in \{ n \colon (n, u) \in A(G) \}$">
+                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, B, \Delta - 1, F)$</alg-step>
+                            <alg-if condition="$\mu \neq \Nil$">
+                                <alg-return>$\mu$</alg-return>
+                            </alg-if>
+                        </alg-foreach>
+                        <alg-step>$\text{remove the first node in } B$</alg-step>
+                        <alg-return>$\Nil$</alg-return>
+                    </alg-algorithm>
+                </p>
+                
+                
+                <p>
+                    <alg-algorithm header="Find-Shortesst-Path($G, s, t$)"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-class="lower_header_bar"
+                                   algorithm-footer-class="footer_bar">
+                        <alg-if condition="$s = t$">
+                            <alg-return>$\langle s \rangle$</alg-return>
+                        </alg-if>
+                        <alg-step>$\Delta \leftarrow 0$</alg-step>
+                        <alg-step>$F, B \leftarrow \emptyset$</alg-step>
+                        <alg-forever>
+                            <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
+                            <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, \Delta, B, F)$</alg-step>
+                            
+                            <alg-if condition="$\mu \neq \Nil$">
+                                <alg-return>Build-Path$(G, s, \mu, B, G)$</alg-return>
+                            </alg-if>
+                            
+                            <alg-step>$B \leftarrow \emptyset$</alg-step>
+                            <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, \Delta + 1, B, F)$</alg-step>
+                            <alg-if condition="$\mu \neq \Nil$">
+                                <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
+                            </alg-if>
+                            <alg-step>$B \leftarrow \emptyset$</alg-step>
+                            <alg-step>$F \leftarrow \emptyset$</alg-step>
+                            <alg-step>$\Delta \leftarrow \Delta + 1$</alg-step>
+                        </alg-forever>
+                    </alg-algorithm>
                 </p>
             </article>
         </div>
