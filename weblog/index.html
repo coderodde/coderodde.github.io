@@ -380,8 +380,10 @@
                                 = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
                                 = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
                                 =\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
-                                \approx \frac{d^{N + 1}}{2(d^{N / 2 + 1})}
-                                = \frac{d^{N / 2}}{2},
+                                \approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
+                                = \frac{d^{N / 2}}{2}
+                                = \frac{\sqrt{d}^N}{2}
+                                = \Theta(d^N),
                 \end{aligned}
                 which implies exponential speedup in shortest path length.
                 </p>
@@ -401,6 +403,12 @@
                 
                 <p>
                     The figures <b>1 (A)</b> and <b>1 (B)</b> demonstrate how the two search spaces go "through" each other, and the figure <b>1 (C)</b> shows how to address that issue.
+                </p>
+                
+                <p>
+                    Before we proceed to pseudocode, we have to review some notational conventions. A directed graph $G$ is a tuple $(V, A)$, where $V$ is a set of nodes, and $A \subseteq V^2$ is a set of directed arcs. 
+                    Given such a graph $G$, we denote its arc set by $A(G)$. In addition, $\{ n \colon (u, n) \in A(G) \}$ is simply a set of children of the node $u$. Analogously, 
+                    $\{ n \colon (n, u) \in A(G) \}$ is the set of parent nodes of $u$. As a reminder, given a directed arc $(u, v) \in A(G)$, we consider it as an arrow from $u$ to $v$, and we call $u$ a <i>parent</i> of $v$, and $v$ a <i>child</i> of $u$.
                 </p>
                 
                 <p>
@@ -477,11 +485,32 @@
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
                             </alg-if>
-                            <alg-step>$B \leftarrow \emptyset$</alg-step>
-                            <alg-step>$F \leftarrow \emptyset$</alg-step>
+                            <alg-step>$F, B \leftarrow \emptyset$</alg-step>
                             <alg-step>$\Delta \leftarrow \Delta + 1$</alg-step>
                         </alg-forever>
                     </alg-algorithm>
+                </p>
+                
+                <p>
+                    The results are rather impressive. What comes to solving 15-puzzles, while iterative deepening A* dominates BID by a factor of three or so, on general graphs, BID 
+                    is faster than iterative deepening depth-first search by an order of magnitude, and BID outperforms unidirectional breadth-first search by three orders
+                    of magnitude. The following listing is a typical output of the benchmarking program:
+                <pre>
+                    <code>
+*** 15-puzzle graph benchmark ***
+Seed = 1544375493597
+BreadthFirstSearch in 1050 milliseconds. Path length: 18
+IterativeDeepeningDepthFirstSearch in 36302 milliseconds. Path length: 18
+BidirectionalIterativeDeepeningDepthFirstSearch in 20 milliseconds. Path length: 18
+IterativeDeepeningAStar in 116 milliseconds. Path length: 18
+Algorithms agree: true
+
+*** General graph benchmark ***
+Seed = 1544375531134
+BidirectionalIterativeDeepeningDepthFirstSearch in 0 milliseconds. Path length: 5
+IterativeDeepeningDepthFirstSearch in 10 milliseconds. Path length: 5
+BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
+                </pre>
                 </p>
             </article>
         </div>
