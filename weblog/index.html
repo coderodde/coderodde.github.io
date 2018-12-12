@@ -474,18 +474,17 @@
                         <alg-step>$F, B \leftarrow \emptyset$</alg-step>
                         <alg-forever>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
-                            <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, \Delta, B, F)$</alg-step>
-                            
-                            <alg-if condition="$\mu \neq \Nil$">
-                                <alg-return>Build-Path$(G, s, \mu, B, G)$</alg-return>
-                            </alg-if>
-                            
-                            <alg-step>$B \leftarrow \emptyset$</alg-step>
-                            <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, \Delta + 1, B, F)$</alg-step>
-                            <alg-if condition="$\mu \neq \Nil$">
-                                <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
-                            </alg-if>
-                            <alg-step>$F, B \leftarrow \emptyset$</alg-step>
+                            <alg-foreach condition="$d \in \{\Delta, \Delta + 1\}$">
+                                <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
+
+                                <alg-if condition="$\mu \neq \Nil$">
+                                    <alg-return>Build-Path$(G, s, \mu, B, G)$</alg-return>
+                                </alg-if>
+
+                                <alg-step>$B \leftarrow \emptyset$</alg-step>
+                                
+                            </alg-foreach>
+                            <alg-step>$F \leftarrow \emptyset$</alg-step>
                             <alg-step>$\Delta \leftarrow \Delta + 1$</alg-step>
                         </alg-forever>
                     </alg-algorithm>
