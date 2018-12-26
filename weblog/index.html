@@ -428,7 +428,7 @@
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
                         <alg-if condition="$\Delta = 0$">
-                            <alg-step>$F \leftarrow F \cup u$</alg-step>
+                            <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
                             <alg-return></alg-return>
                         </alg-if>
                         <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
@@ -442,7 +442,7 @@
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
-                        <alg-step>$\text{append } \pi \text{ to } B$</alg-step>
+                        <alg-step>$\text{prepend } u \text{ to } B$</alg-step>
                         <alg-if condition="$\Delta = 0$">
                             <alg-if condition="$n \in F$">
                                 <alg-return>$n$</alg-return>
@@ -451,7 +451,7 @@
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
                         <alg-foreach condition="$v \in \{ n \colon (n, u) \in A(G) \}$">
-                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, B, \Delta - 1, F)$</alg-step>
+                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F)$</alg-step>
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>$\mu$</alg-return>
                             </alg-if>
@@ -478,7 +478,7 @@
                                 <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
 
                                 <alg-if condition="$\mu \neq \Nil$">
-                                    <alg-return>Build-Path$(G, s, \mu, B, G)$</alg-return>
+                                    <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
                                 </alg-if>
 
                                 <alg-step>$B \leftarrow \emptyset$</alg-step>
