@@ -62,6 +62,7 @@ Algotype.loadMathJax = function() {
     mathJaxSettingsScript.type = Algotype.MATHJAX_CONFIG_MIME_TYPE;
     mathJaxSettingsScript.innerHTML = Algotype.MATHJAX_CONFIG;
     document.head.appendChild(mathJaxSettingsScript);
+    alert(1);
 };
 
 Algotype.getAlgorithmHeaderComment = function (algorithmElement) {
@@ -972,6 +973,6 @@ window.onload = function() {
     if (oldOnloadHandler) {
         oldOnloadHandler();
     }
-    
+    alert(2);
     Algotype.setup();
 };
