@@ -532,11 +532,13 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 Next, we need a way to calculate the position and scope of a tangent line visiting $V$ such that it makes $\alpha$ angle with the horizontal axis. In particular, 
                 Assuming the angle $\alpha$, its equation is
 
-                \begin{aligned}
+                &&
+                \begin{align}
                 \frac{y - y_V}{x - x_V} &= \tan \alpha \\
                 y - y_V &= \frac{\tan \alpha}{x - x_V) \\
                 y &= \frac{\tan \alpha}{x - x_V} - y_V. \\
-                \end{aligned}
+                \end{align}
+                $$
                 
                 We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\pi. The following Lemma proves the assertion:
                 </p>
