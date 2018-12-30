@@ -435,11 +435,12 @@
                                    algorithm-footer-class="footer_bar">
                         <alg-if condition="$\Delta = 0$">
                             <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
-                            <alg-return></alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
-                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
-                        </alg-foreach>
+                        <alg-else>
+                            <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
+                                <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
+                            </alg-foreach>
+                        </alg-else>
                     </alg-algorithm>
                 </p>
                 
