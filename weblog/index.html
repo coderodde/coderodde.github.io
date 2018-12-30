@@ -526,22 +526,25 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
             <article>
                 <p>
                 In this post, we will investigate how to rotate a parabola $P$ in a plane. 
-                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the axis parallel to the $x$-axis growing when the clockwise direction.
+                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the axis parallel to the $x$-axis growing during the clockwise direction.
                 Finally, we are given a parameter $\beta$, which defines the geometry of $P$, $\beta t^2$. 
-                What we wish to accomplish is how to rotate the parabola around their vertices in arbitrary direction.
-                Suppose the focus point is located at $(x_V, y_V)$ and the rotation increases the angle to $\alpha$.
+                What we wish to accomplish is to find out how to rotate the parabola around their vertices in arbitrary directions.
                 </p>
+                
                 <p>
-                Next, we need a way to calculate the position and scope of a tangent line visiting $V$ such that it makes $\alpha$ angle with the horizontal axis. In particular, 
+                Next, we need a way to calculate the position and slope of a tangent line visiting $V$ such that it makes $\alpha$ angle with the horizontal axis. 
+                The tangent line is obviously defined by $y = $
+                In particular,
                 Assuming the angle $\alpha$, its equation is
 
-                
+                <p>
                 \begin{align}
                     \frac{y - y_V}{x - x_V} &= \tan \alpha \\
                     y - y_V &= (\tan \alpha)(x - x_V) \\
-                    y &= (\tan \alpha)(x - x_V) + y_V. 
+                    y &= (\tan \alpha)(x - x_V) + y_V \\
+                    y &= [\tan \alpha]x + y_V - [\tan \alpha] x_V
                 \end{align}
-                
+                </p>
                 
                 We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\pi. The following Lemma proves the assertion:
                 </p>
