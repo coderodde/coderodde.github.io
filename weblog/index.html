@@ -51,7 +51,7 @@
         <script src="algotype.js"></script>
     </head>
     <body>
-        \begin{align}
+<!--        \begin{align}
         a + b &= c \\
         a &= b + c
         \end{align}
@@ -59,7 +59,7 @@
         \begin{aligned}
         a + b &= c \\
         a &= b + c
-        \end{aligned}
+        \end{aligned}-->
         <div id="main">
             <h1>coderodde's technical weblog</h1>
             <div id="browser_note">For best rendering of formal text, <br/> it is advised to view this page via desktop browsers.</div>
@@ -526,7 +526,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
             <article>
                 <p>
                 In this post, we will investigate how to rotate a parabola $P$ in a plane. 
-                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the $y$-axis growing in  clockwise direction.
+                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the axis parallel to the $x$-axis growing when the clockwise direction.
                 Finally, we are given a parameter $\beta$, which defines the geometry of $P$, $\beta t^2$. 
                 What we wish to accomplish is how to rotate the parabola around their vertices in arbitrary direction.
                 Suppose the focus point is located at $(x_V, y_V)$ and the rotation increases the angle to $\alpha$.
@@ -539,7 +539,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 \begin{align}
                     \frac{y - y_V}{x - x_V} &= \tan \alpha \\
                     y - y_V &= (\tan \alpha)(x - x_V) \\
-                    y &= (\tan \alpha)(x - x_V) - y_V. 
+                    y &= (\tan \alpha)(x - x_V) + y_V. 
                 \end{align}
                 
                 
