@@ -51,6 +51,15 @@
         <script src="algotype.js"></script>
     </head>
     <body>
+        \begin{align}
+        a + b &= c \\
+        a &= b + c
+        \end{align}
+        yeah
+        \begin{aligned}
+        a + b &= c \\
+        a &= b + c
+        \end{aligned}
         <div id="main">
             <h1>coderodde's technical weblog</h1>
             <div id="browser_note">For best rendering of formal text, <br/> it is advised to view this page via desktop browsers.</div>
@@ -59,12 +68,6 @@
             <article>
                 <a href="#most-cost-effective-loan-problem.1.introduction"><h4 id="most-cost-effective-loan-problem.1.introduction">1 Introduction</h4></a>
                 <p>
-                    \[
-                    \begin{align}
-                    a & b \\
-                    b & c \\
-                    \end{align}
-                    \]
                 In the most cost-effective loan problem, we are given a directed
                 graph of actors where each actor may lend some amount of resources
                 it possesses to its child nodes. In case an actor needs more than
@@ -435,12 +438,11 @@
                                    algorithm-footer-class="footer_bar">
                         <alg-if condition="$\Delta = 0$">
                             <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
+                            <alg-return></alg-return>
                         </alg-if>
-                        <alg-else>
-                            <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
-                                <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
-                            </alg-foreach>
-                        </alg-else>
+                        <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
+                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
+                        </alg-foreach>
                     </alg-algorithm>
                 </p>
                 
@@ -534,11 +536,11 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 Assuming the angle $\alpha$, its equation is
 
                 
-                \begin{aligned}
+                \begin{align}
                     \frac{y - y_V}{x - x_V} &= \tan \alpha \\
                     y - y_V &= (\tan \alpha)(x - x_V) \\
                     y &= (\tan \alpha)(x - x_V) - y_V. 
-                \end{aligned}
+                \end{align}
                 
                 
                 We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\pi. The following Lemma proves the assertion:
