@@ -515,13 +515,31 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
             
             <h3>Rotating a parabola</h3>
             <article>
+                <p>
                 In this post, we will investigate how to rotate a parabola $P$ in a plane. 
-                Let $(x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the $y$-axis growing in  clockwise direction.
+                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the $y$-axis growing in  clockwise direction.
                 Finally, we are given a parameter $\beta$, which defines the geometry of $P$, $\beta t^2$. 
-                What we wish to accomplish is how to rotate the parabols around their vertices in arbitrary direction.
-                Suppose the focus point is located at $(x_V, y_V)$ and the rotation increaed the angle to $\alpha$.
-                We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\alpha$.
+                What we wish to accomplish is how to rotate the parabola around their vertices in arbitrary direction.
+                Suppose the focus point is located at $(x_V, y_V)$ and the rotation increases the angle to $\alpha$.
+                </p>
+                <p>
+                Next, we need a way to calculate the position and scope of a tangent line visiting $V$ such that it makes $\alpha$ angle with the horizontal axis. In particular, 
+                
+                
+                
+                We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\pi. The following Lemma proves the assertion:
+                </p>
+                    
+                <p>
+                <span class="lemma_name">Lemma 1 (<span class="exclude_from_lemma_name">$d$</span> is acyclic)</span>
+                <span class="lemma_claim">
+                    Given a solution direction function $d$, 
+                there exist no actor sequence $\langle u_1, u_2, \dots, u_k \rangle$
+                such that $d(u_1) = u_2$, $d(u_2) = u_3$, $\dots$, $d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$.</span><br/>
+                </p>
+                
             </article>
         </div>
     </body>
 </html>
+    
