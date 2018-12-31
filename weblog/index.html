@@ -526,13 +526,26 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
             <article>
                 <p>
                 In this post, we will investigate how to rotate a parabola $P$ in a plane. 
-                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry and the axis parallel to the $x$-axis growing during the clockwise direction.
-                Finally, we are given a parameter $\beta$, which defines the geometry of $P$, $\beta t^2$. 
-                What we wish to accomplish is to find out how to rotate the parabola around their vertices in arbitrary directions.
+                Let $V = (x_V, y_V)$ be the vertex of $P$ and $\alpha$ be the angle in radians between axis of symmetry 
+                and the axis parallel to the $x$-axis $(y = y_V)$, call it $\ell$, growing in the counterclockwise direction.
+                Finally, we are given a parameter $\beta$, which defines geometry of $P$, $\beta t^2$. When 
+                $\alpha = 0$, $P$ opens upwards. When $\alpha \pi / 2$, $P$ opens to the right.
+                What we wish to accomplish is to find out how to rotate the parabola around their vertices in arbitrary direction.
                 </p>
                 
                 <p>
-                Next, we need a way to calculate the position and slope of a tangent line visiting $V$ such that it makes $\alpha$ angle with the horizontal axis. 
+                Next, we need a way to calculate the position and slope of a tangent line visiting $V$ such that it makes an angle of $\alpha$ radians with $\ell$.
+                </p>
+                
+                <p>
+                    \begin{align}
+                    \frac{y - y_V}{x - x_V} &= -\tan \alpha \\
+                    y &= -\tan \alpha (x - x_V) + y_V \\
+                      &= -\tan \alpha x + x_V + y_V.
+                    \end{align}
+                </p>
+                
+                <p>
                 The tangent line is obviously defined by $y = $
                 In particular,
                 Assuming the angle $\alpha$, its equation is
@@ -542,10 +555,15 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                     \frac{y - y_V}{x - x_V} &= \tan \alpha \\
                     y - y_V &= (\tan \alpha)(x - x_V) \\
                     y &= (\tan \alpha)(x - x_V) + y_V \\
-                    y &= [\tan \alpha]x + y_V - [\tan \alpha] x_V
+                    y &= (\tan \alpha)x + y_V - (\tan \alpha) x_V.
                 \end{align}
                 </p>
-                
+                <p>
+                    The antiparallel line to the line above, must have the slope such that
+                    \[
+                    
+                    \]
+                </p>
                 We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\pi. The following Lemma proves the assertion:
                 </p>
                     
