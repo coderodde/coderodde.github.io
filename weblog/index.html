@@ -541,8 +541,16 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                     \begin{align}
                     \frac{y - y_V}{x - x_V} &= \tan \alpha \\
                     y &= (\tan \alpha) (x - x_V) + y_V \\
-                      &= (\tan \alpha) x - (\tan \alpha) x_V + y_V.
+                      &= (\tan \alpha) x - (\tan \alpha) x_V + y_V \\
+                      &= \ell(x).
                     \end{align}
+                </p>
+                
+                <p>
+                    Now, given an $x \in \mathbb{R}$, 
+                    \begin{aligned} 
+                    t &= d((x, \ell(x)), (x_V, y_V)) \\
+                      &= \sqrt{(x - x_V)^2 + (\ell(x) - y_V)}.
                 </p>
                 
                 <p>
