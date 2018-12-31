@@ -530,7 +530,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 and the axis parallel to the $x$-axis $(y = y_V)$, call it $\ell$, growing in the clockwise direction.
                 Finally, we are given a parameter $\beta$, which defines geometry of $P$, $\beta t^2$. When 
                 $\alpha = 0$, $P$ opens upwards. When $\alpha = \pi / 2$, $P$ opens to the left.
-                What we wish to accomplish is to find out how to rotate the parabola around their vertices in arbitrary direction.
+                What we wish to accomplish is to find out how to rotate the parabola around their vertices.
                 </p>
                 
                 <p>
@@ -539,9 +539,9 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 
                 <p>
                     \begin{align}
-                    \frac{y - y_V}{x - x_V} &= -\tan \alpha \\
-                    y &= -\tan \alpha (x - x_V) + y_V \\
-                      &= -\tan \alpha x + x_V + y_V.
+                    \frac{y - y_V}{x - x_V} &= \tan \alpha \\
+                    y &= \tan \alpha (x - x_V) + y_V \\
+                      &= \tan \alpha x - \tan \alpha x_V + y_V.
                     \end{align}
                 </p>
                 
