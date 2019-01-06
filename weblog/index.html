@@ -374,6 +374,26 @@
             <h3 id="bidir-iterative-deepening-search">Bidirectional iterative deepening search</h3>
             <article>
                 <p>
+                In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
+                Before that, I will review some terminology. 
+                A directed, unweighted graph $\mathcal{G}$ is an ordered pair $(\mathcal{V, A})$, where $\mathcal{V}$ is the set of <i>nodes</i>, and $\mathcal{A} \subseteq \mathcal{V \times V}$ is the set of directed <i>arcs</i>.
+                Given two terminal nodes $s, t \in \mathcal{V}$, we wish to find a <i>shortest</i> path, or, in other worlds, a path that connects $s$ to $t$ using minimum amount of arcs.
+                According to common jargon, $s$ is called a source node, and $t$ is called a target node. Also, by $A(\mathcal{G})$ we will denote the arc set of $\mathcal{G}$.
+                Finally, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$, todo 
+                </p>
+                
+                <p>
+                What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
+                It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle t \rangle$. 
+                Let $\mathcal{F}_f^k$ be the set of nodes in $\mathcal{G}$ that are reachable from $s$ along the arcs.
+                Let also $\mathcal{F}_b^k$ be the set of nodes in $\mathcal{G}$ tat are reachable from $t$ along the arcs in <b>opposite</b> direction.
+                Formally, the algorithm computes $\mathcal{F}_f^k$ and $\mathcal{F}_b^k$. As soon as the two sets intersect, we have found a shortest path.
+                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch: 
+                
+                Otherwise, the algorithm checks to see whether any child of $s$ is $t$. If not, visit all the parents of $t$; call that 
+                </p>
+                
+                <p>
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient and consumes a moderate amount of memory. 
                 The algorithm in question combines bidirectional search with iterative deepening. Bidirectionality buys us time-wise efficiency, whereas iterative deepening approach helps us save some memory. In this instance, we work on directed, unweighted graphs. In traditional, unidirectional breadth-first search, the work done is
                 \[
@@ -385,14 +405,14 @@
                 \]
                 Now, if we set $d_i = d_o = d$, the speedup is roughly 
                 \begin{aligned}
-                \frac{W_1}{W_2} = \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
-                                = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
-                                = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
-                                =\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
-                                \approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
-                                = \frac{d^{N / 2}}{2}
-                                = \frac{\sqrt{d}^N}{2}
-                                = \Theta(d^N),
+                \frac{W_1}{W_2} &= \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
+                                &= \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
+                                &= \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
+                                &=\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
+                                &\approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
+                                &= \frac{d^{N / 2}}{2}
+                                &= \frac{\sqrt{d}^N}{2}
+                                &= \Theta(d^N),
                 \end{aligned}
                 which implies exponential speedup in shortest path length.
                 </p>
@@ -568,9 +588,9 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                     Let $V_t$ be the point on a parabola with vertex $V$, vertex tangent angle $\alpha$ and the distance from $V$ $t$, the corresponding point $V_t$ is specified by 
                     \begin{aligned}
                         V_t &= V + (t\cos \alpha, t\sin \alpha) + (\beta t^2 \sin \alpha, \beta t^2 \cos \alpha) \\
-                            &= (x_V + t\cos \alpha + \beta t^2 \sin \alpha, y_V + t \sin \alpha + \beta t^2 \cos \alpha)
+                            &= (x_V + t\cos \alpha + \beta t^2 \sin \alpha, \; y_V + t \sin \alpha + \beta t^2 \cos \alpha)
                     \end{aligned}
-                </p>
+                </p>    
                 
                 <p>
                 The tangent line is obviously defined by $y = $
@@ -585,23 +605,6 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                     y &= (\tan \alpha)x + y_V - (\tan \alpha) x_V.
                 \end{align}
                 </p>
-                <p>
-                    The antiparallel line to the line above, must have the slope such that
-                    \[
-                    
-                    \]
-                </p>
-                We need to calculate the two halves of the parabola. First, note that we can confine us to $\alpha \in [\tau, \tau + 2\pi. The following Lemma proves the assertion:
-                </p>
-                    
-                <p>
-                <span class="lemma_name">Lemma 1 (<span class="exclude_from_lemma_name">$d$</span> is acyclic)</span>
-                <span class="lemma_claim">
-                    Given a solution direction function $d$, 
-                there exist no actor sequence $\langle u_1, u_2, \dots, u_k \rangle$
-                such that $d(u_1) = u_2$, $d(u_2) = u_3$, $\dots$, $d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$.</span><br/>
-                </p>
-                
             </article>
         </div>
     </body>
