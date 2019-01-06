@@ -376,19 +376,19 @@
                 <p>
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
-                A directed, unweighted graph $\mathcal{G}$ is an ordered pair $(\mathcal{V, A})$, where $\mathcal{V}$ is the set of <i>nodes</i>, and $\mathcal{A} \subseteq \mathcal{V \times V}$ is the set of directed <i>arcs</i>.
-                Given two terminal nodes $s, t \in \mathcal{V}$, we wish to find a <i>shortest</i> path, or, in other worlds, a path that connects $s$ to $t$ using minimum amount of arcs.
-                According to common jargon, $s$ is called a source node, and $t$ is called a target node. Also, by $A(\mathcal{G})$ we will denote the arc set of $\mathcal{G}$.
+                A directed, unweighted graph $\mathfrak{G}$ is an ordered pair $(\mathfrak{V, A})$, where $\mathfrak{V}$ is the set of <i>nodes</i>, and $\mathfrak{A} \subseteq \mathfrak{V \times V}$ is the set of directed <i>arcs</i>.
+                Given two terminal nodes $s, t \in \mathfrak{V}$, we wish to find a <i>shortest</i> path, or, in other worlds, a path that connects $s$ to $t$ using minimum amount of arcs.
+                According to common jargon, $s$ is called a source node, and $t$ is called a target node. Also, by $A(\mathcal{G})$ we will denote the arc set of $\mathfrak{G}$.
                 Finally, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$, todo 
                 </p>
                 
                 <p>
                 What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
                 It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle t \rangle$. 
-                Let $\mathcal{F}_f^k$ be the set of nodes in $\mathcal{G}$ that are reachable from $s$ along the arcs.
-                Let also $\mathcal{F}_b^k$ be the set of nodes in $\mathcal{G}$ tat are reachable from $t$ along the arcs in <b>opposite</b> direction.
-                Formally, the algorithm computes $\mathcal{F}_f^k$ and $\mathcal{F}_b^k$. As soon as the two sets intersect, we have found a shortest path.
-                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch: 
+                Let $\mathfrak{F}_f^k$ be the set of nodes in $\mathfrak{G}$ that are reachable from $s$ along the arcs.
+                Let also $\mathfrak{F}_b^k$ be the set of nodes in $\mathcal{G}$ tat are reachable from $t$ along the arcs in <b>opposite</b> direction.
+                Formally, the algorithm computes $\mathfrak{F}_f^k$ and $\mathfrak{F}_b^k$. As soon as the two sets intersect, we have found a shortest path.
+                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch:   
                 
                 Otherwise, the algorithm checks to see whether any child of $s$ is $t$. If not, visit all the parents of $t$; call that 
                 </p>
