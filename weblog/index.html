@@ -376,19 +376,21 @@
                 <p>
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
-                A directed, unweighted graph $\mathfrak{G}$ is an ordered pair $(\mathfrak{V, A})$, where $\mathfrak{V}$ is the set of <i>nodes</i>, and $\mathfrak{A} \subseteq \mathfrak{V \times V}$ is the set of directed <i>arcs</i>.
-                Given two terminal nodes $s, t \in \mathfrak{V}$, we wish to find a <i>shortest</i> path, or, in other worlds, a path that connects $s$ to $t$ using minimum amount of arcs.
-                According to common jargon, $s$ is called a source node, and $t$ is called a target node. Also, by $A(\mathcal{G})$ we will denote the arc set of $\mathfrak{G}$.
-                Finally, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$, todo 
+                A directed, unweighted graph $G$ is an ordered pair $(V, A)$, where $V$ is the set of <i>nodes</i>, and $A \subseteq V \times V$ is the set of directed <i>arcs</i>.
+                Given two terminal nodes $s, t \in V$, we wish to find a <i>shortest</i> path, or, in other words, a path that connects $s$ to $t$ using minimum amount of arcs.
+                According to common jargon, $s$ is called a source node, and $t$ is called a target node. Also, by $A(G)$ we will denote the arc set of $G$.
+                Also, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$. 
+                Finally, we reserve the term &quot; search frontier&quot; to depict the set of nodes no further from the main node than $\Delta \in \mathbb{N} \cup \{ 0 \}$ steps.
                 </p>
                 
                 <p>
                 What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
                 It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle t \rangle$. 
-                Let $\mathfrak{F}_f^k$ be the set of nodes in $\mathfrak{G}$ that are reachable from $s$ along the arcs.
-                Let also $\mathfrak{F}_b^k$ be the set of nodes in $\mathcal{G}$ tat are reachable from $t$ along the arcs in <b>opposite</b> direction.
-                Formally, the algorithm computes $\mathfrak{F}_f^k$ and $\mathfrak{F}_b^k$. As soon as the two sets intersect, we have found a shortest path.
-                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch:   
+                Let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ along the arcs.
+                Let also $F_b^k$ be the set of nodes in $G$ tat are reachable from $t$ along the arcs in <b>opposite</b> direction.
+                Formally, the algorithm computes $F_f^k$ and $F_b^k$. As soon as the two sets intersect, we have found a shortest path.
+                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch: suppose a gimple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
+                Now, the search procedure currently under discussion will return with no path, and that happens because when the forward search
                 
                 Otherwise, the algorithm checks to see whether any child of $s$ is $t$. If not, visit all the parents of $t$; call that 
                 </p>
