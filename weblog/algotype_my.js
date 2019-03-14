@@ -946,6 +946,10 @@ Algotype.setup = function() {
     }
 };
 
+Algotype.reload = function() {
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);  
+};
+
 Algotype.dispatchTable = {};
 
 Algotype.dispatchTable["alg-break"]        = Algotype.typesetBreak;
