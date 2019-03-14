@@ -129,11 +129,12 @@
                 to define the concept of <i>effective interest rate</i>.
                 Effective interest rate is given by 
                 \[
-                    I(u, v) = \min \{ \mathfrak{I}(u, v), 
-                        \underset{z \in {\rm P{\small ARENTS}}(G, v)}{\mathfrak{C}(\mathfrak{I}(z, v), I(u, z)) } \}
+                    I(u, v) = \min \Bigg( \mathfrak{I}(u, v), 
+                        \underset{z \in {\rm P{\small ARENTS}}(G, v)}{\mathfrak{C}(\mathfrak{I}(z, v), I(u, z)) } 
+                        \Bigg)
                 \]
                 where ${\rm C{\small HILDREN}}(G, z)$ is the set of child nodes
-                of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$ Also, for the above formula to work, we need to set $\mathfrak{I}(u, v) = \infty)$ for all missing arcs $(u, v) \not\in A(G)$.
+                of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$ Also, for the above formula to work, we need to set $\mathfrak{I}(u, v) = \infty$ for all missing arcs $(u, v) \not\in A(G)$.
                 </p>
                 
                 <a href="#most-cost-effective-loan-problem.3.problem-statement"><h4 id="most-cost-effective-loan-problem.3.problem-statement">3 Problem statement</h4></a>
@@ -370,7 +371,7 @@
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
                 A directed, unweighted graph $G$ is an ordered pair $(V, A)$, where $V$ is the set of <i>nodes</i>, and $A \subseteq V \times V$ is the set of directed <i>arcs</i>.
-                Given two terminal nodes $s, t \in V$, we wish to find a <i>shortest</i> path, or, in other words, a path that connects $s$ to $t$ using minimum amount of arcs.
+                Given two terminal nodes $s, t \in V$, we wish to find a <i>shortest</i> path, or, in other words, a path that connects $s$ to $t$ using minimum number of arcs.
                 According to common jargon, $s$ is called a source node, and $t$ is called a target node. Also, by $A(G)$ we will denote the arc set of $G$.
                 Also, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$. 
                 Finally, we reserve the term &quot; search frontier&quot; to depict the set of nodes no further from the main node than $\Delta \in \mathbb{N} \cup \{ 0 \}$ steps.
