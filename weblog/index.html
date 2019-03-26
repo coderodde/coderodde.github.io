@@ -610,6 +610,35 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 Algotype.reload();
             }, false);
         </script>
+        
+        <article>
+            <p>
+                Let $f(x) = x^n$, where $n \geq 0$.
+\begin{aligned}
+\frac{\mathrm{d}}{\mathrm{d}x}f(x)
+    &= \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} \\
+    &= \lim_{h \to 0} \frac{(x + h)^n - x^n}{h}\\
+    &= \lim_{h \to 0} \frac{\sum_{k = 0}^n \binom{n}{k} x^{n - k}h^k - x^n}{h} \\
+    &= \lim_{h \to 0} \frac{x^n + nx^{n - 1}h + \sum_{k = 2}^n \binom{n}{k} x^{n - k}h^k - x^n}{h} \\
+    &= \lim_{h \to 0} \big[ nx^{n - 1} \big] + \lim_{h \to 0}\Bigg[ \frac{h^2 \sum_{k=2}^n \binom{n}{k} x^{n - k}h^{k - 2} }{h} \Bigg] \\
+    &= nx^{n - 1} + \lim_{h \to 0} \Bigg[ h \sum_{k = 2}^n \binom{n}{k}x^{n - k}h^{k - 2} \Bigg] \\
+    &= nx^{n - 1}
+\end{aligned}
+Next, keeping $n$ in the set of non-negative integers, suppose $f(x) = x^{-n}$. Now we have
+\begin{aligned}
+\frac{\mathrm{d}}{\mathrm{d}x}f(x) &= \lim_{h \to 0} \frac{\frac{1}{(x + h)^n} - \frac{1}{x^n}} 
+{h} \\
+    &= \lim_{h \to 0} \frac{1}{h} \frac{x^n - (x + h)^n}{x^n (x + h)^n } \\
+    &= \lim_{h \to 0} \frac{1}{h} \frac{x^n - \sum_{k = 0}^n \binom{n}{k} x^{n - k}h^k}{x^n (x + h)^n} \\
+    &= \lim_{h \to 0} \frac{x^n - x^n - nx^{n - 1}h - \sum_{k = 2}^n \binom{n}{k} x^{n - k}h^k}{hx^n(x + h)^n} \\
+    &= \lim_{h \to 0} \Bigg[ \frac{-nx^{n - 1}h}{hx^n (x + h)^n} - \frac{h^2\sum_{k = 2}^n \binom{n}{k} x^{n - k}h^{k - 2}}{hx^n (x + h)^n} \Bigg] \\
+    &= \lim_{h \to 0} \frac{-nx^{n - 1}}{x^n (x + h)^n} - \lim_{h \to 0} h \frac{\sum_{k = 2}^n \binom{n}{k} x^{n - k}h^{k - 2}}{x^n(x + h)^n} \\
+    &= \frac{\lim_{h \to 0} -nx^{n - 1}}{\lim_{h \to 0} x^n (x + h)^n} \\
+    &= \frac{-nx^{n - 1}}{ x^{2n} } \\
+    &= -nx^{-n - 1}.
+\end{aligned}
+            </p>
+        </article>
     </body>
 </html>
     
