@@ -73,8 +73,9 @@
                 
                 <p>
                 Formally, we are given a directed graph $G = (V, A)$, where $V$
-                is the set of actors, and $A \subseteq V^2$ is the set of directed
-                arcs. By $V(G)$ we denote the actor set of $G$, and likewise, by
+                is the set of actors, and 
+                $A \subseteq V^2 \setminus \{ (u, u) \in V^2 \text{ for all } u \in V\}$ is the set of directed
+                arcs, excluding self-loops. By $V(G)$ we denote the actor set of $G$, and likewise, by
                 $A(G)$ we denote the arc set of $G$. Given an arc $(u, v) \in A$,
                 we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$. 
                 Existence of such an arc indicates that $u$ may lend some or all
@@ -121,7 +122,8 @@
                     R + 1 &= 1 + r_{u,v} + r_{v,z} + r_{u,v}r_{v,z} \\
                     R &= r_{u,v} + r_{v,z} + r_{u,v}r_{v,z}. 
                 \end{aligned}
-                In general, we write $r_1 + r_2 + r_1 r_2 = \mathfrak{C}(r_1, r_2).$
+                In general, we write $r_1 + r_2 + r_1 r_2 = \mathfrak{C}(r_1, r_2).$ 
+                
                 </p>
                 
                 <p>
@@ -134,7 +136,8 @@
                         \Bigg)
                 \]
                 where ${\rm C{\small HILDREN}}(G, z)$ is the set of child nodes
-                of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$ Also, for the above formula to work, we need to set $\mathfrak{I}(u, v) = \infty$ for all missing arcs $(u, v) \not\in A(G)$.
+                of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$ 
+                Also, for the above formula to work, we need to set $\mathfrak{I}(u, v) = \infty$ for all missing arcs $(u, v) \not\in A(G)$.
                 </p>
                 
                 <a href="#most-cost-effective-loan-problem.3.problem-statement"><h4 id="most-cost-effective-loan-problem.3.problem-statement">3 Problem statement</h4></a>
@@ -401,14 +404,14 @@
                 \]
                 Now, if we set $d_i = d_o = d$, the speedup is roughly 
                 \begin{aligned}
-                \frac{W_1}{W_2} &= \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
-                                &= \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
-                                &= \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
-                                &=\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
-                                &\approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
-                                &= \frac{d^{N / 2}}{2}
-                                &= \frac{\sqrt{d}^N}{2}
-                                &= \Theta(d^N),
+                \frac{W_1}{W_2} = \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
+                                = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
+                                = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
+                                =\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
+                                \approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
+                                = \frac{d^{N / 2}}{2}
+                                = \frac{\sqrt{d}^N}{2}
+                                = \Theta(d^N),
                 \end{aligned}
                 which implies exponential speedup in shortest path length.
                 </p>
@@ -499,7 +502,7 @@
                         <alg-step>$F, B \leftarrow \emptyset$</alg-step>
                         <alg-forever>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
-                            <alg-foreach condition="$d \in \{\Delta, \Delta + 1\}$">
+                            <alg-foreach condition="$d = \Delta, \Delta + 1$">
                                 <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
 
                                 <alg-if condition="$\mu \neq \Nil$">
