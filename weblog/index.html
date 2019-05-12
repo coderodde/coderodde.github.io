@@ -498,7 +498,7 @@
                         <alg-if condition="$s = t$">
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
-                        <alg-if condition="$s \in \{ u \colon (s, u) \in A(G) \}$" comment="comment">
+                        <alg-if condition="$t \in \{ u \colon (s, u) \in A(G) \}$" comment="$t$ is child of $s$">
                             <alg-return>$\langle s, t  \langle$</alg-return>
                         </alg-if>
                         <alg-step>$\Delta \leftarrow 0$</alg-step>
