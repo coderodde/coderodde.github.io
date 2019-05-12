@@ -472,8 +472,8 @@
                                    algorithm-footer-class="footer_bar">
                         <alg-step>$\text{prepend } u \text{ to } B$</alg-step>
                         <alg-if condition="$\Delta = 0$">
-                            <alg-if condition="$n \in F$">
-                                <alg-return>$n$</alg-return>
+                            <alg-if condition="$u \in F$">
+                                <alg-return>$u$</alg-return>
                             </alg-if>
                             <alg-step>$\text{remove the first node in }B$</alg-step>
                             <alg-return>$\Nil$</alg-return>
@@ -502,9 +502,13 @@
                             <alg-return>$\langle s, t  \rangle$</alg-return>
                         </alg-if>
                         <alg-step>$\Delta \leftarrow 0$</alg-step>
-                        <alg-step>$F, B \leftarrow \emptyset$</alg-step>
+                        <alg-step>$F, F_{\text{prev}}, B \leftarrow \emptyset$</alg-step>
                         <alg-forever>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
+                            <alg-if condition="$F = F_{\text{prev}}$">
+                                <alg-return comment="No path from $s$ to $t$">\Nil</alg-return>
+                            </alg-if>
+                            <alg-step>$F_{\text{prev}} = F$</alg-step>
                             <alg-foreach condition="$d = \Delta, \Delta + 1$">
                                 <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
 
