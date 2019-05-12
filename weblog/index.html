@@ -506,7 +506,7 @@
                         <alg-forever>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
                             <alg-if condition="$F = F_{\text{prev}}$">
-                                <alg-return comment="No path from $s$ to $t$">\Nil</alg-return>
+                                <alg-return comment="No path from $s$ to $t$">$\Nil$</alg-return>
                             </alg-if>
                             <alg-step>$F_{\text{prev}} = F$</alg-step>
                             <alg-foreach condition="$d = \Delta, \Delta + 1$">
