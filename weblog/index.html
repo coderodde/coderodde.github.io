@@ -53,6 +53,13 @@
         </style>
         <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
         <script src="https://github.com/coderodde/Algotype.js/raw/master/algotype.js" ></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Algotype.ALGORITHM_STEP_COMMENT_TAG = "//";
+                Algotype.reload();
+            }, false);
+        </script>
+
     </head>
     <body>
         <div id="main">
@@ -614,14 +621,6 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 </p>
             </article>
         </div>
-
-        <!--<script src="algotype_my.js"></script>-->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Algotype.ALGORITHM_STEP_COMMENT_TAG = "//";
-                Algotype.reload();
-            }, false);
-        </script>
         
         <article>
             <p>
