@@ -938,9 +938,12 @@ var Algotype = {};
     };
 
     Algotype.setup = function() {
+        console.log(">>> Algotype.js is loading MathJax...");
         // Load MathJax.
         Algotype.setCSSRules();
         Algotype.loadMathJax();
+
+        console.log(">>> Algotype.js is done loading MathJax. Rendering the algorithms...");
 
         // Typeset all algorithms present in the DOM.
         var algorithmList = document.getElementsByTagName("alg-algorithm");
@@ -948,6 +951,8 @@ var Algotype = {};
         for (var i = 0; i < algorithmList.length; ++i) {
             Algotype.typesetAlgorithm(algorithmList[i]);
         }
+        
+        console.log(">>> Setting up Algotype.js is done!");
     };
 
     Algotype.dispatchTable = {};
