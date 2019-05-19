@@ -372,8 +372,10 @@
                 </p>
             </article>
             
-            <h3 id="bidir-iterative-deepening-search">Bidirectional iterative deepening search</h3>
+            <a href="#mcelp"><h3 id="bdfid">Richard E. Korf's bidirectional depth-first iterative deepening pathfinding algorithm</h3></a>
             <article>
+                
+                
                 <p>
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
@@ -553,6 +555,24 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 </p>
             </article>
             
+            <a href="#on_radial_area"><h3 id="on_radial_area">Computing radial sets with overlapping areas</h3></a>
+            <article>
+                <p  >
+                    In this post, we shall compute the radial sets without overlapping areas in polar coordinates.
+                    A function $r = f(\theta)$ is said to be <i>monotonically reducing</i> on the interval $I = [a, b]$, if
+                    we have $f(\theta) \geq f(\theta + 2\pi)$ for any $\theta \in [a, b - 2\pi]. Now, the radial set is calculated as
+                    \[
+                        A = \frac{1}{2} \int_a^b f^2(\theta) \, d\theta,
+                    \]
+                    if $b - a \leq 2\pi$. In case $b - a > 2\pi$, some of the area will overlap. We can, however, deal with that issue:
+                    \begin{align}
+                    A = \frac{1}{2} \Bigg[ \int_a^{a + 2\pi} f^2(\theta) \, d\theta - 
+                        \sum_{\lfloor (\beta - \alpha) / 2\pi - 1 \rfloor}{k = 1} \int_{\alpha + 2\pi k}^{\alpha + 2\pi (k + 1)} f^2(\theta) \, d\theta 
+                        \int_{\beta}^{\alpha + 2\pi + 2\pi \lfloor (\beta - \alpha - 2\pi) / 2\pi \rfloor} f^2(\theta) \, d\theta,   
+                    \Bigg].
+                    \end{align}
+                </p>
+            </article>
             <h3>Rotating a parabola</h3>
             <article>
                 <p>
@@ -620,8 +640,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
         </div>
         
         <article>
-            <p>
-                Let $f(x) = x^n$, where $n \geq 0$.
+            <p>Let $f(x) = x^n$, where $n \geq 0$.
 \begin{aligned}
 \frac{\mathrm{d}}{\mathrm{d}x}f(x)
     &= \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} \\
@@ -631,7 +650,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
     &= \lim_{h \to 0} \big[ nx^{n - 1} \big] + \lim_{h \to 0}\Bigg[ \frac{h^2 \sum_{k=2}^n \binom{n}{k} x^{n - k}h^{k - 2} }{h} \Bigg] \\
     &= nx^{n - 1} + \lim_{h \to 0} \Bigg[ h \sum_{k = 2}^n \binom{n}{k}x^{n - k}h^{k - 2} \Bigg] \\
     &= nx^{n - 1}
-\end{aligned}
+    \end{aligned}</p>
+<p>
 Next, keeping $n$ in the set of non-negative integers, suppose $f(x) = x^{-n}$. Now we have
 \begin{aligned}
 \frac{\mathrm{d}}{\mathrm{d}x}f(x) &= \lim_{h \to 0} \frac{\frac{1}{(x + h)^n} - \frac{1}{x^n}} 
@@ -644,8 +664,7 @@ Next, keeping $n$ in the set of non-negative integers, suppose $f(x) = x^{-n}$. 
     &= \frac{\lim_{h \to 0} -nx^{n - 1}}{\lim_{h \to 0} x^n (x + h)^n} \\
     &= \frac{-nx^{n - 1}}{ x^{2n} } \\
     &= -nx^{-n - 1}.
-\end{aligned}
-            </p>
+\end{aligned}</p>
         </article>
     </body>
 </html>
