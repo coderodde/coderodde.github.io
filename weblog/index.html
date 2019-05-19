@@ -567,8 +567,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                     if $b - a \leq 2\pi$. In case $b - a > 2\pi$, some of the area will overlap. We can, however, deal with that issue:
                     \begin{align}
                     A = \frac{1}{2} \Bigg[ \int_a^{a + 2\pi} f^2(\theta) \, d\theta - 
-                        \sum_{\lfloor (\beta - \alpha) / 2\pi - 1 \rfloor}{k = 1} \int_{\alpha + 2\pi k}^{\alpha + 2\pi (k + 1)} f^2(\theta) \, d\theta 
-                        \int_{\beta}^{\alpha + 2\pi + 2\pi \lfloor (\beta - \alpha - 2\pi) / 2\pi \rfloor} f^2(\theta) \, d\theta,   
+                        \sum_{k = 1}^{\lfloor (\beta - \alpha) / 2\pi - 1 \rfloor} \int_{\alpha + 2\pi k}^{\alpha + 2\pi (k + 1)} f^2(\theta) \, d\theta 
+                        - \int_{\alpha + 2\pi + 2\pi \lfloor (\beta - \alpha - 2\pi) / 2\pi \rfloor}^{\beta} f^2(\theta) \, d\theta,   
                     \Bigg].
                     \end{align}
                 </p>
