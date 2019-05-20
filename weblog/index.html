@@ -560,15 +560,16 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                 <p  >
                     In this post, we shall compute the radial sets without overlapping areas in polar coordinates.
                     A function $r = f(\theta)$ is said to be <i>monotonically reducing</i> on the interval $I = [a, b]$, if
-                    we have $f(\theta) \geq f(\theta + 2\pi)$ for any $\theta \in [a, b - 2\pi]$. Now, the radial set is calculated as
+                    we have $f(\theta) \geq f(\theta + 2\pi)$ for any $\theta \in [a, b - 2\pi]$. Now, the radial set $A_f(a, b) = \{ (r \cos \theta, r \sin \theta) \colon r \in [0, f(\theta)], \theta \in [a, b] \}$ is calculated as
                     \[
                         A = \frac{1}{2} \int_a^b f^2(\theta) \, d\theta,
                     \]
-                    if $b - a \leq 2\pi$. In case $b - a > 2\pi$, some of the area will overlap. We can, however, deal with that issue:
+                    if $b \leq a + 2\pi$. In case $b > a + 2\pi$, some of the area will overlap. We can, however, deal with that issue:
                     \begin{align}
-                    A = \frac{1}{2} \Bigg[ \int_a^{a + 2\pi} f^2(\theta) \, d\theta - 
+                    |A_f(a,b)| &= \frac{1}{2} \Bigg[ \int_a^{a + 2\pi} f^2(\theta) \, d\theta - 
                         \sum_{k = 1}^{\lfloor (\beta - \alpha) / 2\pi - 1 \rfloor} \int_{\alpha + 2\pi k}^{\alpha + 2\pi (k + 1)} f^2(\theta) \, d\theta 
-                        - \int_{\alpha + 2\pi \lfloor (\beta - \alpha) / 2\pi \rfloor}^{\beta} f^2(\theta) \, d\theta  
+                        - \int_{\alpha + 2\pi \lfloor (\beta - \alpha) / 2\pi \rfloor}^{\beta} f^2(\theta) \, d\theta \\
+                               &= \frac{1}{2} \Bigg[ \int_a^b f^2(\theta)\,d\theta - \int_b^{a + 2\pi} f^2(\theta)\, d\theta \Bigg].
                     \Bigg].
                     \end{align}
                 </p>
