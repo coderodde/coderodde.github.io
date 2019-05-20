@@ -569,8 +569,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                     |A_f(a,b)| &= \frac{1}{2} \Bigg[ \int_a^{a + 2\pi} f^2(\theta) \, d\theta - 
                         \sum_{k = 1}^{\lfloor (\beta - \alpha) / 2\pi - 1 \rfloor} \int_{\alpha + 2\pi k}^{\alpha + 2\pi (k + 1)} f^2(\theta) \, d\theta 
                         - \int_{\alpha + 2\pi \lfloor (\beta - \alpha) / 2\pi \rfloor}^{\beta} f^2(\theta) \, d\theta \\
-                               &= \frac{1}{2} \Bigg[ \int_a^b f^2(\theta)\,d\theta - \int_b^{a + 2\pi} f^2(\theta)\, d\theta \Bigg].
-                    \Bigg].
+                               &= \frac{1}{2} \Bigg[ \int_a^b f^2(\theta)\,d\theta - \int_{a + 2\pi}^b f^2(\theta)\, d\theta \Bigg].
                     \end{align}
                 </p>
             </article>
