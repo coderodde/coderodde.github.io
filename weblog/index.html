@@ -557,6 +557,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
             
             <a href="#on_radial_area"><h3 id="on_radial_area">Computing radial sets with overlapping areas</h3></a>
             <article>
+                <p>May 20, 2019</p>
+                
                 <p  >
                     In this post, we shall compute the radial sets without overlapping areas in polar coordinates.
                     A function $r = f(\theta)$ is said to be <i>monotonically reducing</i> on the interval $I = [a, b]$, if
@@ -565,12 +567,14 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
                         A = \frac{1}{2} \int_a^b f^2(\theta) \, d\theta,
                     \]
                     if $b \leq a + 2\pi$. In case $b > a + 2\pi$, some of the area will overlap. We can, however, deal with that issue:
-                    \begin{align}
-                    |A_f(a,b)| &= \frac{1}{2} \Bigg[ \int_a^{a + 2\pi} f^2(\theta) \, d\theta - 
-                        \sum_{k = 1}^{\lfloor (\beta - \alpha) / 2\pi - 1 \rfloor} \int_{\alpha + 2\pi k}^{\alpha + 2\pi (k + 1)} f^2(\theta) \, d\theta 
-                        - \int_{\alpha + 2\pi \lfloor (\beta - \alpha) / 2\pi \rfloor}^{\beta} f^2(\theta) \, d\theta \\
-                               &= \frac{1}{2} \Bigg[ \int_a^b f^2(\theta)\,d\theta - \int_{a + 2\pi}^b f^2(\theta)\, d\theta \Bigg].
-                    \end{align}
+                    \begin{equation}
+                    |A_f(a,b)| = \frac{1}{2} \Bigg[ \int_a^b f^2(\theta)\,d\theta - \int_{a + 2\pi}^b f^2(\theta)\, d\theta \Bigg].
+                    \end{equation}
+                </p>
+                <p>Now, suppose $f(\theta) \leq f(\theta + 2\pi)$. We must have
+                \[
+                |A_f(a, b)| = \frac{1}{2} \Bigg[ \int_a^b f^2(\theta) \,d\theta - \int_a^{b - 2\pi} f^2(\theta) \, d\theta \Bigg].
+                \]
                 </p>
             </article>
             <h3>Rotating a parabola</h3>
