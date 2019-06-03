@@ -272,7 +272,8 @@
                 there exist no actor sequence $\langle u_1, u_2, \dots, u_k \rangle$
                 such that $d(u_1) = u_2$, $d(u_2) = u_3$, $\dots$, $d(u_{k - 1}) = u_k$ and $d(u_k) = u_1$.</span><br/>
                 The only way for such a cycle to emerge is to have $\mathfrak{I}(u_1, u_2) =
-                \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$.
+                \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$, and to pass in $\infty$ as the required potential. Since it is reasonable 
+                not to accept infinity for the requested potential, and we have the closed list around in the algorithm, this phenomenon cannot appear.     
                 Without loss of generality, suppose the search enters the cycle via $u_1$. When $u_k$ will be
                 removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 20 since $u_1$ is in $C$, and
                 so, there is no way $d(u_k)$ could be mapped to $u_1$.
