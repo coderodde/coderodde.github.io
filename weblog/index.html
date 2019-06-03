@@ -374,7 +374,7 @@
                 </p>
             </article>
             
-            <a href="#mcelp"><h3 id="bdfid">Richard E. Korf's bidirectional depth-first iterative deepening pathfinding algorithm</h3></a>
+            <a href="#mcelp"><h3 id="bdfid">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h3></a>
             <article>
                 
                 
@@ -391,10 +391,10 @@
                 <p>
                 What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
                 It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle t \rangle$. 
-                Let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ along the arcs.
-                Let also $F_b^k$ be the set of nodes in $G$ tat are reachable from $t$ along the arcs in <b>opposite</b> direction.
+                Let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ along the arcs making $k$ steps in the direction of the arcs.
+                Let also $F_b^k$ be the set of nodes in $G$ tat are reachable from $t$ along the arcs making $k$ steps in the <b>opposite</b> direction of the arcs.
                 Formally, the algorithm computes $F_f^k$ and $F_b^k$. As soon as the two sets intersect, we have found a shortest path.
-                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch: suppose a gimple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
+                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch: suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
                 Now, the search procedure currently under discussion will return with no path, and that happens because when the forward search
                 
                 Otherwise, the algorithm checks to see whether any child of $s$ is $t$. If not, visit all the parents of $t$; call that 
