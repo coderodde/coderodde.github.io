@@ -465,7 +465,7 @@
                             <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
                             <alg-return></alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in $ Children $(G, u)$">
+                        <alg-foreach condition="$v \in $ Children$(G, u)$">
                             <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
                         </alg-foreach>
                     </alg-algorithm>
@@ -484,7 +484,7 @@
                             <alg-step>$\text{remove the first node in }B$</alg-step>
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in \textsc{Parents}(G, u)$">
+                        <alg-foreach condition="$v \in $Parents$(G, u)$">
                             <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F)$</alg-step>
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>$\mu$</alg-return>
