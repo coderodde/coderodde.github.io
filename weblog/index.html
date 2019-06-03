@@ -392,12 +392,14 @@
                 What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
                 It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle t \rangle$. 
                 Let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ along the arcs making $k$ steps in the direction of the arcs.
-                Let also $F_b^k$ be the set of nodes in $G$ tat are reachable from $t$ along the arcs making $k$ steps in the <b>opposite</b> direction of the arcs.
-                Formally, the algorithm computes $F_f^k$ and $F_b^k$. As soon as the two sets intersect, we have found a shortest path.
-                Otherwise, $k$ is incremented, and the search repeats once again. There is, however, a catch: suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
-                Now, the search procedure currently under discussion will return with no path, and that happens because when the forward search
-                
-                Otherwise, the algorithm checks to see whether any child of $s$ is $t$. If not, visit all the parents of $t$; call that 
+                Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ along the arcs making $k$ steps in the <b>opposite</b> direction of the arcs.
+                Formally, the algorithm computes $F_f^k$ and $F_b^k$. As soon as the two sets intersect $(F_f^k \cap F_b^k \neq \emptyset)$, we have found a shortest path.
+                Otherwise, $k$ is incremented, and the search repeats once again. 
+                There is, however, a catch. Suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
+                Now, the search procedure currently under discussion will return with no path, and that happens because the forward and backward search frontiers go &quot;through&quot; each other:
+                For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$, and so, the search frontier are not able to 
+                agree on a &quot;meeting&quot; node. In order to remedy this, for each turn of the backward search, 
+                it is run twice: once for detecting shortest paths with even number of arcs, and once for detecting shortest paths with odd number of arcs.
                 </p>
                 
                 <p>
