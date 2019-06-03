@@ -79,7 +79,7 @@
                 Formally, we are given a directed graph $G = (V, A)$, where $V$
                 is the set of actors, and 
                 $A \subseteq V^2 \setminus \{ (u, u) \in V^2 \text{ for all } u \in V\}$ is the set of directed
-                arcs, excluding self-loops. By $V(G)$ we denote the actor set of $G$, and likewise, by
+                arcs, excluding self-loops. By $V(G)$ we denote the actor set of $G$, and, likewise, by
                 $A(G)$ we denote the arc set of $G$. Given an arc $(u, v) \in A$,
                 we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$. 
                 Existence of such an arc indicates that $u$ may lend some or all
@@ -96,7 +96,7 @@
                 <p>
                 Apart from the target data structure, in a problem instance, we
                 are given an actor $a \in V$ that applies for a loan, a required
-                potential $P \in \mathbb{R}_{\geq 0}$ and a maximum tolerable 
+                potential $P \in \mathbb{R}_{> 0}$ and a maximum tolerable 
                 interest rate $i \in \mathbb{R}_{\geq 0}$. Our aim, then, is to 
                 compute a loan (which may involve more than one lending actor) 
                 with minimized interest rates.
@@ -135,13 +135,14 @@
                 to define the concept of <i>effective interest rate</i>.
                 Effective interest rate is given by 
                 \[
-                    I(u, v) = \min \Bigg( \mathfrak{I}(u, v), 
-                        \underset{z \in {\rm P{\small ARENTS}}(G, v)}{\mathfrak{C}(\mathfrak{I}(z, v), I(u, z)) } 
+                    I(u, v) = \min \Bigg( 
+                        \underset{z \in {\rm P{\small ARENTS}}(G, v)}{\mathfrak{C}(I(u, z), \mathfrak{I}(z, v)) } ,
+                        \mathfrak{I}(u, v),
                         \Bigg)
                 \]
-                where ${\rm C{\small HILDREN}}(G, z)$ is the set of child nodes
-                of $z$, or, formally, $\{ u \colon (z, u) \in A(G) \}.$ 
-                Also, for the above formula to work, we need to set $\mathfrak{I}(u, v) = \infty$ for all missing arcs $(u, v) \not\in A(G)$.
+                where ${\rm C{\small HILDREN}}(G, v)$ is the set of child nodes
+                of $v$, or, formally, $\{ u \colon (v, u) \in A(G) \}.$ 
+                Also, for the above formula to be sensible, we need to set $\mathfrak{I}(u, v) = \infty$ for all missing arcs $(u, v) \not\in A(G)$.
                 </p>
                 
                 <a href="#most-cost-effective-loan-problem.3.problem-statement"><h4 id="most-cost-effective-loan-problem.3.problem-statement">3 Problem statement</h4></a>
@@ -198,7 +199,7 @@
                 In the very beginning, the tree is trivial and consists only of $a$.
                 Then a most cost-effective parent $u_1$ is selected and the arc $(u_1, a)$
                 is introduced to the tree. Then $u_2$ is selected. It must not
-                belong to $\{a, u_1\}$ while have the lowest possible effective rate
+                belong to $\{a, u_1\}$ while have the lowest possible effective interest rate
                 among all nodes in $V \setminus \{ a, u_1 \}$. This procedure continues
                 until a desired potential $P$ is collected or until there is no more nodes 
                 left with affordable effective interest rates. Below 
@@ -213,20 +214,20 @@
                         <alg-step>$\text{let } Q \text{ be an empty priority queue}$</alg-step>          
                         <alg-step>$\text{let } \pi \text{ be an empty solution potential function}$</alg-step>          
                         <alg-step>$\text{let } d \text{ be an empty direction function}$</alg-step>          
-                        <alg-step>$C \leftarrow \emptyset$</alg-step>          
-                        <alg-step>$P_{\text{collected}} \leftarrow 0$</alg-step>
-                        <alg-foreach condition="$u \in V(G)$">
+                        <alg-step>$\text{let } C \text{ be the set of processed actors} \leftarrow \emptyset$</alg-step>          
+                        <alg-step>$\text{let } P_{\text{collected}} \leftarrow 0 \text{ be the funds currently collected}$</alg-step>
+                        <alg-foreach condition="$u \in V(G)$" comment="Initialize the functions">
                             <alg-step>$\pi(u) \leftarrow 0$</alg-step>
                             <alg-step>$d(u) \leftarrow \Nil$</alg-step>
                         </alg-foreach>
-                        <alg-foreach condition="$u \in $ Parents$(G, a)$">
+                        <alg-foreach condition="$u \in $ Parents$(G, a)$" comment="Initialize the open list">
                             <alg-if condition="$\mathfrak{I}(u, a) \leq i$">
                                 <alg-step>Priority-Queue-Insert$(Q, \langle u, a, \mathfrak{I}(u, a) \rangle)$</alg-step>
                             </alg-if>
                         </alg-foreach>
                         <alg-while condition="$|Q| > 0 \; \And \; P_{\text{collected}} < P$">
                             <alg-step>$\langle u, v, i_{\text{current}} \rangle \leftarrow $ Priority-Queue-Extract-Minimum$(Q)$</alg-step>
-                            <alg-step>$p_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u))$</alg-step>
+                            <alg-step>$P_\Delta \leftarrow \min (P - P_{\text{collected}}, \mathfrak{P}(u))$</alg-step>
                             <alg-step>$P_{\text{collected}} \leftarrow P_{\text{collected}} + P_\Delta$</alg-step>
                             <alg-step>$\pi(u) \leftarrow P_\Delta$</alg-step>
                             <alg-step>$d(u) \leftarrow v$</alg-step>
@@ -288,7 +289,7 @@
                 and <span class="sc"><b>Priority-Queue-Extract-Minimum</b></span> run in $\mathcal{O}(1)$ time.
                 In particular, operations on $\pi, d$ and $C$ may be expected to run in $\mathcal{O}(1)$
                 on average by resorting to hash-table based maps and sets. With geometric expansion
-                scheme <a href="#ref1"><b>[1]</b></a>, adding an element to a hash-table based data
+                scheme <a href="#ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/"><b>[1]</b></a>, adding an element to a hash-table based data
                 structure runs in <b>amortized</b> $\mathcal{O}(1)$. (If the load factor reaches its
                 upper bound, the underlying storage array must be made larger.)
                 </p>
@@ -505,9 +506,6 @@
                         <alg-if condition="$s = t$">
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
-                        <!--<alg-if condition="$t \in \{ u \colon (s, u) \in A(G) \}$" comment="$t$ is child of $s$">
-                            <alg-return>$\langle s, t \rangle$</alg-return>
-                        </alg-if>-->
                         <alg-step>$\Delta \leftarrow 0$</alg-step>
                         <alg-step>$F, F_{\text{prev}}, B \leftarrow \emptyset$</alg-step>
                         <alg-forever>
