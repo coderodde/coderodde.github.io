@@ -390,11 +390,11 @@
                 
                 <p>
                 What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
-                It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle t \rangle$. 
-                Let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ along the arcs making $k$ steps in the direction of the arcs.
-                Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ along the arcs making $k$ steps in the <b>opposite</b> direction of the arcs.
-                Formally, the algorithm computes $F_f^k$ and $F_b^k$. As soon as the two sets intersect $(F_f^k \cap F_b^k \neq \emptyset)$, we have found a shortest path.
-                Otherwise, $k$ is incremented, and the search repeats once again. 
+                It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle s \rangle = \langle t \rangle$. 
+                Now, let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ in $k$ hops following the directions of the arcs.
+                Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ in $k$ hops following the opposite directions of the arcs.
+                Formally, the algorithm computes $F_f^k$ and $F_b^k$ for $k = 0, 1, \dots$ until $F_f^k$ intersects $F_b^k$ for some $k$ and returns the aforementioned meeting node $\mu \in F_f^k \cap F_b^k$.
+                After finding such a meeting node, the shortest path is reconstructed by recursively finding the shortest $s, \mu$-path and appending the node stack of the backward search process. Otherwise, if the meeting node is not found, $k$ is incremented, and the search repeats once again. 
                 There is, however, a catch. Suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
                 Now, the search procedure currently under discussion will return with no path, and that happens because the forward and backward search frontiers go &quot;through&quot; each other:
                 For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$, and so, the search frontier are not able to 
