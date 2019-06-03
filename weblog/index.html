@@ -393,15 +393,43 @@
                 It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle s \rangle = \langle t \rangle$. 
                 Now, let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ in $k$ hops following the directions of the arcs.
                 Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ in $k$ hops following the opposite directions of the arcs.
-                Formally, the algorithm computes $F_f^k$ and $F_b^k$ for $k = 0, 1, \dots$ until $F_f^k$ intersects $F_b^k$ for some $k$ and returns the aforementioned meeting node $\mu \in F_f^k \cap F_b^k$.
+                Formally, the algorithm computes $F_f^k$ and $F_b^k$ for $k = 0, 1, \dots$ until $F_f^k$ intersects $F_b^k$ for some $k$ and returns the aforementioned meeting node $\mu$ for which $\mu \in F_f^k \cap F_b^k$.
                 After finding such a meeting node, the shortest path is reconstructed by recursively finding the shortest $s, \mu$-path and appending the node stack of the backward search process. Otherwise, if the meeting node is not found, $k$ is incremented, and the search repeats once again. 
                 There is, however, a catch. Suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
                 Now, the search procedure currently under discussion will return with no path, and that happens because the forward and backward search frontiers go &quot;through&quot; each other:
-                For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$, and so, the search frontier are not able to 
+                For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$, and so, the search frontiers are not able to 
                 agree on a &quot;meeting&quot; node. In order to remedy this, for each turn of the backward search, 
-                it is run twice: once for detecting shortest paths with even number of arcs, and once for detecting shortest paths with odd number of arcs.
-                </p>
+                it is run twice: once for detecting shortest paths with even number of arcs, and once for detecting shortest paths with odd number of arcs. Or, in another words,
+                for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
+                Last but not least, if there is no $s,t$-path, the algorith will stuck. In order to remedy that issue, for each new $k + 1$ the forward search process
+                remembers $F_f^k$, and so, if $F_f^k = F_f^{k + 1}$, we know that the forward search was not able to make any progress in the graph component reachable from $s$..</p>
                 
+                <p>
+                As it became evident, BDFID is also bidirectional, so we need to to discuss shortly the benefits of such an arrangement. 
+                Suppose that the average out-degree is $d$ and the shortest path consists of $N$ arcs. Now the total work done by unidirectional breadth-first search
+                is roughly
+                \[
+                W_1 = \sum_{i=0}^N d_i = \Theta(d^N),
+                \]
+                </p>
+                <p>where $N$ is the number of arcs on the shortest path, and $d$ is the average out-degree. Of course, 
+                the above expression requires little variance in nodes' out-degrees. If, however, we denote the average out-degree by $d_o$ and average in-degree by $d_i$,
+                the work done by bidirectional breadth-first search is
+                \[
+                W_2 = \sum_{j=0}^{N/2} d_i^j + \sum_{j=0}^{N/2} d_o^j.
+                \]
+                Now, if we set $d_i = d_o = d$, the speedup is roughly
+                \begin{aligned}
+                \frac{W_1}{W_2} = \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
+                                = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
+                                = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
+                                =\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
+                                \approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
+                                = \frac{d^{N / 2}}{2}
+                                = \Theta(d^{N/2}),
+                \end{aligned}
+                </p>
+                which implies exponential speedup in shortest path length.
                 <p>
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient and consumes a moderate amount of memory. 
                 The algorithm in question combines bidirectional search with iterative deepening. Bidirectionality buys us time-wise efficiency, whereas iterative deepening approach helps us save some memory. In this instance, we work on directed, unweighted graphs. In traditional, unidirectional breadth-first search, the work done is
@@ -413,16 +441,7 @@
                 W_2 = \sum_{j = 0}^{N / 2} d_i^j + \sum_{j = 0}^{N / 2} d_o^j.
                 \]
                 Now, if we set $d_i = d_o = d$, the speedup is roughly 
-                \begin{aligned}
-                \frac{W_1}{W_2} = \frac{\sum_{j = 0}^N d^j}{2 \sum_{j = 0}^{N / 2} d^j}
-                                = \frac{\frac{1 - d^{N + 1}}{1 - d}}{2 \frac{1 - d^{N / 2 + 1}}{1 - d}}
-                                = \frac{1 - d^{N + 1}}{2 (1 - d^{N / 2 + 1})}
-                                =\frac{d^{N + 1} - 1}{2(d^{N / 2 + 1} - 1)}
-                                \approx \frac{d^{N + 1}}{2d^{N / 2 + 1}}
-                                = \frac{d^{N / 2}}{2}
-                                = \frac{\sqrt{d}^N}{2}
-                                = \Theta(d^N),
-                \end{aligned}
+                
                 which implies exponential speedup in shortest path length.
                 </p>
                 
