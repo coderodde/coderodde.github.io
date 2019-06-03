@@ -465,7 +465,7 @@
                             <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
                             <alg-return></alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in \mathsc{Children}(G, u)$">
+                        <alg-foreach condition="$v \in \textsc{Children}(G, u)$">
                             <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
                         </alg-foreach>
                     </alg-algorithm>
@@ -484,7 +484,7 @@
                             <alg-step>$\text{remove the first node in }B$</alg-step>
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in \mathsc{Parents}(G, u)$">
+                        <alg-foreach condition="$v \in \textsc{Parents}(G, u)$">
                             <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F)$</alg-step>
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>$\mu$</alg-return>
@@ -512,7 +512,7 @@
                             <alg-if condition="$F = F_{\text{prev}}$">
                                 <alg-return comment="No path from $s$ to $t$">$\Nil$</alg-return>
                             </alg-if>
-                            <alg-step>$F_{\text{prev}} = F$</alg-step>
+                            <alg-step>$F_{\text{prev}} \leftarrow F$</alg-step>
                             <alg-foreach condition="$d = \Delta, \Delta + 1$">
                                 <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
 
