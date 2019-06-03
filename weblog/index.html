@@ -389,16 +389,16 @@
                 </p>
                 
                 <p>
-                What comes to actual algorithm in question, it utilizes iterative deepening in order to reduce the memory consumption. 
+                What comes to the actual algorithm in question, it utilizes iterative deepening in order to reduce memory consumption. 
                 It first checks that the invocation is trivial (the source node is the target node), and if so, returns $\langle s \rangle = \langle t \rangle$. 
                 Now, let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ in $k$ hops following the directions of the arcs.
                 Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ in $k$ hops following the opposite directions of the arcs.
-                Formally, the algorithm computes $F_f^k$ and $F_b^k$ for $k = 0, 1, \dots$ until $F_f^k$ intersects $F_b^k$ for some $k$ and returns the aforementioned meeting node $\mu$ for which $\mu \in F_f^k \cap F_b^k$.
+                Formally, the algorithm computes $F_f^k$ and $F_b^k$ for $k = 0, 1, \dots$ until $F_f^k$ intersects $F_b^k$ for some $k$ and returns a &quot;meeting node&quot; $\mu$ for which $\mu \in F_f^k \cap F_b^k$.
                 After finding such a meeting node, the shortest path is reconstructed by recursively finding the shortest $s, \mu$-path and appending the node stack of the backward search process. Otherwise, if the meeting node is not found, $k$ is incremented, and the search repeats once again. 
                 There is, however, a catch. Suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest path.
                 Now, the search procedure currently under discussion will return with no path, and that happens because the forward and backward search frontiers go &quot;through&quot; each other:
                 For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$, and so, the search frontiers are not able to 
-                agree on a &quot;meeting&quot; node. In order to remedy this, for each turn of the backward search, 
+                agree on a meeting node. In order to remedy this, for each turn of the backward search, 
                 it is run twice: once for detecting shortest paths with even number of arcs, and once for detecting shortest paths with odd number of arcs. Or, in another words,
                 for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
                 Last but not least, if there is no $s,t$-path, the algorith will stuck. In order to remedy that issue, for each new $k + 1$ the forward search process
@@ -430,32 +430,9 @@
                 \end{aligned}
                 </p>
                 which implies exponential speedup in shortest path length.
-                <p>
-                In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient and consumes a moderate amount of memory. 
-                The algorithm in question combines bidirectional search with iterative deepening. Bidirectionality buys us time-wise efficiency, whereas iterative deepening approach helps us save some memory. In this instance, we work on directed, unweighted graphs. In traditional, unidirectional breadth-first search, the work done is
-                \[
-                W_1 = \sum_{i = 0}^N d^i,
-                \]
-                where $N$ is the number of arcs on the shortest path, and $d$ is the average out-degree. Of course, the above expression requires little variance in node out-degrees. If, however, we denote the average out-degree by $d_o$, and average in-degree by $d_i$, the work done by bidirectional breadth-first search is 
-                \[
-                W_2 = \sum_{j = 0}^{N / 2} d_i^j + \sum_{j = 0}^{N / 2} d_o^j.
-                \]
-                Now, if we set $d_i = d_o = d$, the speedup is roughly 
-                
-                which implies exponential speedup in shortest path length.
-                </p>
-                
-                <p>
-                The bidirectional iterative deepening search works as follows. If the source node is the target node, halt and return a list containing only the node in question.
-                Otherwise, scan the child nodes of the source node, and scan the parent nodes of the target node. If there is a node scanned twice, we have found a shortest path.
-                If that does not produce a shortest path, go two steps deeper in both search directions starting from source and target nodes. There is, however, a catch: this arrangement may return with no solution in case the shortest path consists of an odd number of arcs. 
-                To remedy this, for each depth $\Delta$, the forward search goes one step deeper. 
-                
-               
-                </p>
                 
                 <p align="center">
-                    <img src="BID1.png" width="400px"/>
+                    <img src="BDFID.png" width="400px"/>
                 </p>
                 
                 <p>
@@ -488,7 +465,7 @@
                             <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
                             <alg-return></alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in \{ n \colon (u, n) \in A(G)\}$">
+                        <alg-foreach condition="$v \in \mathsc{Children}(G, u)$">
                             <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
                         </alg-foreach>
                     </alg-algorithm>
@@ -507,7 +484,7 @@
                             <alg-step>$\text{remove the first node in }B$</alg-step>
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
-                        <alg-foreach condition="$v \in \{ n \colon (n, u) \in A(G) \}$">
+                        <alg-foreach condition="$v \in \mathsc{Parents}(G, u)$">
                             <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F)$</alg-step>
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>$\mu$</alg-return>
