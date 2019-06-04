@@ -494,7 +494,7 @@
                         <alg-return>$\Nil$</alg-return>
                     </alg-algorithm>
                 </p>
-                
+               
                 
                 <p>
                     <alg-algorithm header="Find-Shortesst-Path($G, s, t$)"
@@ -641,7 +641,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
         </div>
         
         <article>
-            <p>Let $f(x) = x^n$, where $n \geq 0$.
+            <p>Let $f(x) = x^n$, where $n \geq 0$.</p>
+            <p>
 \begin{aligned}
 \frac{\mathrm{d}}{\mathrm{d}x}f(x)
     &= \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} \\
@@ -651,9 +652,10 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
     &= \lim_{h \to 0} \big[ nx^{n - 1} \big] + \lim_{h \to 0}\Bigg[ \frac{h^2 \sum_{k=2}^n \binom{n}{k} x^{n - k}h^{k - 2} }{h} \Bigg] \\
     &= nx^{n - 1} + \lim_{h \to 0} \Bigg[ h \sum_{k = 2}^n \binom{n}{k}x^{n - k}h^{k - 2} \Bigg] \\
     &= nx^{n - 1}
-    \end{aligned}</p>
+    \end{aligned}
+            </p>
+<p>Next, keeping $n$ in the set of non-negative integers, suppose $f(x) = x^{-n}$. Now we have</p>
 <p>
-Next, keeping $n$ in the set of non-negative integers, suppose $f(x) = x^{-n}$. Now we have
 \begin{aligned}
 \frac{\mathrm{d}}{\mathrm{d}x}f(x) &= \lim_{h \to 0} \frac{\frac{1}{(x + h)^n} - \frac{1}{x^n}} 
 {h} \\
