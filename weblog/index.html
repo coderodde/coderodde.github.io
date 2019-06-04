@@ -376,8 +376,6 @@
             
             <a href="#mcelp"><h3 id="bdfid">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h3></a>
             <article>
-                
-                
                 <p>
                 In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
@@ -440,9 +438,9 @@
                 </p>
                 
                 <p>
-                    Before we proceed to pseudocode, we have to review some notational conventions. A directed graph $G$ is a tuple $(V, A)$, where $V$ is a set of nodes, and $A \subseteq V^2$ is a set of directed arcs. 
-                    Given such a graph $G$, we denote its arc set by $A(G)$. In addition, $\{ n \colon (u, n) \in A(G) \}$ is simply a set of children of the node $u$. Analogously, 
-                    $\{ n \colon (n, u) \in A(G) \}$ is the set of parent nodes of $u$. As a reminder, given a directed arc $(u, v) \in A(G)$, we consider it as an arrow from $u$ to $v$, and we call $u$ a <i>parent</i> of $v$, and $v$ a <i>child</i> of $u$.
+                    Before we proceed to pseudocode, we have to review some notational conventions.
+                    Given a graph $G$, the set of all children of a node $u \in V(G)$ is written as $\textsc{Children}(G, u)$. Also, the set of all parents of a node 
+                    $u$ is written as $\textsc{Parents}(G, u)$.
                 </p>
                 
                 <p>
@@ -641,7 +639,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
         
         <h3>Deriving the polynomial derivatives</h3>
         <article>
-            <p>Let $f(x) = x^n$, where $n \geq 0$.</p>
+            <p>Let $f(x) = x^n$, where $n$ is a non-negative integer Now we have.</p>
             <p>
 \begin{aligned}
 \frac{\mathrm{d}}{\mathrm{d}x}f(x)
@@ -654,7 +652,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
     &= nx^{n - 1}
     \end{aligned}
             </p>
-<p>Next, keeping $n$ in the set of non-negative integers, suppose $f(x) = x^{-n}$. Now we have</p>
+<p>Next, keeping $n$ in the set of positive integers, suppose $f(x) = x^{-n}$. Now we have</p>
 <p>
 \begin{aligned}
 \frac{\mathrm{d}}{\mathrm{d}x}f(x) &= \lim_{h \to 0} \frac{\frac{1}{(x + h)^n} - \frac{1}{x^n}} 
