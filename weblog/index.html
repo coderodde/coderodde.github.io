@@ -377,7 +377,7 @@
             <a href="#mcelp"><h3 id="bdfid">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h3></a>
             <article>
                 <p>
-                In this post, I will briefly discuss a rather simple graph search technique that turned out to be rather efficient on sparse, directed, unweighted graphs. 
+                    In this post, I will briefly discuss a rather simple graph search technique <b>[1]</b> that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
                 A directed, unweighted graph $G$ is an ordered pair $(V, A)$, where $V$ is the set of <i>nodes</i>, and $A \subseteq V \times V$ is the set of directed <i>arcs</i>.
                 Given two terminal nodes $s, t \in V$, we wish to find a <i>shortest</i> path, or, in other words, a path that connects $s$ to $t$ using minimum number of arcs.
@@ -531,6 +531,8 @@
                     The results are rather impressive. What comes to solving 15-puzzles, while iterative deepening A* dominates BID by a factor of three or so, on general graphs, BID 
                     is faster than iterative deepening depth-first search by an order of magnitude, and BID outperforms unidirectional breadth-first search by three orders
                     of magnitude. The following listing is a typical output of the benchmarking program:
+                </p>
+                
                 <pre>
                     <code>
 *** 15-puzzle graph benchmark ***
@@ -545,9 +547,18 @@ Algorithms agree: true
 Seed = 1544375531134
 BidirectionalIterativeDeepeningDepthFirstSearch in 0 milliseconds. Path length: 5
 IterativeDeepeningDepthFirstSearch in 10 milliseconds. Path length: 5
-BreadthFirstSearch in 472 milliseconds. Path length: 5</code>
+BreadthFirstSearch in 472 milliseconds. Path length: 5
+                    </code>
                 </pre>
-                </p>
+                
+                <a href="#bdfid.references"><h4 id="bdfid.references">8 References</h4></a>
+                <b>[1]</b> <a id="ref1" target="_blank" href="https://academiccommons.columbia.edu/doi/10.7916/D8BK1M9V/download">Richard E. Korf,
+Depth-first iterative-deepening: An optimal admissible tree search,
+Artificial Intelligence,
+Volume 27, Issue 1,
+1985,
+Pages 97-109,</a> (Retrieved 2019-06-05.)
+            
             </article>
             
             <a href="#on_radial_area"><h3 id="on_radial_area">Computing radial sets with overlapping areas</h3></a>
