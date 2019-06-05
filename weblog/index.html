@@ -504,8 +504,7 @@
                         <alg-if condition="$s = t$">
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
-                        <alg-step>$\Delta \leftarrow 0$</alg-step>
-                        <alg-step>$\langle F, F_{\text{prev}}, B \rangle \leftarrow \langle \emptyset, \emptyset, \emptyset \rangle$</alg-step>
+                        <alg-step>$\langle F, F_{\text{prev}}, B \Delta \rangle \leftarrow \langle \emptyset, \emptyset, 0 \emptyset \rangle$</alg-step>
                         <alg-forever>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
                             <alg-if condition="$F = F_{\text{prev}}$">
