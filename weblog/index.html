@@ -441,7 +441,18 @@
                     Before we proceed to pseudocode, we have to review some notational conventions.
                     Given a graph $G$, the set of all children of a node $u \in V(G)$ is written as 
                     ${\rm C{\small HILDREN}}(G, u)$. Also, the set of all parents of a node 
-                    $u$ is written as ${\rm P{\small ARENTS}}(G, u)$.
+                    $u$ is written as ${\rm P{\small ARENTS}}(G, u)$. The algorithm 1 reconstructs the 
+                    shortest path by recursively searching the shortest $s,\mu$-path from the source node
+                    and to the meeting node $\mu$, appends the $B$-path to the resulting path and returning the
+                    concatenation. The algorithm 2 is the forward search routine that colors all the nodes
+                    exactly $\Delta$ hops away from the source. Note that it may color the nodes 
+                    less than $\Delta$ hops away, since it may &quot;make a turn&quot; and proceed towards
+                    closer nodes. It is, however, sufficient for us that the routine does not reach the nodes
+                    farther than $\Delta$ steps away. The algorithm 3, like the algorithm 2, makes a 
+                    depth-first search backwards, but along opposite direction (from child to parent). When
+                    the node $\mu$ for which $\mu \in F_b^k$, the search is over and the shortest path
+                    is reconstructed via algorithm 1. Finally, the algorithm 4 performs the actual search
+                    by increasingly going deeper in the graph until the two search frontiers $F_f^k, F_b^k$ (or $F_f^k, F_b^{k+1}$) intersect.
                 </p>
                 
                 <p>
