@@ -407,13 +407,13 @@
                     and so, the search frontiers are not able to 
                 agree on a meeting node. In order to remedy this, for each turn of the backward search, 
                 it is run twice:
-                    once for detecting shortest paths with even number of arcs, and once for detecting shortest paths with odd number of arcs. Or, in another words,
-                for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
-                Last but not least, if there is no $s,t$-path, the algorith will stuck. In order to remedy that issue, for each new $k + 1$ the forward search process
-                remembers $F_f^k$, and so, if $F_f^k = F_f^{k + 1}$, we know that the forward search was not able to make any progress in the graph component reachable from $s$..</p>
+                    once for detecting shortest paths with the even number of arcs, and once for detecting shortest paths with the odd number of arcs. 
+                    Or, in another words, for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
+                Last but not least, if there is no $s,t$-path, the algorith will stuck.
+                </p>
                 
                 <p>
-                As it became evident, BDFID is also bidirectional, so we need to to discuss shortly the benefits of such an arrangement. 
+                As it became evident, BIDDFS is also bidirectional, so we need to to discuss shortly the benefits of such an arrangement. 
                 Suppose that the average out-degree is $d$ and the shortest path consists of $N$ arcs. Now the total work done by unidirectional breadth-first search
                 is roughly
                 \[
@@ -421,7 +421,8 @@
                 \]
                 </p>
                 <p>where $N$ is the number of arcs on the shortest path, and $d$ is the average out-degree. Of course, 
-                the above expression requires little variance in nodes' out-degrees. If, however, we denote the average out-degree by $d_o$ and average in-degree by $d_i$,
+                the above expression requires little variance in nodes' out-degrees. 
+                    If, however, we denote the average out-degree by $d_o$ and average in-degree by $d_i$,
                 the work done by bidirectional breadth-first search is
                 \[
                 W_2 = \sum_{j=0}^{N/2} d_i^j + \sum_{j=0}^{N/2} d_o^j.
