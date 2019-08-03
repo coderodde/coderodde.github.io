@@ -527,13 +527,9 @@
                         <alg-if condition="$s = t$">
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
-                        <alg-step>$\langle F, F_{\text{prev}}, B, \Delta \rangle \leftarrow \langle \emptyset, \emptyset, \emptyset, 0 \rangle$</alg-step>
+                        <alg-step>$\langle F, B, \Delta \rangle \leftarrow \langle \emptyset, \emptyset, 0 \rangle$</alg-step>
                         <alg-forever>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
-                            <alg-if condition="$F = F_{\text{prev}}$">
-                                <alg-return comment="No path from $s$ to $t$">$\Nil$</alg-return>
-                            </alg-if>
-                            <alg-step>$F_{\text{prev}} \leftarrow F$</alg-step>
                             <alg-foreach condition="$d = \Delta, \Delta + 1$">
                                 <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
 
