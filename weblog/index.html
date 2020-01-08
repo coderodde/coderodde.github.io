@@ -500,7 +500,7 @@
                             <alg-if condition="$u \in F$">
                                 <alg-return>$u$</alg-return>
                             </alg-if>
-                            <alg-step>$\text{remove the first node in }B$</alg-step>
+                            <alg-step>$\text{remove the head node in }B$</alg-step>
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
                         <alg-foreach condition="$v \in $Parents$(G, u)$">
@@ -509,7 +509,7 @@
                                 <alg-return>$\mu$</alg-return>
                             </alg-if>
                         </alg-foreach>
-                        <alg-step>$\text{remove the first node in } B$</alg-step>
+                        <alg-step>$\text{remove the head node in } B$</alg-step>
                         <alg-return>$\Nil$</alg-return>
                     </alg-algorithm>
                 </p>
