@@ -36,16 +36,16 @@
 
 .upper_header_bar {
     border-top: 3px solid black !important;
-    width: 800px;
+    width: 900px;
 }
 
 .lower_header_bar {
     border-bottom: 2px solid black !important; 
-    width: 800px;
+    width: 900px;
 }
 
 .footer_bar {
     background-color: black;
-    width: 800px; 
+    width: 900px; 
     height: 3px;
 }

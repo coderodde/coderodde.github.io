@@ -9,12 +9,12 @@
             
             article {
                 font-family: "Times New Roman";
-                font-size: 12pt;
+                font-size: 13pt;
                 text-align: justify;
             }
             
             #main {
-                width: 800px;
+                width: 900px;
                 margin: auto;
             }
             
@@ -49,6 +49,18 @@
             
             #main {
                 overflow-x: scroll;
+            }
+
+            .my_italics {
+                font-style: italic;
+            }
+
+            .figure_style {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                padding-top: 40px;
+                padding-bottom: 40px;
             }
         </style>
         <link rel="stylesheet" type="text/css" href="algotype_my_config.css">
@@ -317,7 +329,7 @@
                 <a href="#most-cost-effective-loan-problem.8.references"><h4 id="most-cost-effective-loan-problem.8.references">8 References</h4></a>
                 <b>[1]</b> <a id="ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
-            
+            <!--
             <a href="#inclusion-exclusion-principle"><h3 id="inclusion-exclusion-principle">Proving inclusion-exclusion principle</h3></a>
             
             <article>
@@ -370,7 +382,7 @@
                     \end{aligned}
                 </p>
             </article>
-            
+            -->
             <a href="#biddfs"><h3 id="biddfs">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h3></a>
             <article>
                 <p>
@@ -685,6 +697,37 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
     &= \frac{-nx^{n - 1}}{ x^{2n} } \\
     &= -nx^{-n - 1}.
 \end{aligned}</p>
+        </article>
+
+        <a href="#eill"><h3 id="eill">Efficient indexed linked list</h3></a>
+        <article>
+            <p>In this post, we will present an indexed, doubly-linked list data structure that runs all the single-element operations in $\mathcal{O}(\sqrt{N})$ time. The idea is to maintain, along the actual doubly-linked list $L$, a stack of <span class="my_italics">fingers</span> $L.fingers$. Each finger $f$ consists of a reference to a node $f.node$ somewhere in the list, and the appearance index $f.index$ of that node. Now, for example, when we want to access a node via an index (call that index $i$), the data structure scans all the fingers and chooses the finger whose index is closest to $i$, after which all we do is to iterate from the node in the finger to the list node at index $i$. The process of choosing the closest finger is exemplified in the following procedure:
+            <div>
+
+                <alg-algorithm header="Access-Via-Index$(L, i)$"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-class="lower_header_bar"
+                                   algorithm-footer-class="footer_bar">
+
+                    <alg-step>$\Delta \leftarrow \infty$</alg-step>
+                    <alg-step>$f \leftarrow \Nil$</alg-step>
+
+                    <alg-foreach condition="$f' \in L.fingers$">
+                        <alg-step>$\delta \leftarrow |f'.index - i|$</alg-step>
+                        <alg-if condition="$\delta = 0$">
+                            <alg-return>$f'$</alg-return>
+                        </alg-if>
+                        <alg-if condition="$\Delta > \delta$">
+                            <alg-step>$\Delta \leftarrow \delta$</alg-step>
+                            <alg-step>$f \leftarrow f'$</alg-step>
+                        </alg-if>
+                    </alg-foreach>
+                    <alg-return>$f$</alg-return>
+                </alg-algorithm>
+            </div>
+
+            <p>Suppose that the fingers are evenly distributed as in the Figure 1:
+            <img class="figure_style" src="FingerListDS.svg" alt="Evenly distributed fingers"/>
         </article>
         </div>
     </body>
