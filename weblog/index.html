@@ -701,10 +701,10 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
         <a href="#eill"><h3 id="eill">Efficient indexed linked list</h3></a>
         <article>
-            <p>In this post, we will present an indexed, doubly-linked list data structure that runs all the single-element operations in $\mathcal{O}(\sqrt{N})$ time. The idea is to maintain, along the actual doubly-linked list $L$, a stack of <span class="my_italics">fingers</span> $L.fingers$. Each finger $f$ consists of a reference to a node $f.node$ somewhere in the list, and the appearance index $f.index$ of that node. Now, for example, when we want to access a node via an index (call that index $i$), the data structure scans all the fingers and chooses the finger whose index is closest to $i$, after which all we do is to iterate from the node in the finger to the list node at index $i$. The process of choosing the closest finger is exemplified in the following procedure:
+            <p>In this post, we will present an indexed, heuristic doubly-linked list data structure that runs all the single-element operations in $\mathcal{O}(\sqrt{N})$ time. The idea is to maintain, along the actual doubly-linked list $L$, a stack of <span class="my_italics">fingers</span> $L.fingers$. Each finger $f$ consists of a reference to a node $f.node$ somewhere in the list, and the appearance index $f.index$ of that node. Now, for example, when we want to access a node via an index (call that index $i$), the data structure scans all the fingers and chooses the finger whose index is closest to $i$, after which all we do is to iterate from the node in the finger to the list node at index $i$. The process of choosing the closest finger is exemplified in the following procedure:
             <div>
 
-                <alg-algorithm header="Access-Via-Index$(L, i)$"
+                <alg-algorithm header="Get-Closest-Finger$(L, i)$"
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
@@ -726,13 +726,38 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
                 </alg-algorithm>
             </div>
 
-            <p>Suppose that the fingers are evenly distributed as in the Figure 1:
+            The actual routine for obtaining a reference to the target node is as follows:
+
+            <div>
+            <alg-algorithm header="Get-Node$(L, i)$"
+                        algorithm-upper-header-class="upper_header_bar"
+                        algorithm-lower-header-class="lower_header_bar"
+                        algorithm-footer-class="footer_bar">
+
+                <alg-step>$f \leftarrow$Get-Closest-Finger$(L, i)$</alg-step>
+                <alg-step>$\delta \leftarrow f.index - i$</alg-step>
+                <alg-step>$f.index \leftarrow f.index - \delta$</alg-step>
+                <alg-if condition="$\delta > 0$">
+                    <alg-for init="$i = 1$" to="$\delta$">
+                        <alg-step>$f.node \leftarrow f.node.prev$</alg-step>
+                    </alg-for>    
+                </alg-if>
+                <alg-else>
+                    <alg-for init="$i = 1$" to="$-\delta$">
+                       <alg-step>$f.node \leftarrow f.node.next$</alg-step>
+                    </alg-for>    
+                </alg-else>
+            </div>
+
+            <p>Suppose that the fingers are evenly distributed as in the Figure 1.
             <img class="figure_style" src="FingerListDS.svg" alt="Evenly distributed fingers"/>
 
             <p>Assuming that all the $f$ fingers are distributed evenly over a list of length $N$, the work $W_N(f)$ for the access operation runs in
             \[
                 \frac{N}{2f} + f.
             \]
+            The idea is that we first consult all the $f$ fingers, choosing the closest one (call it $T$) to the target index, after which we move starting from the node $T.node$ towards the node with the target index. Obviously, consulting the fingers runs in $\Theta(f)$ time since the fingers are not sorted by their indices. Now, in the evenly-distributed finger list, each finger covers $N/f$ nodes, but if we choose a closer finger, it's enough to iterate the nodes at most $\lceil N/(2f) \rceil$ times.
+            <p> 
             Next, we would like to find the value $f$ that minimizes $W_N(f)$. To achieve that, we first need to derivate $W_N(f)$ with respect to $f$:
             \[
                 \begin{aligned}
@@ -744,21 +769,7 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
             \[
                 \frac{d}{df}W_N(f_0) = 0. 
             \]
-            To this end, we have
-            \[
-                \begin{aligned}
-                    -\frac{N}{2f_0^2} + 1 = 0 & \leftrightarrow \\
-                    \frac{N}{2f_0^2} = 1 & \leftrightarrow \\
-                    N = 2f_0^2 & \leftrightarrow \\
-                    f_0^2 = \frac{N}{2} & \leftrightarrow \\
-                    f_0 = \pm \sqrt{\frac{N}{2}}.
-                \end{aligned}
-            \]
-            Since we don't accept negative values for $f_0$, we must conclude that $f = f_0 = \sqrt{N/2}$ minimizes $W_N(f)$. Finally, since any non-empty finger list must have at least one finger (even for the finger list consisting of a single element), we use 
-            \[
-                f = \sqrt{\lceil \frac{N}{2} \rceil}
-            \]
-            as the actual number of fingers for a list of $N$ elements.
+            A simple manipulation will lead to the equation $f = \sqrt{N/2}$. Since $\sqrt{1/2} < 1$, in our implementation we set $f = \lceil \sqrt{N/2} \rceil$.
         </article>
         </div>
     </body>
