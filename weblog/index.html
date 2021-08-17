@@ -729,11 +729,36 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
             <p>Suppose that the fingers are evenly distributed as in the Figure 1:
             <img class="figure_style" src="FingerListDS.svg" alt="Evenly distributed fingers"/>
 
-            <p>Assuming that all the fingers are distributed evenly, the work $W_N(f)$ for the access operation runs in
+            <p>Assuming that all the $f$ fingers are distributed evenly over a list of length $N$, the work $W_N(f)$ for the access operation runs in
             \[
                 \frac{N}{2f} + f.
             \]
-            
+            Next, we would like to find the value $f$ that minimizes $W_N(f)$. To achieve that, we first need to derivate $W_N(f)$ with respect to $f$:
+            \[
+                \begin{aligned}
+                    \frac{d}{df}W_N(f) &= \frac{d}{df}\Bigg[\frac{N}{2f} + f\Bigg] \\
+                                       &= -\frac{N}{2f^2} + 1.
+                \end{aligned}
+            \]
+            Now, we need to find such an $f_0$, that 
+            \[
+                \frac{d}{df}W_N(f_0) = 0. 
+            \]
+            To this end, we have
+            \[
+                \begin{aligned}
+                    -\frac{N}{2f_0^2} + 1 = 0 & \leftrightarrow \\
+                    \frac{N}{2f_0^2} = 1 & \leftrightarrow \\
+                    N = 2f_0^2 & \leftrightarrow \\
+                    f_0^2 = \frac{N}{2} & \leftrightarrow \\
+                    f_0 = \pm \sqrt{\frac{N}{2}}.
+                \end{aligned}
+            \]
+            Since we don't accept negative values for $f_0$, we must conclude that $f = f_0 = \sqrt{N/2}$ minimizes $W_N(f)$. Finally, since any non-empty finger list must have at least one finger (even for the finger list consisting of a single element), we use 
+            \[
+                f = \sqrt{\lceil \frac{N}{2} \rceil}
+            \]
+            as the actual number of fingers for a list of $N$ elements.
         </article>
         </div>
     </body>
