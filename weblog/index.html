@@ -699,6 +699,11 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 \end{aligned}</p>
         </article>
 
+
+
+
+
+
         <a href="#eill"><h3 id="eill">Efficient indexed linked list</h3></a>
         <article>
             <p>In this post, we will present an indexed, heuristic doubly-linked list data structure that runs all the single-element operations in $\mathcal{O}(\sqrt{N})$ time. The idea is to maintain, along the actual doubly-linked list $L$, a stack of <span class="my_italics">fingers</span> $L.fingers$. Each finger $f$ consists of a reference to a node $f.node$ somewhere in the list, and the appearance index $f.index$ of that node. Now, for example, when we want to access a node via an index (call that index $i$), the data structure scans all the fingers and chooses the finger whose index is closest to $i$, after which all we do is to iterate from the node in the finger to the list node at index $i$. The process of choosing the closest finger is exemplified in the following procedure:
@@ -755,9 +760,9 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
             <p>Assuming that all the $f$ fingers are distributed evenly over a list of length $N$, the work $W_N(f)$ for the access operation runs in
             \[
-                \frac{N}{2f} + f.
+                \frac{N}{2f} + f
             \]
-            The idea is that we first consult all the $f$ fingers, choosing the closest one (call it $T$) to the target index, after which we move starting from the node $T.node$ towards the node with the target index. Obviously, consulting the fingers runs in $\Theta(f)$ time since the fingers are not sorted by their indices. Now, in the evenly-distributed finger list, each finger covers $N/f$ nodes, but if we choose a closer finger, it's enough to iterate the nodes at most $\lceil N/(2f) \rceil$ times.
+            steps. The idea is that we first consult all the $f$ fingers, choosing the closest one (call it $T$) to the target index, after which we move starting from the node $T.node$ towards the node with the target index. Obviously, consulting the fingers runs in $\Theta(f)$ time since the fingers are not sorted by their indices. Now, in the evenly-distributed finger list, each finger covers $N/f$ nodes, but if we choose a closer finger, it's enough to iterate the nodes at most $\lceil N/(2f) \rceil$ times.
             <p> 
             Next, we would like to find the value $f$ that minimizes $W_N(f)$. To achieve that, we first need to derivate $W_N(f)$ with respect to $f$:
             \[
@@ -770,7 +775,11 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
             \[
                 \frac{d}{df}W_N(f_0) = 0. 
             \]
-            A simple manipulation will lead to the equation $f = \sqrt{N/2}$. Since $\sqrt{1/2} < 1$, in our implementation we set $f = \lceil \sqrt{N/2} \rceil$.
+            A simple manipulation will lead to the equation $f_0 = \sqrt{N/2}$. Next, we need to verify that such $f_0$ is, in fact, a minimizing value. To this end, we need the second derivative of $W_f(N)$:
+            \[
+                    \frac{d}{df} \Bigg[ -\frac{N}{2f^2} + 1 \Bigg] = \frac{d}{df} \Bigg[-\frac{N}{2f^2}\Bigg] = \frac{N}{f^3}.  
+            \]
+            Since $f > 0$, the second derivative is positive, and, so, the $f = \sqrt{N/2}$ is a (global) minimum. Finally, as $\sqrt{1/2} < 1$, in our implementation we set $f = \lceil \sqrt{N/2} \rceil$. 
         </article>
         </div>
     </body>
