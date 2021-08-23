@@ -29,7 +29,7 @@ function renderResults(jsonText, textElement) {
         }
 
         if (mostRecentViewTime) {
-            textElement += " Last visit time: " + new Date(mostRecentViewTime).toString() + ".";
+            textElement.innerHTML += " Last visit time: " + new Date(mostRecentViewTime).toString() + ".";
         } else {
             textElement.innerHTML += " Last visit time: N/A.";
         }
