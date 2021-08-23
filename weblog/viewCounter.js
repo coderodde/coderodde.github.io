@@ -12,7 +12,7 @@ function processViewCounter() {
     };
 
     xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView");
-    xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+    xhttp.setRequestHeader('Origin', 'http://coderodde.github.io/weblog/');
     xhttp.send();
 }
 
