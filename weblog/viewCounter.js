@@ -1,4 +1,4 @@
-function process() {
+function processViewCounter() {
     let span = document.getElementById("view_count_span");
     console.log(span);
     let xhttp = new XMLHttpRequest();
@@ -17,7 +17,7 @@ function process() {
 function renderResults(jsonText, textElement) {
     const responseObject = JSON.parse(jsonText);
     console.log(jsonText);
-    
+
     if (responseObject["succeeded"]) {
         const numberOfViews = responseObject["numberOfViews"];
         const mostRecentViewTime = responseObject["mostRecentViewCount"];
