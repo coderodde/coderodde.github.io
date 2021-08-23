@@ -17,18 +17,22 @@ function processViewCounter() {
 
 function renderResults(jsonText, textElement) {
     const responseObject = JSON.parse(jsonText);
-    console.log(jsonText);
 
     if (responseObject["succeeded"]) {
         const numberOfViews = responseObject["numberOfViews"];
-        const mostRecentViewTime = responseObject["mostRecentViewCount"];
-        textElement.innerHTML = 
-            "Total views: " +
-            numberOfViews + 
-            ". Last visit time: " + 
-            mostRecentViewTime +
-            ".";
+        const mostRecentViewTime = responseObject["mostRecentViewTime"];
 
+        if (numberOfViews) {            
+            textElement.innerHTML = "Total views: " + numberOfViews + ".";
+        } else {
+            textElement.innerHTML = "Total views: N/A.";
+        }
+
+        if (mostRecentViewTime) {
+            textElement += " Last visit time: " + new Date(mostRecentViewTime).toString() + ".";
+        } else {
+            textElement.innerHTML += " Last visit time: N/A.";
+        }
     } else {
         textElement.innerHTML = "Total views: N/A. Last visit time: N/A.";
     }
