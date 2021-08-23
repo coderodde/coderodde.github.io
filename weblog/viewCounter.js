@@ -12,6 +12,12 @@ function processViewCounter() {
     xhttp.send();
 }
 
+function getDateString(dateString) {
+    const event = new Date(dateString);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', minute: 'numeric', second: 'numeric', hour: 'numeric'};
+    return event.toLocaleDateString("en-US", options);
+}
+
 function renderResults(jsonText, textElement) {
     const responseObject = JSON.parse(jsonText);
 
@@ -26,7 +32,7 @@ function renderResults(jsonText, textElement) {
         }
 
         if (mostRecentViewTime) {
-            textElement.innerHTML += " Last visit time: " + new Date(mostRecentViewTime).toString() + ".";
+            textElement.innerHTML += " Last visit time: " + getDateString(mostRecentViewTime) + ".";
         } else {
             textElement.innerHTML += " Last visit time: N/A.";
         }
