@@ -17,7 +17,7 @@ function renderResults(jsonText, textElement) {
 
     if (responseObject["succeeded"]) {
         const numberOfViews = responseObject["numberOfViews"];
-        const mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]");
+        const mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]", "");
 
         if (numberOfViews) {            
             textElement.innerHTML = "Total views: " + numberOfViews + ".";
