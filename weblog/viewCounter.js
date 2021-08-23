@@ -10,8 +10,8 @@ function processViewCounter() {
             console.log("nooo!");
         }
     };
-    
-    xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView", true);
+
+    xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView");
     xhttp.send();
 }
 
