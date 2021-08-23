@@ -5,7 +5,7 @@ function processViewCounter() {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             renderResults(this.responseText, span);
-        }
+        }   
     };
 
     xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView");
@@ -17,7 +17,7 @@ function renderResults(jsonText, textElement) {
 
     if (responseObject["succeeded"]) {
         const numberOfViews = responseObject["numberOfViews"];
-        const mostRecentViewTime = responseObject["mostRecentViewTime"];
+        const mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]");
 
         if (numberOfViews) {            
             textElement.innerHTML = "Total views: " + numberOfViews + ".";
