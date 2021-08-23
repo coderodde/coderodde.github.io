@@ -1,9 +1,13 @@
 function process() {
     let span = document.getElementById("view_count_span");
+    console.log(span);
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
+            console.log("yees!");
             renderResults(this.responseText, span);
+        } else {
+            console.log("nooo!");
         }
     };
     xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView", true);
@@ -12,6 +16,7 @@ function process() {
 
 function renderResults(jsonText, textElement) {
     const responseObject = JSON.parse(jsonText);
+    console.log(jsonText);
     
     if (responseObject["succeeded"]) {
         const numberOfViews = responseObject["numberOfViews"];
