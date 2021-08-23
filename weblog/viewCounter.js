@@ -6,7 +6,7 @@ function process() {
             renderResults(this.responseText, span);
         }
     };
-    xhttp.open("GET", "countView", true);
+    xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView", true);
     xhttp.send();
 }
 
@@ -22,7 +22,7 @@ function renderResults(jsonText, textElement) {
             ". Last visit time: " + 
             mostRecentViewTime +
             ".";
-            
+
     } else {
         textElement.innerHTML = "Total views: N/A. Last visit time: N/A.";
     }
