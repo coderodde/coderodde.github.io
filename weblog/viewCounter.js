@@ -1,7 +1,7 @@
 function processViewCounter() {
     let span = document.getElementById("view_count_span");
-    console.log(span);
     let xhttp = new XMLHttpRequest();
+
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             console.log("yees!");
@@ -10,6 +10,7 @@ function processViewCounter() {
             console.log("nooo!");
         }
     };
+    
     xhttp.open("POST", "https://weblog-view-counter.herokuapp.com/countView", true);
     xhttp.send();
 }
