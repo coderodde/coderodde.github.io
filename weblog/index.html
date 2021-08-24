@@ -789,7 +789,11 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
             \[
                     \frac{d}{df} \Bigg[ -\frac{N}{2f^2} + 1 \Bigg] = \frac{d}{df} \Bigg[-\frac{N}{2f^2}\Bigg] = \frac{N}{f^3}.  
             \]
-            Since $f > 0$, the second derivative is positive, and, so, the $f = \sqrt{N/2}$ is a (global) minimum. Finally, as $\sqrt{1/2} < 1$, in our implementation we set $f = \lceil \sqrt{N/2} \rceil$. 
+            Since $f > 0$, the second derivative is positive, and, so, the $f = \sqrt{N/2}$ is a (global) minimum. Finally, we can conclude that
+            \[
+                W_N(f) = \frac{N}{2f} + f = \frac{N}{2\sqrt{N/2}} + \sqrt{N/2} = 2\sqrt{N/2} = \Theta(\sqrt{N}).
+            \] 
+            As $\sqrt{1/2} < 1$, in our implementation we set $f = \lceil \sqrt{N/2} \rceil$. 
         </article>
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
