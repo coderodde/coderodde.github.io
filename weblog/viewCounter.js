@@ -34,6 +34,7 @@ function renderResults(jsonText, textElement) {
 
         if (responseObject["mostRecentViewTime"]) {
             mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]", "");
+            mostRecentViewTime = getDateString(mostRecentViewTime);
         } else {
             mostRecentViewTime = "N/A";
         }
