@@ -23,7 +23,6 @@ function renderResults(jsonText, textElement) {
 
     if (responseObject["succeeded"]) {
         const numberOfViews = responseObject["numberOfViews"];
-        const mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]", "");
 
         if (numberOfViews) {            
             textElement.innerHTML = "Total views: " + numberOfViews + ".";
@@ -31,11 +30,13 @@ function renderResults(jsonText, textElement) {
             textElement.innerHTML = "Total views: N/A.";
         }
 
-        if (mostRecentViewTime) {
-            textElement.innerHTML += " Last visit time: " + getDateString(mostRecentViewTime) + ".";
+        if (responseObject["mostRecentViewTime"]) {
+            const mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]", "");
         } else {
-            textElement.innerHTML += " Last visit time: N/A.";
+            const mostRecentViewTime = "N/A";
         }
+
+        textElement.innerHTML += " Last visit time: " + mostRecentViewTime + ".";
     } else {
         textElement.innerHTML = "Total views: N/A. Last visit time: N/A.";
     }
