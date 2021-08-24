@@ -30,10 +30,12 @@ function renderResults(jsonText, textElement) {
             textElement.innerHTML = "Total views: N/A.";
         }
 
+        let mostRecentViewTime;
+
         if (responseObject["mostRecentViewTime"]) {
-            const mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]", "");
+            mostRecentViewTime = responseObject["mostRecentViewTime"].replace("[Europe/Helsinki]", "");
         } else {
-            const mostRecentViewTime = "N/A";
+            mostRecentViewTime = "N/A";
         }
 
         textElement.innerHTML += " Last visit time: " + mostRecentViewTime + ".";
