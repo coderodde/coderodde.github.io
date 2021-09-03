@@ -30,6 +30,14 @@ function renderResults(jsonText, textElement) {
             textElement.innerHTML = "Total views: N/A.";
         }
 
+        const numberOfVisitorsViews = responseObject["numberOfVisitorsViews"];
+
+        if (numberOfVisitorsViews) {
+            textElement.innerHTML += "Your views: " + numberOfVisitorsViews + ".";
+        } else {
+            textElement.innerHTML += "Your views: N/A.";
+        }
+
         let mostRecentViewTime;
 
         if (responseObject["mostRecentViewTime"]) {
@@ -39,8 +47,17 @@ function renderResults(jsonText, textElement) {
             mostRecentViewTime = "N/A";
         }
 
-        textElement.innerHTML += " Last visit time: " + mostRecentViewTime + ".";
+        let visitorsMostRecentViewTime;
+
+        if (responseObject["visitorsMostRecentViewTime"]) {
+            visitorsMostRecentViewTime = responseObject["visitorsMostRecentViewTime"].replace("[Europe/Helsinki]", "");
+            visitorsMostRecentViewTime = getDateString(visitorsMostRecentViewTime);
+        } else {
+            visitorsMostRecentViewTime = "N/A";
+        }
+
+        textElement.innerHTML += " Your last visit time: " + visitorsMostRecentViewTime + ".";
     } else {
-        textElement.innerHTML = "Total views: N/A. Last visit time: N/A.";
+        textElement.innerHTML = "Total views: N/A. Your views: N/A. Last total visit time: N/A. Last your visit time: N/A.";
     }
 }

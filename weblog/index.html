@@ -797,6 +797,33 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
             <p>(A Java implementation of the linked list under discussion may be found at <a href="https://github.com/coderodde/LinkedList">GitHub</a>.) 
         </article>
+
+
+        
+        <!--<a href="#eill"><h3 id="integration-by-parts">Integration by parts and the solid of revolution</h3></a>
+        <article>
+            <p> Suppose the graph of a function $f(x) = |\sin x|$ from $x = 0$ to $x = h$ revolves around the $x$-axis. The volume of the resulting solid will be given by 
+                \[ V_h = \pi \int_0^h |\sin x|^2 \, \mathrm{d}x \]. Let functions $g(x)$ and $f(x)$ be given. We have
+                \[
+                    \begin{aligned}
+                        \frac{d}{dx} \Big[ f(x)g(x) \Big] &= f^\prime (x)g(x) + f(x)g^\prime (x) \\
+                        \int \frac{d}{dx} \Big[ f(x)g(x) \Big] \, dx &= \int f^\prime (x)g(x) \, dx + \int f(x)g^\prime (x) \, dx \\
+                        f(x)g(x) &= \int f^\prime (x)g(x) \, dx + \int f(x)g^\prime (x) \, dx \\
+                        \int f^\prime (x)g(x) \, dx &= f(x)g(x) - \int f(x)g^\prime (x) \, dx,
+                    \end{aligned}
+                \]
+                which is called <i>integration by parts</i>. Now, Since $|\sin x|^2 = \sin^2 x$, we can choose $f^\prime(x) = \sin x$ and $g(x) = \sin x$, which will lead to 
+                $f(x) = -\cos x$ and $g^\prime(x) = \cos x$. Plugging everything together, we obtain
+                \[
+                    \begin{aligned}
+                        V_h &= \pi \int_0^h \sin^2 x \, dx \\
+                            &= \Bigg[ -\cos x \sin x \Bigg]_{x = 0}^{x = h} - \int_0^h -\cos x \cos x \, dx \\
+                            &= yeah
+                    \end{aligned}
+                \]
+
+        </article>-->
+
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
             <script src="viewCounter.js"></script>
