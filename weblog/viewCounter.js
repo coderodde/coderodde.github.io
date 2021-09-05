@@ -22,9 +22,9 @@ function renderResults(jsonText, textElement) {
     const responseObject = JSON.parse(jsonText);
 
     if (responseObject["succeeded"]) {
-        const numberOfViews = responseObject["numberOfViews"];
+        const numberOfTotalViews = responseObject["numberOfTotalViews"];
 
-        if (numberOfViews) {            
+        if (numberOfTotalViews) {            
             textElement.innerHTML = "Total views: " + numberOfViews + ".";
         } else {
             textElement.innerHTML = "Total views: N/A.";
@@ -47,6 +47,8 @@ function renderResults(jsonText, textElement) {
             mostRecentViewTime = "N/A";
         }
 
+        textElement.innerHTML += "Most recent view time: " + mostRecentViewTime + ".";
+
         let visitorsMostRecentViewTime;
 
         if (responseObject["visitorsMostRecentViewTime"]) {
@@ -58,6 +60,6 @@ function renderResults(jsonText, textElement) {
 
         textElement.innerHTML += " Your last visit time: " + visitorsMostRecentViewTime + ".";
     } else {
-        textElement.innerHTML = "Total views: N/A. Your views: N/A. Last total visit time: N/A. Last your visit time: N/A.";
+        textElement.innerHTML = "(No view data available.)";
     }
 }
