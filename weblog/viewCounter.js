@@ -38,6 +38,8 @@ function renderResults(jsonText, textElement) {
             textElement.innerHTML += "Your views: N/A. ";
         }
 
+        textElement.innerHTML += "<br/>";
+
         let mostRecentViewTime;
 
         if (responseObject["mostRecentViewTime"]) {
