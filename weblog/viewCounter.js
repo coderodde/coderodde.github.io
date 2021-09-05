@@ -25,17 +25,17 @@ function renderResults(jsonText, textElement) {
         const numberOfTotalViews = responseObject["numberOfTotalViews"];
 
         if (numberOfTotalViews) {            
-            textElement.innerHTML = "Total views: " + numberOfViews + ".";
+            textElement.innerHTML = "Total views: " + numberOfTotalViews + ". ";
         } else {
-            textElement.innerHTML = "Total views: N/A.";
+            textElement.innerHTML = "Total views: N/A. ";
         }
 
         const numberOfVisitorsViews = responseObject["numberOfVisitorsViews"];
 
         if (numberOfVisitorsViews) {
-            textElement.innerHTML += "Your views: " + numberOfVisitorsViews + ".";
+            textElement.innerHTML += "Your views: " + numberOfVisitorsViews + ". ";
         } else {
-            textElement.innerHTML += "Your views: N/A.";
+            textElement.innerHTML += "Your views: N/A. ";
         }
 
         let mostRecentViewTime;
@@ -47,7 +47,7 @@ function renderResults(jsonText, textElement) {
             mostRecentViewTime = "N/A";
         }
 
-        textElement.innerHTML += "Most recent view time: " + mostRecentViewTime + ".";
+        textElement.innerHTML += "Most recent view time: " + mostRecentViewTime + ". ";
 
         let visitorsMostRecentViewTime;
 
