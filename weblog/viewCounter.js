@@ -49,7 +49,7 @@ function renderResults(jsonText, textElement) {
             mostRecentViewTime = "N/A";
         }
 
-        textElement.innerHTML += "Most recent view time: " + mostRecentViewTime + ". ";
+        textElement.innerHTML += "Most recent view time: " + mostRecentViewTime + ".<br/>";
 
         let visitorsMostRecentViewTime;
 
