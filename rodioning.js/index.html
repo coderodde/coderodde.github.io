@@ -5,25 +5,25 @@
             body {
                 background-color: black;
                 color: #f5da42;
-                width: 1000px;
-                margin: auto;
+                margin: 0px;
+                padding: 0px;
                 font-family: monospace;
-                font-size: 12pt;
+                font-size: 15px;
             }
         </style>
     </head>
 
     <body>
-        <pre id="terminal">
-        </pre>
+        <pre id="terminal"></pre>
 
         <script type="text/javascript">
             const fileNameList = [
-                "https://raw.githubusercontent.com/coderodde/coderodde.github.io/master/rodioning.js/AssociationRuleGenerator.java.html"
+                "https://https://raw.githubusercontent.com/coderodde/AssociationRuleGenerator/master/src/main/java/net/coderodde/mining/associationrules/AssociationRuleGenerator.java",
+                "https://raw.githubusercontent.com/coderodde/AssociationRuleGenerator/master/src/main/java/net/coderodde/mining/associationrules/AprioriFrequentItemsetGenerator.java",
+                "https://raw.githubusercontent.com/coderodde/AssociationRuleGenerator/master/src/main/java/net/coderodde/mining/associationrules/AssociationRule.java",
             ];
 
             const terminal = document.getElementById("terminal");
-            console.log(terminal);
 
             function dealWithEntities(text) {
                 let chrs = text.split("");
