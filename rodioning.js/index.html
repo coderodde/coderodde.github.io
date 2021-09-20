@@ -30,12 +30,17 @@
             console.log(terminal);
 
             function loadProgramTextToTerminalImpl(fileUrl) {
-                let link = document.createElement("a");
-                link.setAttribute("download", "fds");
-                link.href = fileUrl;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET", fileUrl, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        let status = xhr.status;
+
+                        if (status === 0 || (status >= 200 && status < 400)) {
+                            terminal.innerHTML += xhr.responseText;
+                        }
+                    }
+                };
             }
 
             function loadProgramTextToTerminal() {
