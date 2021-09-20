@@ -23,12 +23,28 @@
 
         <script type="text/javascript">
             const fileNameList = [
-                "AssociationRuleGenerator.java.html"
+                "https://raw.githubusercontent.com/coderodde/coderodde.github.io/master/rodioning.js/AssociationRuleGenerator.java.html"
             ];
 
-            function loadProgramTextToTerminal() {
-                
+            const terminal = document.getElementById("terminal");
+            console.log(terminal);
+
+            function loadProgramTextToTerminalImpl(fileUrl) {
+                let link = document.createElement("a");
+                link.setAttribute("download", "fds");
+                link.href = fileUrl;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
             }
+
+            function loadProgramTextToTerminal() {
+                for (let i = 0, sz = fileNameList.length; i < sz; i++) {
+                    loadProgramTextToTerminalImpl(fileNameList[i]);
+                }
+            }
+
+            loadProgramTextToTerminal();
         </script>
     </body>
 </html>
