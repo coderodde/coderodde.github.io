@@ -20,42 +20,15 @@
 
         }
         </pre>
-        <span id="textspan"></span>
-        <script type="text/javascript">
-            const endpointName = "/download";
-            
-            function getWebSocketURL() {
-                const protocol = window.location.protocol;
-                const host = "rodioning-backend.herokuapp.com";
-                
-                if (protocol === "http:") {
-                    return "ws://" + host + endpointName;
-                } else if (protocol === "https:") {
-                    return "wss://" + host + endpointName;
-                } else {
-                    throw "Unknown protocol '" + protocol + "'.";
-                }
-            }
-            
-            const webSocketURL = getWebSocketURL();
-            console.log(webSocketURL);
-            var socket = new WebSocket(webSocketURL);
-            
-            socket.onclose = function(event) {
-                console.log("onclose, wasClean: " + event.wasClean)
-            };
 
-            socket.onerror = function(error) {
-                console.log("error: " + error.message);            ;
-            };
-            
-            socket.onopen = function(e) {
-              socket.send("fhfds");  
-            };
-            
-            socket.onmessage = function(event) {
-                document.getElementById("textspan").innerHTML = event.data;
-            };
+        <script type="text/javascript">
+            const fileNameList = [
+                "AssociationRuleGenerator.java.html"
+            ];
+
+            function loadProgramTextToTerminal() {
+                
+            }
         </script>
     </body>
 </html>
