@@ -14,12 +14,12 @@
     </head>
 
     <body>
-        <pre id="terminal">
+        <code id="terminal">
         #include &lt;string&gt;
         int main(int argc, char* argv[]) {
 
         }
-        </pre>
+        </code>
 
         <script type="text/javascript">
             const fileNameList = [
@@ -29,6 +29,10 @@
             const terminal = document.getElementById("terminal");
             console.log(terminal);
 
+            function dealWithEntities(text) {
+                return text;
+            }
+
             function loadProgramTextToTerminalImpl(fileUrl) {
                 let xhr = new XMLHttpRequest();
                 xhr.open("GET", fileUrl, true);
@@ -37,12 +41,12 @@
                         let status = xhr.status;
 
                         if (status === 0 || (status >= 200 && status < 400)) {
-                            terminal.innerHTML += xhr.responseText;
+                            terminal.innerHTML += dealWithEntities(xhr.responseText);
                         }
                     }
                 };
 
-                xhr.send();
+                xhr.send(); 
             }
 
             function loadProgramTextToTerminal() {
