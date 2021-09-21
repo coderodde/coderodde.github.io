@@ -53,7 +53,7 @@
 
             function loadProgramTextToTerminalImpl(fileUrl) {
                 let xhr = new XMLHttpRequest();
-                xhr.open("GET", fileUrl, true);
+                xhr.open("GET", fileUrl, false);
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === XMLHttpRequest.DONE) {
                         let status = xhr.status;
@@ -71,18 +71,20 @@
                 for (let i = 0, sz = fileNameList.length; i < sz; i++) {
                     loadProgramTextToTerminalImpl(fileNameList[i]);
                 }
+
+                return document.documentElement.clientHeight;
             }
 
-            const height = window.height;
-
-            async function startScrolling() {
+            async function startScrolling(h) {
                 let y = 0;
+                h -= window.innerHeight;
+                console.log("h = " + h);
 
                 while (true) {
                     await sleep(16);
-                    window.scrollTo(0, y++);
+                    window.scrollTo(0, y += 10);
 
-                    if (y >= height) {
+                    if (y >= h) {
                         y = 0;
                     }
                 }
@@ -92,8 +94,8 @@
                 await new Promise(resolve => setTimeout(resolve, ms));
             }
 
-            loadProgramTextToTerminal();
-            startScrolling();
+            const h =loadProgramTextToTerminal();
+            startScrolling(h);
         </script>
     </body>
 </html>
