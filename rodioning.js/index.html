@@ -72,7 +72,27 @@
                 }
             }
 
+            const height = window.height;
+
+            async function startScrolling() {
+                let y = 0;
+
+                while (true) {
+                    await sleep(16);
+                    window.scrollTo(0, y++);
+
+                    if (y >= height) {
+                        y = 0;
+                    }
+                }
+            }
+
+            async function sleep(ms) {
+                await new Promise(resolve => setTimeout(resolve, ms));
+            }
+
             loadProgramTextToTerminal();
+            startScrolling();
         </script>
     </body>
 </html>
