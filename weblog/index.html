@@ -824,60 +824,60 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
         </article>-->
 
-        <a href="#eill"><h3 id="gtif">Generating trigonometric identities from $f_n(x) = \sin^nx$</h3></a>
+        <a href="#gtif"><h3>Generating trigonometric identities from $f_q(x) = \sin^qx$</h3></a>
 	<p>
-	In this post, we will take a look, what identities may be generated from a simple equation $f_n(x) = \sin^n x$. The idea is to, first, define the inverse function $f_n^{-1}$ and derivate it via direct derivation and via using the known identity
+	In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \neq 0$. The idea is to, first, define the inverse function $f_q^{-1}$ and derivate it via direct derivation and via using the known identity
 $$
-    \frac{d}{dx} f_n^{-1}(x) \overset{(1)}{=} \frac{1}{f'(f_n^{-1}(x))},
+    \frac{d}{dx} f_q^{-1}(x) \overset{(1)}{=} \frac{1}{f'(f_q^{-1}(x))},
 $$
 after which we compare the two results and cancel the common factors, possibly, leaving us with something of interest.
 
         <p>
-        Let us begin with defining the inverse function of $f_n$:
+        Let us begin with defining the inverse function of $f_q(x)$:
         \[
             \begin{aligned}
-                 y &= \sin^n x          \\
-            \sin x &= y^{1/n}           \\ 
-                 x &= \arcsin (y^{1/n}) \\
+                 y &= \sin^q x          \\
+            \sin x &= y^{1/q}           \\ 
+                 x &= \arcsin (y^{1/q}) \\
             \end{aligned}
         \]
 	Next, for convenience, we change the variables in the most recent identity:
         \[
-            y = f_n^{-1}(x) = \arcsin (x^{1/n}).
+            f_q^{-1}(x) = \arcsin (x^{1/q}).
         \]
-        Derivating $f_n^{-1}(x)$ directly gives us:
+        Derivating $f_q^{-1}(x)$ directly gives us:
         \[
             \begin{aligned}
-                \frac{d}{dx} f_n^{-1}(x) &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{d}{dx}(x^{1/n}) \\
-                                       &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{x^{1/n}}{nx}    \\
-                                       &= \frac{1}{nx^{1 - 1/n}\sqrt{1 - x^{2/n}}}.          \\
+                \frac{d}{dx} f_q^{-1}(x) &= \frac{1}{\sqrt{1 - x^{2/q}}} \frac{d}{dx}(x^{1/q}) \\
+                                         &= \frac{1}{\sqrt{1 - x^{2/q}}} \frac{x^{1/q}}{nx}    \\
+                                         &= \frac{1}{qx^{1 - 1/q}\sqrt{1 - x^{2/q}}}.          \\
             \end{aligned}
         \]
-        Now, we need the derivative of $f_n(x)$:
+        Now, we need the derivative of $f_q(x)$:
         $$
-            f'_n(x) = n \sin^{n - 1} x \cos x. 
+            f'_q(x) = q \sin^{q - 1} x \cos x. 
         $$
         What comes to the identity (1), it yields
         \[
             \begin{aligned}
-                \frac{d}{dx} f_n^{-1}(x) &= \frac{1}{f'_n(\arcsin(x^{1/n}))} \\
-                                         &= \frac{1}{n \sin^{n - 1} (\arcsin(x^{1/n})) \cos (\arcsin(x^{1/n}))} \\
-                                         &= \frac{1}{n x^{1 - 1/n} \cos (\arcsin(x^{1/n}))}.
+                \frac{d}{dx} f_q^{-1}(x) &= \frac{1}{f'_q(\arcsin(x^{1/q}))} \\
+                                         &= \frac{1}{q \sin^{q - 1} (\arcsin(x^{1/q})) \cos (\arcsin(x^{1/q}))} \\
+                                         &= \frac{1}{q x^{1 - 1/q} \cos (\arcsin(x^{1/q}))}.
             \end{aligned}
         \]
         Since 
         $$
-            \frac{d}{dx} f_n^{-1}(x) = \frac{1}{f'_n(f_n^{-1}(x))},
+            \frac{d}{dx} f_q^{-1}(x) = \frac{1}{f'_q(f_q^{-1}(x))},
         $$
         we must have
         $$
-            \frac{1}{\underbrace{nx^{1 - 1/n}}_{\alpha}\sqrt{1 - x^{2/n}}} = \frac{1}{\underbrace{n x^{1 - 1/n}}_{\alpha} \cos (\arcsin(x^{1/n}))},
+            \frac{1}{\underbrace{qx^{1 - 1/q}}_{\alpha}\sqrt{1 - x^{2/q}}} = \frac{1}{\underbrace{q x^{1 - 1/q}}_{\alpha} \cos (\arcsin(x^{1/q}))},
         $$
         which leads to the desired equation:
         $$
-        \cos(\arcsin(x^{1/n})) = \sqrt{1 - x^{2/n}}.
+        I_q(x) = \cos(\arcsin(x^{1/q})) = \sqrt{1 - x^{2/q}}.
         $$
-        Finally, since the domain of $\arcsin$ is $[-1, 1]$, $x \in [-1, 1]$.
+        Finally, since the domain of $\arcsin$ is $[-1, 1]$, it is safe to assume, that the domain of $I_q$ is $[-1, 1]$. Also, note that we disallowed the case $q = 0$, since it would yield a division by zero in the calculation.
 	<article>
 
 	</article>
