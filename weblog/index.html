@@ -824,6 +824,62 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
         </article>-->
 
+        <a href="#eill"><h3 id="eill">Generating trigonometric identities from $f_n(x) = \sin^nx$</h3></a>
+	<p>
+	In this post, we will take a look, what identities may be generated from a simple equation $f_n(x) = \sin^n x$. The idea is to, first, define the inverse function $f_n^{-1}$ and derivate it via direct derivation and via using the known identity
+$$\frac{d}{dx} f_n^{-1}(x) \overset{(1)}{=} \frac{1}{f'(f_n^{-1}(n)},$$
+after which we compare the two results and cancel the common factors, possibly, leaving us with something of interest.
+
+        <p>
+        Let us begin with defining the inverse function of $f_n$:
+        \[
+            \begin{aligned}
+                 y &= \sin^n x          \\
+            \sin x &= y^{1/n}           \\ 
+                 x &= \arcsin (y^{1/n}) \\
+            \end{aligned}
+        \]
+	Next, for convenience, we change the variables in the most recent identity:
+        \[
+            y = f^{-1}(x) = \arcsin (x^{1/n}).
+        \]
+        Derivating $f^{-1}(x)$ directly gives us:
+        \[
+            \begin{aligned}
+                \frac{d}{dx} f^{-1}(x) &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{d}{dx}(x^{1/n}) \\
+                                       &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{x^{1/n}}{nx}    \\
+                                       &= \frac{1}{nx^{1 - 1/n}\sqrt{1 - x^{2/n}}}.          \\
+            \end{aligned}
+        \]
+        Now, we need the derivative of $f_n(x)$:
+        $$
+            f'_n(x) = n \sin^{n - 1} x \cos x. 
+        $$
+        What comes to the identity (1), it yields
+        \[
+            \begin{aligned}
+                \frac{d}{dx} f_n^{-1}(x) &= \frac{1}{f'_n(\arcsin(x^{1/n}))} \\
+                                         &= \frac{1}{n \sin^{n - 1} (\arcsin(x^{1/n})) \cos (\arcsin(x^{1/n}))} \\
+                                         &= \frac{1}{n x^{1 - 1/n} \cos (\arcsin(x^{1/n}))}.
+            \end{aligned}
+        \]
+        Since 
+        $$
+            \frac{d}{dx} f_n^{-1}(x) = \frac{1}{f'_n(f_n^{-1}(x))},
+        $$
+        we must have
+        $$
+            \frac{1}{\underbrace{nx^{1 - 1/n}}_{\alpha}\sqrt{1 - x^{2/n}}} = \frac{1}{\underbrace{n x^{1 - 1/n}}_{\alpha} \cos (\arcsin(x^{1/n}))},
+        $$
+        which leads to the desired equation:
+        $$
+        \cos(\arcsin(x^{1/n})) = \sqrt{1 - x^{2/n}}.
+        $$
+        Finally, since the domain of $\arcsin$ is $[-1, 1]$, $x \in [-1, 1]$.
+	<article>
+
+	</article>
+
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
             <script src="viewCounter.js"></script>
