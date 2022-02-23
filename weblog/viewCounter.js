@@ -30,7 +30,7 @@ function renderResults(jsonText, textElement) {
             textElement.innerHTML = "Total views: N/A. ";
         }
 
-        textElement.innerHTML += "<br/>";
+        textElement.innerHTML += "<br/>";   
 
         const numberOfVisitorsViews = responseObject["numberOfVisitorsViews"];
 
