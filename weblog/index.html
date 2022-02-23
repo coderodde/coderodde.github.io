@@ -824,10 +824,12 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
         </article>-->
 
-        <a href="#eill"><h3 id="eill">Generating trigonometric identities from $f_n(x) = \sin^nx$</h3></a>
+        <a href="#eill"><h3 id="gtif">Generating trigonometric identities from $f_n(x) = \sin^nx$</h3></a>
 	<p>
 	In this post, we will take a look, what identities may be generated from a simple equation $f_n(x) = \sin^n x$. The idea is to, first, define the inverse function $f_n^{-1}$ and derivate it via direct derivation and via using the known identity
-$$\frac{d}{dx} f_n^{-1}(x) \overset{(1)}{=} \frac{1}{f'(f_n^{-1}(n)},$$
+$$
+    \frac{d}{dx} f_n^{-1}(x) \overset{(1)}{=} \frac{1}{f'(f_n^{-1}(x))},
+$$
 after which we compare the two results and cancel the common factors, possibly, leaving us with something of interest.
 
         <p>
@@ -841,12 +843,12 @@ after which we compare the two results and cancel the common factors, possibly, 
         \]
 	Next, for convenience, we change the variables in the most recent identity:
         \[
-            y = f^{-1}(x) = \arcsin (x^{1/n}).
+            y = f_n^{-1}(x) = \arcsin (x^{1/n}).
         \]
-        Derivating $f^{-1}(x)$ directly gives us:
+        Derivating $f_n^{-1}(x)$ directly gives us:
         \[
             \begin{aligned}
-                \frac{d}{dx} f^{-1}(x) &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{d}{dx}(x^{1/n}) \\
+                \frac{d}{dx} f_n^{-1}(x) &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{d}{dx}(x^{1/n}) \\
                                        &= \frac{1}{\sqrt{1 - x^{2/n}}} \frac{x^{1/n}}{nx}    \\
                                        &= \frac{1}{nx^{1 - 1/n}\sqrt{1 - x^{2/n}}}.          \\
             \end{aligned}
