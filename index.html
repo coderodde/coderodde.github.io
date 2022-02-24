@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>coderodde</title>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-</script>
-<script type="text/javascript" async
-    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
-</script>
+<style>
+
+            #view_count_span {
+                font-style: italic;
+                font-size: 13pt;
+            }
+
+            #counter_paragraph {
+                text-align: center;
+            }
+</style>
+<title>coderodde's home page</title>
 </head>
 <body>
 <h3>Who</h3>
@@ -16,19 +21,25 @@
 <tr><td>Birthday</td>          <td>August 26, 1988</td></tr>
 <tr><td>Place of birth</td>    <td><a href="https://www.google.fi/maps/place/Kostamus,+Karjala,+Ven%C3%A4j%C3%A4/@64.5926842,21.6402129,5z/data=!4m2!3m1!1s0x442876d0044c7df1:0x1363528e565e36d6">Kostomuksha, Russia</a></td></tr>
 <tr><td>Nationality</td>       <td>Russia</td></tr>
-<tr><td>Current residence</td> <td>Helsinki, Finland</td></tr>
+<tr><td>Current residence</td> <td>Kuopio, Finland</td></tr>
 </table>
 
-<h3>About this page</h3>
-<p>\[\sum_{i = 0}\]
-This page is the place where I intend to share my software with the people.
-</p>
-
-<h3>What about license?</h3>
+<h3>What</h3>
+I have a BSc in computer science from the University of Helsinki, and I love the point where CS meets IT: implementing efficient algorithms and data structures in frameworks that can be used in real-world projects. When talking about programming, I usually call myself coderodde, and drop the &laquo;code&raquo; prefix when I am out of programming mode.
 <p>
-All code I produce is copy-left; you can earn billions with it, or you could melt the reactor of your local nuclear power plant.
-</p>
+My internet activity consists of the following:
+<ul>
+<li><a href="https://codereview.stackexchange.com/users/58360/coderodde">Code Review Stackexchange</a> I am, like, in top 50 worldwide</li>
+<li><a href="https://coderodde.github.io/weblog/">My 2nd technical blog</a></li>
+<li><a href="https://coderodde.wordpress.com/">My 1st technical blog</a></li>
+<li><a href="https://github.com/coderodde">My repositories (contains also unfinished projects, oops)</a></li>
+<li><a href="https://gist.github.com/coderodde">My gists</a></li>
+</ul>
+
+<p id="counter_paragraph">
 <span id="view_count_span"></span>
-<script src="viewCounter.js" defer></script>
+<script src="viewCounter.js"></script>
+<script type="text/javascript">processViewCounter();</script>
+</p>
 </body>
 </html>
