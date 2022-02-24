@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+
+            #view_count_span {
+                font-style: italic;
+                font-size: 13pt;
+            }
+
+            #counter_paragraph {
+                text-align: center;
+            }
+</style>
 <title>coderodde's home page</title>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
@@ -30,8 +41,11 @@ My internet activity consists of the following:
 <li><a href="https://github.com/coderodde">My repositories (contains also unfinished projects, oops)</a></li>
 <li><a href="https://gist.github.com/coderodde">My gists</a></li>
 </ul>
+
+<p id="counter_paragraph">
 <span id="view_count_span"></span>
 <script src="viewCounter.js"></script>
 <script type="text/javascript">processViewCounter();</script>
+</p>
 </body>
 </html>
