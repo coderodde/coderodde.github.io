@@ -826,7 +826,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
         <a href="#gtif"><h3>Generating trigonometric identities from $f_q(x) = \sin^qx$</h3></a>
 	<p>
-	In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \neq 0$. The idea is to, first, define the inverse function $f_q^{-1}$ and derivate it via direct derivation and via using the known identity
+	In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \in \mathbb{Q} \setminus
+    \{ 0 \}$. The idea is to, first, define the inverse function $f_q^{-1}$ and derivate it via direct derivation and via using the known identity
 $$
     \frac{d}{dx} f_q^{-1}(x) \overset{(1)}{=} \frac{1}{f'(f_q^{-1}(x))},
 $$
@@ -877,7 +878,7 @@ after which we compare the two results and cancel the common factors, possibly, 
         $$
         I_q(x) = \cos(\arcsin(x^{1/q})) = \sqrt{1 - x^{2/q}}.
         $$
-        Finally, since the domain of $\arcsin$ is $[-1, 1]$, it is safe to assume, that the domain of $I_q$ is $[-1, 1]$. Also, note that we disallowed the case $q = 0$, since it would yield a division by zero in the calculation.
+        Finally, since the domain of $\arcsin$ is $[-1, 1]$, it is safe to assume, that the domain of $I_q$ is $[-1, 1]$. Also, note that we disallowed the case $q = 0$, since it would yield a division by zero in the calculation, and the function $f_0(x) = \sin^0 x = 1$ does not have an inverse.
 	<article>
 
 	</article>
