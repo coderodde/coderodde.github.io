@@ -34,10 +34,13 @@ var Algotype = {};
     // keywords as 'and', 'or', 'not', and others, with the font that matches the 
     // actual keywords, such as 'for each', 'repeat ... until', etc.
     Algotype.MATHJAX_CONFIG =
-            'MathJax.Hub.Config({' + 
-            "tex2jax: {inlineMath: [['$','$']]}," +
-            'TeX: {' + 
-                'Macros: {' +
+            'MathJax.Hub.Config({'                   +
+            '"HTML-CSS": {matchFontHeight: false},'  +
+            'SVG: {matchFontHeight: false},'         +
+            'CommonHTML: {matchFontHeight: false},'  +  
+            "tex2jax: {inlineMath: [['$','$']]},"    +
+            'TeX: {'                                 + 
+                'Macros: {'                          +
                     'And:     "\\\\mathbf{and}",'    +
                     'Or:      "\\\\mathbf{or}",'     +
                     'Not:     "\\\\mathbf{not}",'    +
