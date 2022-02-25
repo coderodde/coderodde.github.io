@@ -35,9 +35,9 @@ var Algotype = {};
     // actual keywords, such as 'for each', 'repeat ... until', etc.
     Algotype.MATHJAX_CONFIG =
             'MathJax.Hub.Config({'                   +
-            '"HTML-CSS": {matchFontHeight: false},'  +
-            'SVG: {matchFontHeight: false},'         +
-            'CommonHTML: {matchFontHeight: false},'  +  
+            '"HTML-CSS": {minScaleAdjust: 100},'     +
+            'SVG: {minScaleAdjust: 100},'            +
+            'CommonHTML: {minScaleAdjust: 100},'     +  
             "tex2jax: {inlineMath: [['$','$']]},"    +
             'TeX: {'                                 + 
                 'Macros: {'                          +
