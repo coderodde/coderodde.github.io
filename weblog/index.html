@@ -888,7 +888,33 @@ after which we compare the two results and cancel the common factors, possibly, 
 
         <a href="#gtif"><h3>Calculating the force between a charged particle and a charged line with infitesimal density</h3></a>
         <article>
-            In this post, we are given a particle with electric charge $Q_1$, and a (infinite) line with finite charge $Q_2$ and infinitesimal charge density. The shortest distance to the line is $d$. We wish to compute the magnetic pull between the line and the particle. Suppose we bisect the line into $n \in \mathbb{N}$ equidistana
+            <p>
+            In this post, we are given a particle with electric charge $Q_1$, and an (infinite) line with finite charge $Q_2$ with infinitesimal charge density. The shortest distance to the line is $d$. We wish to compute the magnetic pull between the line and the particle. Suppose we bisect the line into $n \in \mathbb{N}$ equidistant parts. Now, the charge density of the line is given by
+            $$
+            \frac{Q_2}{n}.
+            $$
+            If we fix $x \in \mathbb{R},$ the electromagnetic pull between the particle and the line is given by
+            $$
+            \frac{kQ_1Q_2\Delta x}{nL_d^2(x)},
+            $$
+            where $L_d(x)$ is the distance between the particles (see Figure 1). Since $L_d(x) = \sqrt{d^2 + x^2}$, we must have that the total pull is given by
+            $$
+            \begin{aligned}
+                F_{\mathrm{total}} &= \lim_{n \to \infty} \lim_{\Delta x \to 0+} \sum \frac{ k Q_1 Q_2 \Delta x }{ n (d^2 + x^2) } \\
+                                   &= \lim_{n \to \infty} \int_{-\infty}^{\infty} \frac{k Q_1 Q_2}{n(d^2 + x^2)} dx \\
+                                   &= \lim_{n \to \infty} \frac{k Q_1 Q_2}{n} \Bigg[ \frac{1}{d} \arctan(x/d) \Bigg]_{x = -\infty}^{x = \infty} \\
+                                   &= \lim_{n \to \infty} \frac{k Q_1 Q_2}{nd} \Bigg[ \frac{\pi}{2} - \Bigg( -\frac{\pi}{2} \Bigg) \Bigg]  \\
+                                   &= \lim_{n \to \infty} \frac{\pi k Q_1 Q_2}{nd}.
+            \end{aligned}
+            $$
+            <div style="text-align: center;">
+                <img src="ChargedParticle.svg"></img>
+            </div>
+            <p>
+                If we set $d(n) = \alpha / n, \alpha \neq 0$, we obtain
+                $$
+                F_{\mathrm{total}} = \frac{\pi k Q_1 Q_2}{\alpha}.
+                $$
         </article>
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
