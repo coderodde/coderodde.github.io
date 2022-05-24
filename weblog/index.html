@@ -3,6 +3,10 @@
     <head>
         <title>coderodde - weblog</title>
         <style>
+            .MathJax {
+                font-size: 13pt;
+            }
+
             h1, h3 {
                 text-align: center;
             }
@@ -798,7 +802,12 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
         </article>
 
         <a href="#gtif"><h3>Generating trigonometric identities from $f_q(x) = \sin^qx$</h3></a>
+<<<<<<< HEAD
 	<article>
+=======
+        <article>
+	<p>
+>>>>>>> 725c39f7098f062518512c0e3c649ed8bccbdb18
 	In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \in \mathbb{R} \setminus
     \{ 0 \}$. The idea is to, first, define the inverse function $f_q^{-1}$ and derivate it via direct derivation and via using the known identity
 $$
@@ -856,6 +865,7 @@ after which we compare the two results and cancel the common factors, possibly, 
         \cos(\arcsin(x^{q})) = \sqrt{1 - x^{2q}}.
         $$
         Finally, since the domain of $\arcsin$ is $[-1, 1]$, it is safe to assume, that the domain of $I_q$ is $[-1, 1]$. Also, note that we disallowed the case $q = 0$, since it would yield a division by zero in the calculation, and the function $f_0(x) = \sin^0 x = 1$ does not have an inverse.
+
     </article>
 	
     <a href="#meill"><h3 id="meill">More efficient indexed linked list</h3></a>
@@ -936,6 +946,45 @@ after which we compare the two results and cancel the common factors, possibly, 
             Basically, we can say that instead of $\alpha \sqrt{N}$ steps, we do almost negligible number of steps, which improves the running time for single-element operations by the factor of two.
 	</article>
 
+        <a href="#calc-force"><h3>Calculating the force between a charged particle and a charged line with infitesimal density</h3></a>
+        <article>
+            <p>
+            In this post, we are given a particle with electric charge $Q_1$, and an (infinite) line with finite charge $Q_2$ with infinitesimal charge density. The shortest distance to the line is $d$. We wish to compute the magnetic pull between the line and the particle. Suppose we bisect the line into $n \in \mathbb{N}$ equidistant parts. Now, the charge density of the line is given by
+            $$
+            \frac{Q_2}{n}.
+            $$
+            If we fix $x \in \mathbb{R},$ the electromagnetic pull between the particle and the line is given by
+            $$
+            \frac{kQ_1Q_2\Delta x}{nL_d^2(x)},
+            $$
+            where $L_d(x)$ is the distance between the particles (see Figure 1). Since $L_d(x) = \sqrt{d^2 + x^2}$, we must have that the total pull is given by
+            $$
+            \begin{aligned}
+                F_{\mathrm{total}} &= \lim_{n \to \infty} \lim_{\Delta x \to 0+} \sum \frac{ k Q_1 Q_2 \Delta x }{ n (d^2 + x^2) } \\
+                                   &= \lim_{n \to \infty} \int_{-\infty}^{\infty} \frac{k Q_1 Q_2}{n(d^2 + x^2)} dx \\
+                                   &= \lim_{n \to \infty} \frac{k Q_1 Q_2}{n} \Bigg[ \frac{1}{d} \arctan(x/d) \Bigg]_{x = -\infty}^{x = \infty} \\
+                                   &= \lim_{n \to \infty} \frac{k Q_1 Q_2}{nd} \Bigg[ \frac{\pi}{2} - \Bigg( -\frac{\pi}{2} \Bigg) \Bigg]  \\
+                                   &= \lim_{n \to \infty} \frac{\pi k Q_1 Q_2}{nd}.
+            \end{aligned}
+            $$
+            <div style="text-align: center;">
+                <img src="ChargedParticle.svg"></img>
+            </div>
+            <p>
+            If $d > 0$, we must have $F_{\mathrm{total}} = 0$. Next, let's see what happens if $d = 0$:
+            $$
+            \begin{aligned}
+                F_{\mathrm{total}} &= \lim_{n \to \infty} \lim_{\Delta x \to 0+} \sum \frac{ k Q_1 Q_2 \Delta x }{ n (d^2 + x^2) } \\
+                                   &= \lim_{n \to \infty} \lim_{\Delta x \to 0+} \sum \frac{ k Q_1 Q_2 \Delta x}{nx^2} \\
+                                   &= \lim_{n \to \infty} \int_{-\infty}^{\infty} \frac{k Q_1 Q_2}{nx^2} dx \\
+                                   &= \lim_{n \to \infty} \frac{k Q_1 Q_2}{n} \Bigg[ -\frac{1}{x} \Bigg]_{x = -\infty}^{x = \infty} \\
+                                   &= \lim_{n \to \infty} \lim_{a \to \infty} \frac{k Q_1, Q_2}{n}\Bigg[ -\frac{1}{a} - \Bigg( -\frac{1}{-a} \Bigg) \Bigg] \\
+                                   &= \lim_{n \to \infty} \lim_{a \to \infty} \frac{k Q_1, Q_2}{n}\Bigg[ -\frac{2}{a} \Bigg] \\
+                                   &= 0.
+            \end{aligned}
+            $$
+            So we conclude that the pull is always zero in this setting.
+        </article>
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
             <script src="viewCounter.js"></script>
