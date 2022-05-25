@@ -1,0 +1,1224 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinkedListBenchmark.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LinkedList</a> &gt; <a href="index.source.html" class="el_package">com.github.coderodde.util.benchmark</a> &gt; <span class="el_source">LinkedListBenchmark.java</span></div><h1>LinkedListBenchmark.java</h1><pre class="source lang-java linenums">package com.github.coderodde.util.benchmark;
+
+import com.github.coderodde.util.IndexedLinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.list.TreeList;
+
+final class LinkedListBenchmark {
+
+    private static final int ADD_FIRST_OPERATIONS           = 100_000;
+    private static final int ADD_LAST_OPERATIONS            = 100_000;
+    private static final int ADD_AT_OPERATIONS              = 10_000;
+    private static final int ADD_COLLECTION_AT_OPERATIONS   = 4_000;
+    private static final int ADD_LAST_COLLECTION_OPERATIONS = 10_000;
+    private static final int REMOVE_VIA_INDEX_OPERATIONS    = 10;
+    private static final int REMOVE_OBJECT_OPERATIONS       = 1_000;
+    private static final int GET_OPERATIONS                 = 2_000;
+    private static final int REMOVE_FIRST_OPERATIONS        = 2_000;
+
+    private static final int MAXIMUM_COLLECTION_SIZE = 20;
+
+    private static final int MAXIMUM_INTEGER = 1_000;
+
+    private final long seed;
+
+    private Random randomJavaUtilLinkedList;
+    private Random randomJavaUtilArrayList;
+    private Random randomRoddeList;
+    private Random randomTreeList;
+
+<span class="nc" id="L40">    private IndexedLinkedList&lt;Integer&gt; roddeList = new IndexedLinkedList&lt;&gt;();</span>
+<span class="nc" id="L41">    private LinkedList&lt;Integer&gt; linkedList = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L42">    private ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L43">    private TreeList&lt;Integer&gt; treeList = new TreeList&lt;&gt;();</span>
+
+<span class="nc" id="L45">    private long totalMillisRoddeList  = 0L;</span>
+<span class="nc" id="L46">    private long totalMillisLinkedList = 0L;</span>
+<span class="nc" id="L47">    private long totalMillisArrayList  = 0L;</span>
+<span class="nc" id="L48">    private long totalMillisTreeList   = 0L;</span>
+    
+<span class="nc" id="L50">    private final List&lt;Integer&gt;[] getLists = new ArrayList[5];</span>
+
+<span class="nc" id="L52">    LinkedListBenchmark(long seed) {</span>
+<span class="nc" id="L53">        this.seed = seed;</span>
+        
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for (int i = 0; i &lt; getLists.length; i++) {</span>
+<span class="nc" id="L56">            getLists[i] = new ArrayList&lt;&gt;(GET_OPERATIONS);</span>
+        }
+<span class="nc" id="L58">    }</span>
+
+    void warmup() {
+<span class="nc" id="L61">        profile(BenchmarkChoice.WARMUP);</span>
+<span class="nc" id="L62">    }</span>
+
+    void benchmark() {
+<span class="nc" id="L65">        profile(BenchmarkChoice.BENCHMARK);</span>
+<span class="nc" id="L66">    }</span>
+    
+    // Simulate list.subList(fromIndex, toIndex) for those lists that do not
+    // support the method:
+    private static void clear(List&lt;Integer&gt; list, int fromIndex, int toIndex) {
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        for (int i = fromIndex; i &lt; toIndex; ++i) {</span>
+<span class="nc" id="L72">            list.remove(fromIndex);</span>
+        }
+<span class="nc" id="L74">    }</span>
+    
+    private static  Integer getRandomInteger(Random random) {
+<span class="nc" id="L77">        return random.nextInt(MAXIMUM_INTEGER + 1);</span>
+    }
+
+    private static List&lt;Integer&gt; createRandomCollection(Random random) {
+<span class="nc" id="L81">        int size = 1 + random.nextInt(MAXIMUM_COLLECTION_SIZE);</span>
+
+<span class="nc" id="L83">        List&lt;Integer&gt; list = new ArrayList&lt;&gt;(size);</span>
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="nc" id="L86">            list.add(getRandomInteger(random));</span>
+        }
+
+<span class="nc" id="L89">        return list;</span>
+    }
+
+<span class="nc" id="L92">    private enum BenchmarkChoice { WARMUP, BENCHMARK }</span>
+
+    private void initRandomGenerators() {
+<span class="nc" id="L95">        randomJavaUtilLinkedList = new Random(seed);</span>
+<span class="nc" id="L96">        randomJavaUtilArrayList  = new Random(seed);</span>
+<span class="nc" id="L97">        randomRoddeList          = new Random(seed);</span>
+<span class="nc" id="L98">        randomTreeList           = new Random(seed);</span>
+<span class="nc" id="L99">    }</span>
+
+    private void listsEqual() {
+<span class="nc" id="L102">        listsEqual(roddeList,</span>
+                   linkedList, 
+                   arrayList, 
+                   treeList);
+<span class="nc" id="L106">    }</span>
+
+    private static void listsEqual(List&lt;Integer&gt;... lists) {
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (lists.length &lt; 2) {</span>
+<span class="nc" id="L110">            throw new IllegalArgumentException(&quot;lists.length &lt; 2&quot;);</span>
+        }
+
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        for (int i = 0; i &lt; lists.length - 1; i++) {</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (lists[i].size() != lists[lists.length - 1].size()) {</span>
+<span class="nc" id="L115">                throw new IllegalStateException(&quot;Different size&quot;);</span>
+            }
+
+<span class="nc" id="L118">            Iterator&lt;Integer&gt; iterator1 = lists[i].iterator();</span>
+<span class="nc" id="L119">            Iterator&lt;Integer&gt; iterator2 = lists[lists.length - 1].iterator();</span>
+
+<span class="nc" id="L121">            int elementIndex = 0;</span>
+
+<span class="nc bnc" id="L123" title="All 4 branches missed.">            while (iterator1.hasNext() &amp;&amp; iterator2.hasNext()) {</span>
+<span class="nc" id="L124">                Integer integer1 = iterator1.next();</span>
+<span class="nc" id="L125">                Integer integer2 = iterator2.next();</span>
+
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                if (!integer1.equals(integer2)) {</span>
+<span class="nc" id="L128">                    throw new IllegalStateException(</span>
+                            &quot;Data mismatch: &quot; + integer1 + &quot; vs. &quot; + 
+                            integer2 + &quot; at list &quot; + i + 
+                            &quot;, element index: &quot; + elementIndex);
+                }
+
+<span class="nc" id="L134">                elementIndex++;</span>
+<span class="nc" id="L135">            }</span>
+
+<span class="nc bnc" id="L137" title="All 4 branches missed.">            if (iterator1.hasNext() || iterator2.hasNext()) {</span>
+<span class="nc" id="L138">                throw new IllegalStateException(&quot;Bad iterators&quot;);</span>
+            }
+        }
+<span class="nc" id="L141">    }</span>
+
+    private void profile(BenchmarkChoice benchmarkChoice) {
+
+<span class="nc" id="L145">        printTitle(benchmarkChoice);</span>
+<span class="nc" id="L146">        initRandomGenerators();</span>
+
+<span class="nc" id="L148">        profileAddFirst();</span>
+<span class="nc" id="L149">        profileAddLast();</span>
+<span class="nc" id="L150">        profileAddViaIndex();</span>
+<span class="nc" id="L151">        profileAppendCollection();</span>
+<span class="nc" id="L152">        profileAddCollection();</span>
+<span class="nc" id="L153">        profileGet();</span>
+<span class="nc" id="L154">        profileRemoveFirst();</span>
+<span class="nc" id="L155">        profileRemoveLast();</span>
+<span class="nc" id="L156">        profileRemoveViaIndex();</span>
+<span class="nc" id="L157">        profileRemoveObject();</span>
+<span class="nc" id="L158">        profileListIteratorAddition();</span>
+<span class="nc" id="L159">        profileListIteratorRemoval();</span>
+<span class="nc" id="L160">        profileStream();</span>
+<span class="nc" id="L161">        profileParallelStream();</span>
+<span class="nc" id="L162">        profileRemoveAll();</span>
+  
+        // SubList.clear() is not quite fair for TreeList.
+        //profileSubListClear();
+
+<span class="nc" id="L167">        printTotalDurations();</span>
+
+<span class="nc" id="L169">        resetLists();</span>
+<span class="nc" id="L170">        zeroTimeDurationCounters();</span>
+<span class="nc" id="L171">    }</span>
+
+    private void zeroTimeDurationCounters() {
+<span class="nc" id="L174">        totalMillisArrayList   = 0;</span>
+<span class="nc" id="L175">        totalMillisLinkedList  = 0;</span>
+<span class="nc" id="L176">        totalMillisRoddeList   = 0;</span>
+<span class="nc" id="L177">        totalMillisRoddeList = 0;</span>
+<span class="nc" id="L178">        totalMillisTreeList    = 0;</span>
+<span class="nc" id="L179">    }</span>
+
+    private void resetLists() {
+<span class="nc" id="L182">        roddeList = new IndexedLinkedList&lt;&gt;();</span>
+<span class="nc" id="L183">        linkedList  = new java.util.LinkedList&lt;&gt;();</span>
+<span class="nc" id="L184">        arrayList   = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L185">        treeList    = new TreeList&lt;&gt;();</span>
+<span class="nc" id="L186">    }</span>
+
+    private void profileAddFirst() {
+<span class="nc" id="L189">        profileAddFirstRoddeListV2();</span>
+<span class="nc" id="L190">        profileAddFirstLinkedList();</span>
+<span class="nc" id="L191">        profileAddFirstArrayList();</span>
+<span class="nc" id="L192">        profileAddFirstTreeList();</span>
+
+<span class="nc" id="L194">        listsEqual();</span>
+<span class="nc" id="L195">        System.out.println();</span>
+<span class="nc" id="L196">    }</span>
+
+    private void profileAddLast() {
+<span class="nc" id="L199">        profileAddLastRoddeListV2();</span>
+<span class="nc" id="L200">        profileAddLastLinkedList();</span>
+<span class="nc" id="L201">        profileAddLastArrayList();</span>
+<span class="nc" id="L202">        profileAddLastTreeList();</span>
+
+<span class="nc" id="L204">        listsEqual();</span>
+<span class="nc" id="L205">        System.out.println();</span>
+<span class="nc" id="L206">    }</span>
+
+    private void profileAddViaIndex() {
+<span class="nc" id="L209">        profileAddIndexRoddeListV2();</span>
+<span class="nc" id="L210">        profileAddIndexLinkedList();</span>
+<span class="nc" id="L211">        profileAddIndexArrayList();</span>
+<span class="nc" id="L212">        profileAddIndexTreeList();</span>
+
+<span class="nc" id="L214">        listsEqual();</span>
+<span class="nc" id="L215">        System.out.println();</span>
+<span class="nc" id="L216">    }</span>
+
+    private void profileAddCollection() {
+<span class="nc" id="L219">        profileAddCollectionRoddeListV2();</span>
+<span class="nc" id="L220">        profileAddCollectionLinkedList();</span>
+<span class="nc" id="L221">        profileAddCollectionArrayList();</span>
+<span class="nc" id="L222">        profileAddCollectionTreeList();</span>
+
+<span class="nc" id="L224">        listsEqual();</span>
+<span class="nc" id="L225">        System.out.println();</span>
+<span class="nc" id="L226">    }</span>
+    
+    private void profileGet() {
+<span class="nc" id="L229">        profileGetRoddeListV2();</span>
+<span class="nc" id="L230">        profileGetLinkedList();</span>
+<span class="nc" id="L231">        profileGetArrayList();</span>
+<span class="nc" id="L232">        profileGetTreeList();</span>
+        
+<span class="nc" id="L234">        listsEqual();</span>
+        
+<span class="nc" id="L236">        System.out.println();</span>
+<span class="nc" id="L237">    }</span>
+    
+    private void profileRemoveFirst() {
+<span class="nc" id="L240">        profileRemoveFirstRoddeListV2();</span>
+<span class="nc" id="L241">        profileRemoveFirstLinkedList();</span>
+<span class="nc" id="L242">        profileRemoveFirstArrayList();</span>
+<span class="nc" id="L243">        profileRemoveFirstTreeList();</span>
+        
+<span class="nc" id="L245">        listsEqual();</span>
+<span class="nc" id="L246">        System.out.println();</span>
+<span class="nc" id="L247">    }</span>
+    
+    private void profileRemoveLast() {
+<span class="nc" id="L250">        profileRemoveLastRoddeListV2();</span>
+<span class="nc" id="L251">        profileRemoveLastLinkedList();</span>
+<span class="nc" id="L252">        profileRemoveLastArrayList();</span>
+<span class="nc" id="L253">        profileRemoveLastTreeList();</span>
+        
+<span class="nc" id="L255">        listsEqual();</span>
+<span class="nc" id="L256">        System.out.println();</span>
+<span class="nc" id="L257">    }</span>
+
+    private void profileAppendCollection() {
+<span class="nc" id="L260">        profileAppendCollectionRoddeListV2();</span>
+<span class="nc" id="L261">        profileAppendCollectionLinkedList();</span>
+<span class="nc" id="L262">        profileAppendCollectionArrayList();</span>
+<span class="nc" id="L263">        profileAppendCollectionTreeList();</span>
+
+<span class="nc" id="L265">        listsEqual();</span>
+<span class="nc" id="L266">        System.out.println();</span>
+<span class="nc" id="L267">    }</span>
+
+    private void profileRemoveViaIndex() {
+<span class="nc" id="L270">        profileRemoveViaIndexRoddeListV2();</span>
+<span class="nc" id="L271">        profileRemoveViaIndexLinkedList();</span>
+<span class="nc" id="L272">        profileRemoveViaIndexArrayList();</span>
+<span class="nc" id="L273">        profileRemoveViaIndexTreeList();</span>
+
+<span class="nc" id="L275">        listsEqual();</span>
+<span class="nc" id="L276">        System.out.println();</span>
+<span class="nc" id="L277">    }</span>
+
+    private void profileRemoveObject() {
+<span class="nc" id="L280">        profileRemoveObjectRoddeListV2();</span>
+<span class="nc" id="L281">        profileRemoveObjectLinkedList();</span>
+<span class="nc" id="L282">        profileRemoveObjectArrayList();</span>
+<span class="nc" id="L283">        profileRemoveObjectTreeList();</span>
+
+<span class="nc" id="L285">        listsEqual();</span>
+<span class="nc" id="L286">        System.out.println();</span>
+<span class="nc" id="L287">    }</span>
+
+    private void profileListIteratorAddition() {
+<span class="nc" id="L290">        profileListIteratorAdditionRoddeListV2();</span>
+<span class="nc" id="L291">        profileListIteratorAdditionLinkedList();</span>
+<span class="nc" id="L292">        profileListIteratorAdditionArrayList();</span>
+<span class="nc" id="L293">        profileListIteratorAdditionTreeList();</span>
+
+<span class="nc" id="L295">        listsEqual();</span>
+<span class="nc" id="L296">        System.out.println();</span>
+<span class="nc" id="L297">    }</span>
+
+    private void profileListIteratorRemoval() {
+<span class="nc" id="L300">        profileListIteratorRemovalRoddeListV2();</span>
+<span class="nc" id="L301">        profileListIteratorRemovalLinkedList();</span>
+<span class="nc" id="L302">        profileListIteratorRemovalArrayList();</span>
+<span class="nc" id="L303">        profileListIteratorRemovalTreeList();</span>
+
+<span class="nc" id="L305">        listsEqual();</span>
+<span class="nc" id="L306">        System.out.println();</span>
+<span class="nc" id="L307">    }</span>
+
+    private void profileStream() {
+<span class="nc" id="L310">        profileStreamRoddeListV2();</span>
+<span class="nc" id="L311">        profileStreamLinkedList();</span>
+<span class="nc" id="L312">        profileStreamArrayList();</span>
+<span class="nc" id="L313">        profileStreamTreeList();</span>
+
+<span class="nc" id="L315">        listsEqual();</span>
+<span class="nc" id="L316">        System.out.println();</span>
+<span class="nc" id="L317">    }</span>
+
+    private void profileParallelStream() {
+<span class="nc" id="L320">        profileParallelStreamRoddeList();</span>
+<span class="nc" id="L321">        profileParallelStreamLinkedList();</span>
+<span class="nc" id="L322">        profileParallelStreamArrayList();</span>
+<span class="nc" id="L323">        profileParallelStreamTreeList();</span>
+
+<span class="nc" id="L325">        Collections.sort(treeList);</span>
+<span class="nc" id="L326">        Collections.sort(roddeList);</span>
+<span class="nc" id="L327">        Collections.sort(arrayList);</span>
+<span class="nc" id="L328">        Collections.sort(linkedList);</span>
+
+<span class="nc" id="L330">        listsEqual();</span>
+<span class="nc" id="L331">        System.out.println();</span>
+<span class="nc" id="L332">    }</span>
+    
+    private void profileRemoveAll() {
+<span class="nc" id="L335">        roddeList.clear();</span>
+<span class="nc" id="L336">        linkedList.clear();</span>
+<span class="nc" id="L337">        arrayList.clear();</span>
+<span class="nc" id="L338">        treeList.clear();</span>
+        
+<span class="nc" id="L340">        roddeList.addAll(getIntegerArray(10_000));</span>
+<span class="nc" id="L341">        linkedList.addAll(roddeList);</span>
+<span class="nc" id="L342">        arrayList.addAll(roddeList);</span>
+<span class="nc" id="L343">        treeList.addAll(roddeList);</span>
+        
+<span class="nc" id="L345">        Collection&lt;Integer&gt; toRemove = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L346">        Random random = new Random(seed + 1);</span>
+        
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        for (int i = 0; i &lt; 5_000; ++i) {</span>
+<span class="nc" id="L349">            int value = random.nextInt(5_000);</span>
+<span class="nc" id="L350">            toRemove.add(value);</span>
+        }
+        
+<span class="nc" id="L353">        profileRemoveAllRoddeList  (toRemove);</span>
+<span class="nc" id="L354">        profileRemoveAllLinkedList (toRemove);</span>
+<span class="nc" id="L355">        profileRemoveAllArrayList  (toRemove);</span>
+<span class="nc" id="L356">        profileRemoveAllTreeList   (toRemove);</span>
+        
+<span class="nc" id="L358">        listsEqual();</span>
+<span class="nc" id="L359">        System.out.println();</span>
+<span class="nc" id="L360">    }</span>
+    
+    private static List&lt;Integer&gt; getIntegerArray(int size) {
+<span class="nc" id="L363">        List&lt;Integer&gt; integers = new ArrayList&lt;&gt;(size);</span>
+        
+<span class="nc bnc" id="L365" title="All 2 branches missed.">        for (int i = 0; i &lt; size; ++i) {</span>
+<span class="nc" id="L366">            integers.add(Integer.valueOf(size % 900_000));</span>
+        }
+        
+<span class="nc" id="L369">        Collections.shuffle(integers);</span>
+<span class="nc" id="L370">        return integers;</span>
+    }
+    
+    private void profileSubListClear() {
+<span class="nc" id="L374">        roddeList.clear();</span>
+<span class="nc" id="L375">        arrayList.clear();</span>
+<span class="nc" id="L376">        linkedList.clear();</span>
+<span class="nc" id="L377">        treeList.clear();</span>
+        
+<span class="nc" id="L379">        roddeList.addAll(getIntegerArray(1_000_000));</span>
+<span class="nc" id="L380">        arrayList.addAll(roddeList);</span>
+<span class="nc" id="L381">        linkedList.addAll(roddeList);</span>
+<span class="nc" id="L382">        treeList.addAll(roddeList);</span>
+        
+<span class="nc" id="L384">        profileSubListClearRoddeList();</span>
+<span class="nc" id="L385">        profileSubListClearLinkedList();</span>
+<span class="nc" id="L386">        profileSubListClearArrayList();</span>
+<span class="nc" id="L387">        profileSubListClearTreeList();</span>
+        
+<span class="nc" id="L389">        listsEqual();</span>
+<span class="nc" id="L390">        System.out.println();</span>
+<span class="nc" id="L391">    }</span>
+
+    private void printTotalDurations() {
+<span class="nc" id="L394">        System.out.println(&quot;--- Total time elapsed ---&quot;);</span>
+        
+<span class="nc" id="L396">        System.out.println(</span>
+<span class="nc" id="L397">                roddeList.getClass().getName() + </span>
+                        &quot; in (ms): &quot; + 
+                        totalMillisRoddeList);
+
+<span class="nc" id="L401">        System.out.println(</span>
+<span class="nc" id="L402">                linkedList.getClass().getName() + </span>
+                        &quot; in (ms): &quot; + 
+                        totalMillisLinkedList);
+
+<span class="nc" id="L406">        System.out.println(</span>
+<span class="nc" id="L407">                arrayList.getClass().getName() + </span>
+                        &quot; in (ms): &quot; + 
+                        totalMillisArrayList);
+
+<span class="nc" id="L411">        System.out.println(</span>
+<span class="nc" id="L412">                treeList.getClass().getName() + </span>
+                        &quot; in (ms): &quot; + 
+                        totalMillisTreeList);
+<span class="nc" id="L415">    }</span>
+
+    private long profileAddFirst(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L422">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L424" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L425">            list.add(0, getRandomInteger(random));</span>
+        }
+
+<span class="nc" id="L428">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L429">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L431">        System.out.println(</span>
+<span class="nc" id="L432">                list.getClass().getName() + </span>
+                        &quot;.addFirst in (ms): &quot; + 
+                        durationMillis);
+
+<span class="nc" id="L436">        return durationMillis;</span>
+    }
+
+    private long profileAddLast(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L444">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L446" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L447">            list.add(list.size(), getRandomInteger(random));</span>
+        }
+
+<span class="nc" id="L450">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L451">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L453">        System.out.println(</span>
+<span class="nc" id="L454">                list.getClass().getName() + </span>
+                        &quot;.addLast in (ms): &quot; + 
+                        durationMillis);
+
+<span class="nc" id="L458">        return durationMillis;</span>
+    }
+
+    private long profileAddIndex(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L466">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L468" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L469">            int index = random.nextInt(list.size());</span>
+<span class="nc" id="L470">            Integer value = getRandomInteger(random);</span>
+<span class="nc" id="L471">            list.add(index, value);</span>
+        }
+
+<span class="nc" id="L474">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L475">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L477">        System.out.println(</span>
+<span class="nc" id="L478">                list.getClass().getName() + </span>
+                        &quot;.add(int, E) in (ms): &quot; + 
+                        durationMillis);
+
+<span class="nc" id="L482">        return durationMillis;</span>
+    }
+
+    private long profileAddCollection(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L490">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L492" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L493">            List&lt;Integer&gt; collection = createRandomCollection(random);</span>
+//            System.out.println(&quot;i = &quot; + i);
+<span class="nc" id="L495">            int index = random.nextInt(list.size());</span>
+<span class="nc" id="L496">            list.addAll(index, collection);</span>
+        }
+
+<span class="nc" id="L499">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L500">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L502">        System.out.println(</span>
+<span class="nc" id="L503">                list.getClass().getName() + </span>
+                        &quot;.addAll(int, Collection) in (ms): &quot; +
+                        durationMillis);
+
+<span class="nc" id="L507">        return durationMillis;</span>
+    }
+
+    private long profileAppendCollection(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L515">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L517" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L518">            List&lt;Integer&gt; collection = createRandomCollection(random);</span>
+<span class="nc" id="L519">            list.addAll(collection);</span>
+        }
+
+<span class="nc" id="L522">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L523">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L525">        System.out.println(</span>
+<span class="nc" id="L526">                list.getClass().getName() + </span>
+                        &quot;.addAll(Collection) in (ms): &quot; +
+                        durationMillis);
+
+<span class="nc" id="L530">        return durationMillis;</span>
+    }
+    
+    private long profileGet(List&lt;Integer&gt; list, int operations, Random random) {
+<span class="nc" id="L534">        long startMillis = System.currentTimeMillis();</span>
+        
+<span class="nc bnc" id="L536" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L537">            list.get(random.nextInt(list.size()));</span>
+        }
+        
+<span class="nc" id="L540">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L541">        long durationMillis = endMillis - startMillis;</span>
+        
+<span class="nc" id="L543">        System.out.println(</span>
+<span class="nc" id="L544">                list.getClass().getName() + &quot;.get(int) in (ms): &quot; +</span>
+                    durationMillis);
+        
+<span class="nc" id="L547">        return durationMillis;</span>
+    }
+    
+    private long profileRemoveFirst(List&lt;Integer&gt; list) {
+<span class="nc" id="L551">        long startMillis = System.currentTimeMillis();</span>
+        
+<span class="nc bnc" id="L553" title="All 2 branches missed.">        if (!list.getClass().equals(Deque.class)) {</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">            for (int i = 0; i &lt; REMOVE_FIRST_OPERATIONS; i++) {</span>
+<span class="nc" id="L555">                list.remove(0);</span>
+            }
+        } else {
+<span class="nc bnc" id="L558" title="All 2 branches missed.">            for (int i = 0; i &lt; REMOVE_FIRST_OPERATIONS; i++) {</span>
+<span class="nc" id="L559">                ((Deque&lt;Integer&gt;) list).removeFirst();</span>
+            }
+        }
+        
+        
+<span class="nc" id="L564">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L565">        long durationMillis = endMillis - startMillis;</span>
+        
+<span class="nc" id="L567">        System.out.println(</span>
+<span class="nc" id="L568">                list.getClass().getName() + &quot;.removeFirst() in (ms): &quot; +</span>
+                        durationMillis);
+        
+<span class="nc" id="L571">        return durationMillis;</span>
+    }
+    
+    private long profileRemoveLast(List&lt;Integer&gt; list) {
+<span class="nc" id="L575">        long startMillis = System.currentTimeMillis();</span>
+        
+<span class="nc bnc" id="L577" title="All 2 branches missed.">        if (!list.getClass().equals(Deque.class)) {</span>
+<span class="nc bnc" id="L578" title="All 2 branches missed.">            for (int i = 0; i &lt; REMOVE_FIRST_OPERATIONS; i++) {</span>
+<span class="nc" id="L579">                list.remove(list.size() - 1);</span>
+            }
+        } else {
+<span class="nc bnc" id="L582" title="All 2 branches missed.">            for (int i = 0; i &lt; REMOVE_FIRST_OPERATIONS; i++) {</span>
+<span class="nc" id="L583">                ((Deque&lt;Integer&gt;) list).removeLast();</span>
+            }
+        }
+        
+        
+<span class="nc" id="L588">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L589">        long durationMillis = endMillis - startMillis;</span>
+        
+<span class="nc" id="L591">        System.out.println(</span>
+<span class="nc" id="L592">                list.getClass().getName() + &quot;.removeLast() in (ms): &quot; +</span>
+                        durationMillis);
+        
+<span class="nc" id="L595">        return durationMillis;</span>
+    }
+
+    private long profileRemoveViaIndex(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L603">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L605" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L606">            list.remove(random.nextInt(list.size()));</span>
+        }
+
+<span class="nc" id="L609">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L610">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L612">        System.out.println(</span>
+<span class="nc" id="L613">                list.getClass().getName() +</span>
+                        &quot;.remove(int) in (ms): &quot; +
+                        durationMillis);
+
+<span class="nc" id="L617">        return durationMillis;</span>
+    }
+
+    private long profileRemoveObject(
+            List&lt;Integer&gt; list, 
+            int operations, 
+            Random random) {
+
+<span class="nc" id="L625">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc bnc" id="L627" title="All 2 branches missed.">        for (int i = 0; i &lt; operations; i++) {</span>
+<span class="nc" id="L628">            list.remove(Integer.valueOf(getRandomInteger(random)));</span>
+        }
+
+<span class="nc" id="L631">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L632">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L634">        System.out.println(</span>
+<span class="nc" id="L635">                list.getClass().getName() +</span>
+                        &quot;.remove(Object) in (ms): &quot; +
+                        durationMillis);
+
+<span class="nc" id="L639">        return durationMillis;</span>
+    }
+    
+    private long profileListIteratorRemoval(List&lt;Integer&gt; list) {
+<span class="nc" id="L643">        long startMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L644">        Iterator&lt;Integer&gt; iterator = list.iterator();</span>
+<span class="nc" id="L645">        int counter = 0;</span>
+
+<span class="nc bnc" id="L647" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
+<span class="nc" id="L648">            iterator.next();</span>
+
+            // Remove every 2nd element:
+<span class="nc bnc" id="L651" title="All 2 branches missed.">            if (counter % 10 == 0) {</span>
+                try {
+<span class="nc" id="L653">                    iterator.remove();</span>
+<span class="nc" id="L654">                } catch (AssertionError ae) {</span>
+<span class="nc" id="L655">                    System.err.println(ae.getMessage());</span>
+<span class="nc" id="L656">                    System.exit(1);</span>
+<span class="nc" id="L657">                }</span>
+            }
+
+<span class="nc" id="L660">            counter++;</span>
+        }
+
+<span class="nc" id="L663">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L664">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L666">        System.out.println(</span>
+<span class="nc" id="L667">                list.getClass().getName() +</span>
+                        &quot;.iterator().remove() in (ms): &quot; +
+                        durationMillis);
+
+<span class="nc" id="L671">        return durationMillis;</span>
+    }
+
+    private long profileListIteratorAddition(
+            List&lt;Integer&gt; list, Random random) {
+
+<span class="nc" id="L677">        long startMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L678">        ListIterator&lt;Integer&gt; iterator = list.listIterator(1);</span>
+<span class="nc" id="L679">        int counter = 0;</span>
+
+<span class="nc bnc" id="L681" title="All 2 branches missed.">        while (iterator.hasNext()) {</span>
+<span class="nc" id="L682">            iterator.next();</span>
+
+            // Remove every 2nd element:
+<span class="nc bnc" id="L685" title="All 2 branches missed.">            if (counter % 10 == 0) {</span>
+                try {
+<span class="nc" id="L687">                    Integer integer = Integer.valueOf(random.nextInt(10_000));</span>
+<span class="nc" id="L688">                    iterator.add(integer);</span>
+<span class="nc" id="L689">                } catch (AssertionError ae) {</span>
+<span class="nc" id="L690">                    System.err.println(ae.getMessage());</span>
+<span class="nc" id="L691">                    System.exit(1);</span>
+<span class="nc" id="L692">                }</span>
+            }
+
+<span class="nc" id="L695">            counter++;</span>
+        }
+
+<span class="nc" id="L698">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L699">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L701">        System.out.println(</span>
+<span class="nc" id="L702">                list.getClass().getName() +</span>
+                        &quot;.iterator().add() in (ms): &quot; +
+                        durationMillis);
+
+<span class="nc" id="L706">        return durationMillis;</span>
+    }
+
+    private long profileStream(List&lt;Integer&gt; list) {
+<span class="nc" id="L710">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc" id="L712">        List&lt;Integer&gt; newList =</span>
+<span class="nc" id="L713">                list.stream().map(x -&gt; 2 * x).collect(Collectors.toList());</span>
+
+<span class="nc" id="L715">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L716">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L718">        list.clear();</span>
+<span class="nc" id="L719">        list.addAll(newList);</span>
+
+<span class="nc" id="L721">        System.out.println(</span>
+<span class="nc" id="L722">                list.getClass().getName() +</span>
+                        &quot;.stream() in (ms): &quot; + durationMillis);
+
+<span class="nc" id="L725">        return durationMillis;</span>
+    }
+
+    private long profileParallelStream(List&lt;Integer&gt; list) {
+<span class="nc" id="L729">        long startMillis = System.currentTimeMillis();</span>
+
+<span class="nc" id="L731">        List&lt;Integer&gt; newList = list.stream()</span>
+<span class="nc" id="L732">                        .parallel()</span>
+<span class="nc" id="L733">                        .map(x -&gt; 2 * x)</span>
+<span class="nc" id="L734">                        .collect(Collectors.toList());</span>
+
+<span class="nc" id="L736">        long endMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L737">        long durationMillis = endMillis - startMillis;</span>
+
+<span class="nc" id="L739">        list.clear();</span>
+<span class="nc" id="L740">        list.addAll(newList);</span>
+
+<span class="nc" id="L742">        System.out.println(</span>
+<span class="nc" id="L743">                list.getClass().getName() +</span>
+                        &quot;.stream().parallel() in (ms): &quot; + durationMillis);
+
+<span class="nc" id="L746">        return durationMillis;</span>
+    }
+    
+    private long profileRemoveAll(List&lt;Integer&gt; list, 
+                                  Collection&lt;Integer&gt; toRemove) {
+        long startMillis;
+        long endMillis;
+        
+<span class="nc bnc" id="L754" title="All 4 branches missed.">        if (list instanceof TreeList || list instanceof LinkedList) {</span>
+<span class="nc" id="L755">            startMillis = System.currentTimeMillis();</span>
+            
+<span class="nc bnc" id="L757" title="All 2 branches missed.">            for (Integer i : toRemove) {</span>
+<span class="nc" id="L758">                list.remove(i);</span>
+<span class="nc" id="L759">            }</span>
+            
+<span class="nc" id="L761">            endMillis = System.currentTimeMillis();</span>
+        } else {
+<span class="nc" id="L763">            startMillis = System.currentTimeMillis();</span>
+<span class="nc" id="L764">            list.removeAll(toRemove);</span>
+<span class="nc" id="L765">            endMillis = System.currentTimeMillis();</span>
+        }
+        
+<span class="nc" id="L768">        long durationMillis = endMillis - startMillis;</span>
+        
+<span class="nc" id="L770">        System.out.println(</span>
+<span class="nc" id="L771">                list.getClass().getName() +</span>
+                        &quot;.removeAll() in (ms): &quot; + durationMillis);
+
+<span class="nc" id="L774">        return durationMillis;</span>
+    }
+    
+    private long profileSubListClear(List&lt;Integer&gt; list) {
+<span class="nc" id="L778">        Class&lt;?&gt; clazz = list.getClass();</span>
+        
+        long startMillis;
+        long endMillis;
+        long durationMillis;
+        
+        int fromIndex;
+        int toIndex;
+        
+<span class="nc bnc" id="L787" title="All 2 branches missed.">        if (clazz.getSimpleName().equals(&quot;TreeList&quot;)) {</span>
+<span class="nc" id="L788">            fromIndex = list.size() / 2;</span>
+<span class="nc" id="L789">            toIndex = list.size() / 2 + 1;</span>
+            
+<span class="nc" id="L791">            startMillis = System.currentTimeMillis();</span>
+            
+            // Clear short range:
+<span class="nc" id="L794">            clear(list, fromIndex, toIndex);</span>
+            
+<span class="nc" id="L796">            fromIndex = 10;</span>
+<span class="nc" id="L797">            toIndex = list.size() - 9;</span>
+            
+            // Clear long range:
+<span class="nc" id="L800">            clear(list, fromIndex, toIndex);</span>
+            
+<span class="nc" id="L802">            endMillis = System.currentTimeMillis();</span>
+        } else {
+<span class="nc" id="L804">            fromIndex = list.size() / 2;</span>
+<span class="nc" id="L805">            toIndex = list.size() / 2 + 1;</span>
+            
+<span class="nc" id="L807">            startMillis = System.currentTimeMillis();</span>
+            
+            // Clear short range:
+<span class="nc" id="L810">            list.subList(fromIndex, toIndex).clear();</span>
+            
+<span class="nc" id="L812">            fromIndex = 10;</span>
+<span class="nc" id="L813">            toIndex = list.size() - 9;</span>
+            
+            // Clear long range:
+<span class="nc" id="L816">            list.subList(fromIndex, toIndex).clear();</span>
+            
+<span class="nc" id="L818">            endMillis = System.currentTimeMillis();</span>
+        }
+        
+<span class="nc" id="L821">        durationMillis = endMillis - startMillis;</span>
+        
+<span class="nc" id="L823">        System.out.println(</span>
+<span class="nc" id="L824">                list.getClass().getName() + </span>
+                        &quot;.subList(...).clear() in (ms): &quot; + 
+                        durationMillis);
+        
+<span class="nc" id="L828">        return durationMillis;</span>
+    }
+
+    private void profileAddFirstRoddeListV2() {
+<span class="nc" id="L832">        totalMillisRoddeList += </span>
+<span class="nc" id="L833">                profileAddFirst(</span>
+                        roddeList, 
+                        ADD_FIRST_OPERATIONS, 
+                        randomRoddeList);
+<span class="nc" id="L837">    }</span>
+
+    private void profileAddFirstLinkedList() {
+<span class="nc" id="L840">        totalMillisLinkedList += </span>
+<span class="nc" id="L841">                profileAddFirst(linkedList, </span>
+                                ADD_FIRST_OPERATIONS, 
+                                randomJavaUtilLinkedList);
+<span class="nc" id="L844">    }</span>
+
+    private void profileAddFirstArrayList() {
+<span class="nc" id="L847">        totalMillisArrayList += </span>
+<span class="nc" id="L848">                profileAddFirst(arrayList, </span>
+                                ADD_FIRST_OPERATIONS, 
+                                randomJavaUtilArrayList);
+<span class="nc" id="L851">    }</span>
+
+    private void profileAddFirstTreeList() {
+<span class="nc" id="L854">        totalMillisTreeList += </span>
+<span class="nc" id="L855">                profileAddFirst(treeList,</span>
+                                ADD_FIRST_OPERATIONS,
+                                randomTreeList);
+<span class="nc" id="L858">    }</span>
+
+    private void profileAddLastRoddeListV2() {
+<span class="nc" id="L861">        totalMillisRoddeList += </span>
+<span class="nc" id="L862">            profileAddLast(roddeList, ADD_LAST_OPERATIONS, randomRoddeList);</span>
+<span class="nc" id="L863">    }</span>
+
+    private void profileAddLastLinkedList() {
+<span class="nc" id="L866">        totalMillisLinkedList += </span>
+<span class="nc" id="L867">                profileAddLast(</span>
+                        linkedList, 
+                        ADD_LAST_OPERATIONS, 
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L871">    }</span>
+
+    private void profileAddLastArrayList() {
+<span class="nc" id="L874">        totalMillisArrayList += </span>
+<span class="nc" id="L875">                profileAddLast(arrayList, </span>
+                               ADD_LAST_OPERATIONS, 
+                               randomJavaUtilArrayList);
+<span class="nc" id="L878">    }</span>
+
+    private void profileAddLastTreeList() {
+<span class="nc" id="L881">        totalMillisTreeList += </span>
+<span class="nc" id="L882">                profileAddLast(treeList, </span>
+                               ADD_LAST_OPERATIONS, 
+                               randomTreeList);
+<span class="nc" id="L885">    }</span>
+
+    private void profileAddIndexRoddeListV2() {
+<span class="nc" id="L888">        totalMillisRoddeList += </span>
+<span class="nc" id="L889">                profileAddIndex(roddeList,</span>
+                                ADD_AT_OPERATIONS, 
+                                randomRoddeList);
+<span class="nc" id="L892">    }</span>
+
+    private void profileAddIndexLinkedList() {
+<span class="nc" id="L895">        totalMillisLinkedList += </span>
+<span class="nc" id="L896">                profileAddIndex(</span>
+                        linkedList, 
+                        ADD_AT_OPERATIONS, 
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L900">    }</span>
+
+    private void profileAddIndexArrayList() {
+<span class="nc" id="L903">        totalMillisArrayList +=</span>
+<span class="nc" id="L904">                profileAddIndex(</span>
+                        arrayList, 
+                        ADD_AT_OPERATIONS, 
+                        randomJavaUtilArrayList);
+<span class="nc" id="L908">    }</span>
+
+    private void profileAddIndexTreeList() {
+<span class="nc" id="L911">        totalMillisTreeList +=</span>
+<span class="nc" id="L912">                profileAddIndex(</span>
+                        treeList, 
+                        ADD_AT_OPERATIONS, 
+                        randomTreeList);
+<span class="nc" id="L916">    }</span>
+
+    private void profileAddCollectionRoddeListV2() {
+<span class="nc" id="L919">        totalMillisRoddeList +=</span>
+<span class="nc" id="L920">                profileAddCollection(</span>
+                        roddeList, 
+                        ADD_COLLECTION_AT_OPERATIONS, 
+                        randomRoddeList);
+<span class="nc" id="L924">    }</span>
+
+    private void profileAddCollectionLinkedList() {
+<span class="nc" id="L927">        totalMillisLinkedList += </span>
+<span class="nc" id="L928">                profileAddCollection(</span>
+                        linkedList,
+                        ADD_COLLECTION_AT_OPERATIONS,
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L932">    }</span>
+
+    private void profileAddCollectionArrayList() {
+<span class="nc" id="L935">        totalMillisArrayList +=</span>
+<span class="nc" id="L936">                profileAddCollection(</span>
+                        arrayList,
+                        ADD_COLLECTION_AT_OPERATIONS,
+                        randomJavaUtilArrayList);
+<span class="nc" id="L940">    }</span>
+
+    private void profileAddCollectionTreeList() {
+<span class="nc" id="L943">        totalMillisTreeList +=</span>
+<span class="nc" id="L944">                profileAddCollection(</span>
+                        treeList,
+                        ADD_COLLECTION_AT_OPERATIONS,
+                        randomTreeList);
+<span class="nc" id="L948">    }</span>
+    
+    private void profileGetRoddeListV2() {
+<span class="nc" id="L951">        totalMillisRoddeList += </span>
+<span class="nc" id="L952">                profileGet(roddeList, GET_OPERATIONS, randomRoddeList);</span>
+<span class="nc" id="L953">    }</span>
+    
+    private void profileGetLinkedList() {
+<span class="nc" id="L956">        totalMillisLinkedList += </span>
+<span class="nc" id="L957">                profileGet(linkedList, </span>
+                           GET_OPERATIONS, 
+                           randomJavaUtilLinkedList);
+<span class="nc" id="L960">    }</span>
+    
+    private void profileGetArrayList() {
+<span class="nc" id="L963">        totalMillisArrayList += </span>
+<span class="nc" id="L964">                profileGet(arrayList, </span>
+                           GET_OPERATIONS, 
+                           randomJavaUtilArrayList);
+<span class="nc" id="L967">    }</span>
+    
+    private void profileGetTreeList() {
+<span class="nc" id="L970">        totalMillisTreeList += </span>
+<span class="nc" id="L971">                profileGet(treeList, GET_OPERATIONS, randomTreeList);</span>
+<span class="nc" id="L972">    }</span>
+
+    private void profileRemoveFirstRoddeListV2() {
+<span class="nc" id="L975">        totalMillisRoddeList += profileRemoveFirst(roddeList);</span>
+<span class="nc" id="L976">    }</span>
+
+    private void profileRemoveFirstLinkedList() {
+<span class="nc" id="L979">        totalMillisLinkedList += profileRemoveFirst(linkedList);</span>
+<span class="nc" id="L980">    }</span>
+
+    private void profileRemoveFirstArrayList() {
+<span class="nc" id="L983">        totalMillisArrayList += profileRemoveFirst(arrayList);</span>
+<span class="nc" id="L984">    }</span>
+
+    private void profileRemoveFirstTreeList() {
+<span class="nc" id="L987">        totalMillisTreeList += profileRemoveFirst(treeList);        </span>
+<span class="nc" id="L988">    }</span>
+
+    private void profileRemoveLastRoddeListV2() {
+<span class="nc" id="L991">        totalMillisRoddeList += profileRemoveLast(roddeList);</span>
+<span class="nc" id="L992">    }</span>
+
+    private void profileRemoveLastLinkedList() {
+<span class="nc" id="L995">        totalMillisLinkedList += profileRemoveLast(linkedList);</span>
+<span class="nc" id="L996">    }</span>
+
+    private void profileRemoveLastArrayList() {
+<span class="nc" id="L999">        totalMillisArrayList += profileRemoveLast(arrayList);</span>
+<span class="nc" id="L1000">    }</span>
+
+    private void profileRemoveLastTreeList() {
+<span class="nc" id="L1003">        totalMillisTreeList += profileRemoveLast(treeList);        </span>
+<span class="nc" id="L1004">    }</span>
+    
+    private void profileAppendCollectionRoddeListV2() {
+<span class="nc" id="L1007">        totalMillisRoddeList +=</span>
+<span class="nc" id="L1008">                profileAppendCollection(</span>
+                        roddeList, 
+                        ADD_LAST_COLLECTION_OPERATIONS, 
+                        randomRoddeList);
+<span class="nc" id="L1012">    }</span>
+
+    private void profileAppendCollectionLinkedList() {
+<span class="nc" id="L1015">        totalMillisLinkedList +=</span>
+<span class="nc" id="L1016">                profileAppendCollection(</span>
+                        linkedList, 
+                        ADD_LAST_COLLECTION_OPERATIONS, 
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L1020">    }</span>
+
+    private void profileAppendCollectionArrayList() {
+<span class="nc" id="L1023">        totalMillisArrayList +=</span>
+<span class="nc" id="L1024">                profileAppendCollection(</span>
+                        arrayList, 
+                        ADD_LAST_COLLECTION_OPERATIONS, 
+                        randomJavaUtilArrayList);
+<span class="nc" id="L1028">    }</span>
+
+    private void profileAppendCollectionTreeList() {
+<span class="nc" id="L1031">        totalMillisTreeList +=</span>
+<span class="nc" id="L1032">                profileAppendCollection(</span>
+                        treeList, 
+                        ADD_LAST_COLLECTION_OPERATIONS, 
+                        randomTreeList);
+<span class="nc" id="L1036">    }</span>
+
+    private void profileRemoveViaIndexRoddeListV2() {
+<span class="nc" id="L1039">        totalMillisRoddeList += </span>
+<span class="nc" id="L1040">                profileRemoveViaIndex(</span>
+                        roddeList, 
+                        REMOVE_VIA_INDEX_OPERATIONS, 
+                        randomRoddeList);
+<span class="nc" id="L1044">    }</span>
+
+    private void profileRemoveViaIndexLinkedList() {    
+<span class="nc" id="L1047">        totalMillisLinkedList += </span>
+<span class="nc" id="L1048">                profileRemoveViaIndex(</span>
+                        linkedList, 
+                        REMOVE_VIA_INDEX_OPERATIONS, 
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L1052">    }</span>
+
+    private void profileRemoveViaIndexArrayList() {
+<span class="nc" id="L1055">        totalMillisArrayList += </span>
+<span class="nc" id="L1056">                profileRemoveViaIndex(</span>
+                        arrayList, 
+                        REMOVE_VIA_INDEX_OPERATIONS, 
+                        randomJavaUtilArrayList);
+<span class="nc" id="L1060">    }</span>
+
+    private void profileRemoveViaIndexTreeList() {
+<span class="nc" id="L1063">        totalMillisTreeList += </span>
+<span class="nc" id="L1064">                profileRemoveViaIndex(</span>
+                        treeList, 
+                        REMOVE_VIA_INDEX_OPERATIONS, 
+                        randomTreeList);
+<span class="nc" id="L1068">    }</span>
+
+    private void profileRemoveObjectRoddeListV2() {
+<span class="nc" id="L1071">        totalMillisRoddeList += </span>
+<span class="nc" id="L1072">                profileRemoveObject(</span>
+                        roddeList, 
+                        REMOVE_OBJECT_OPERATIONS, 
+                        randomRoddeList);
+<span class="nc" id="L1076">    }</span>
+
+    private void profileRemoveObjectLinkedList() {    
+<span class="nc" id="L1079">        totalMillisLinkedList += </span>
+<span class="nc" id="L1080">                profileRemoveObject(</span>
+                        linkedList, 
+                        REMOVE_OBJECT_OPERATIONS, 
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L1084">    }</span>
+
+    private void profileRemoveObjectArrayList() {
+<span class="nc" id="L1087">        totalMillisArrayList += </span>
+<span class="nc" id="L1088">                profileRemoveObject(</span>
+                        arrayList, 
+                        REMOVE_OBJECT_OPERATIONS, 
+                        randomJavaUtilArrayList);
+<span class="nc" id="L1092">    }</span>
+
+    private void profileRemoveObjectTreeList() {
+<span class="nc" id="L1095">        totalMillisTreeList += </span>
+<span class="nc" id="L1096">                profileRemoveObject(</span>
+                        treeList,
+                        REMOVE_OBJECT_OPERATIONS, 
+                        randomTreeList);
+<span class="nc" id="L1100">    }</span>
+    
+    private void profileListIteratorRemovalRoddeListV2() {
+<span class="nc" id="L1103">        totalMillisRoddeList += profileListIteratorRemoval(roddeList);</span>
+<span class="nc" id="L1104">    }</span>
+
+    private void profileListIteratorRemovalLinkedList() {
+<span class="nc" id="L1107">        totalMillisLinkedList += profileListIteratorRemoval(linkedList);</span>
+<span class="nc" id="L1108">    }</span>
+
+    private void profileListIteratorRemovalArrayList() {
+<span class="nc" id="L1111">        totalMillisArrayList += profileListIteratorRemoval(arrayList);</span>
+<span class="nc" id="L1112">    }</span>
+
+    private void profileListIteratorRemovalTreeList() {
+<span class="nc" id="L1115">        totalMillisTreeList += profileListIteratorRemoval(treeList);</span>
+<span class="nc" id="L1116">    }</span>
+    
+    private void profileListIteratorAdditionRoddeListV2() {
+<span class="nc" id="L1119">        totalMillisRoddeList += </span>
+<span class="nc" id="L1120">                profileListIteratorAddition(roddeList, randomRoddeList);</span>
+<span class="nc" id="L1121">    }</span>
+
+    private void profileListIteratorAdditionLinkedList() {
+<span class="nc" id="L1124">        totalMillisLinkedList +=</span>
+<span class="nc" id="L1125">                profileListIteratorAddition(</span>
+                        linkedList, 
+                        randomJavaUtilLinkedList);
+<span class="nc" id="L1128">    }</span>
+
+    private void profileListIteratorAdditionArrayList() {
+<span class="nc" id="L1131">        totalMillisArrayList += </span>
+<span class="nc" id="L1132">                profileListIteratorAddition(</span>
+                        arrayList, 
+                        randomJavaUtilArrayList);
+<span class="nc" id="L1135">    }</span>
+
+    private void profileListIteratorAdditionTreeList() {
+<span class="nc" id="L1138">        totalMillisTreeList += </span>
+<span class="nc" id="L1139">                profileListIteratorAddition(treeList, randomTreeList);</span>
+<span class="nc" id="L1140">    }</span>
+
+    private void profileStreamRoddeListV2() {
+<span class="nc" id="L1143">        totalMillisRoddeList += profileStream(roddeList);</span>
+<span class="nc" id="L1144">    }</span>
+
+    private void profileStreamLinkedList() {
+<span class="nc" id="L1147">        totalMillisLinkedList += profileStream(linkedList);</span>
+<span class="nc" id="L1148">    }</span>
+
+    private void profileStreamArrayList() {
+<span class="nc" id="L1151">        totalMillisArrayList += profileStream(arrayList);</span>
+<span class="nc" id="L1152">    }</span>
+
+    private void profileStreamTreeList() {
+<span class="nc" id="L1155">        totalMillisTreeList += profileStream(treeList);</span>
+<span class="nc" id="L1156">    }</span>
+
+    private void profileParallelStreamRoddeList() {
+<span class="nc" id="L1159">        totalMillisRoddeList += profileParallelStream(roddeList);</span>
+<span class="nc" id="L1160">    }</span>
+
+    private void profileParallelStreamLinkedList() {
+<span class="nc" id="L1163">        totalMillisLinkedList += profileParallelStream(linkedList);</span>
+<span class="nc" id="L1164">    }</span>
+
+    private void profileParallelStreamArrayList() {
+<span class="nc" id="L1167">        totalMillisArrayList += profileParallelStream(arrayList);</span>
+<span class="nc" id="L1168">    }</span>
+
+    private void profileParallelStreamTreeList() {
+<span class="nc" id="L1171">        totalMillisTreeList += profileParallelStream(treeList);</span>
+<span class="nc" id="L1172">    }</span>
+            
+    private void profileRemoveAllRoddeList(Collection&lt;Integer&gt; toRemove) {
+<span class="nc" id="L1175">        totalMillisRoddeList += profileRemoveAll(roddeList, toRemove);</span>
+<span class="nc" id="L1176">    }</span>
+    
+    private void profileRemoveAllLinkedList(Collection&lt;Integer&gt; toRemove) {
+<span class="nc" id="L1179">        totalMillisLinkedList += profileRemoveAll(linkedList, toRemove);</span>
+<span class="nc" id="L1180">    }</span>
+    
+    private void profileRemoveAllArrayList(Collection&lt;Integer&gt; toRemove) {
+<span class="nc" id="L1183">        totalMillisArrayList += profileRemoveAll(arrayList, toRemove);</span>
+<span class="nc" id="L1184">    }</span>
+    
+    private void profileRemoveAllTreeList(Collection&lt;Integer&gt; toRemove) {
+<span class="nc" id="L1187">        totalMillisTreeList += profileRemoveAll(treeList, toRemove);</span>
+<span class="nc" id="L1188">    }</span>
+
+    private void profileSubListClearRoddeList() {
+<span class="nc" id="L1191">        totalMillisRoddeList += profileSubListClear(roddeList);</span>
+<span class="nc" id="L1192">    }</span>
+
+    private void profileSubListClearLinkedList() {
+<span class="nc" id="L1195">        totalMillisLinkedList += profileSubListClear(linkedList);</span>
+<span class="nc" id="L1196">    }</span>
+
+    private void profileSubListClearArrayList() {
+<span class="nc" id="L1199">        totalMillisArrayList += profileSubListClear(arrayList);</span>
+<span class="nc" id="L1200">    }</span>
+
+    private void profileSubListClearTreeList() {
+<span class="nc" id="L1203">        totalMillisTreeList += profileSubListClear(treeList);</span>
+<span class="nc" id="L1204">    }</span>
+    
+    private void printTitle(BenchmarkChoice benchmarkChoice) {
+<span class="nc bnc" id="L1207" title="All 3 branches missed.">        switch (benchmarkChoice) {</span>
+            case WARMUP:
+<span class="nc" id="L1209">                System.out.println(&quot;=== WARMUP RUN ===&quot;);</span>
+<span class="nc" id="L1210">                break;</span>
+
+            case BENCHMARK:
+<span class="nc" id="L1213">                System.out.println(&quot;=== BENCHMARK RUN ===&quot;);</span>
+                break;
+        }
+<span class="nc" id="L1216">    }</span>
+    
+    private void clearGetLists() {
+<span class="nc bnc" id="L1219" title="All 2 branches missed.">        for (List&lt;Integer&gt; list : getLists) {</span>
+<span class="nc" id="L1220">            list.clear();</span>
+        }
+<span class="nc" id="L1222">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

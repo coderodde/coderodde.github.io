@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Finger.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LinkedList</a> &gt; <a href="index.source.html" class="el_package">com.github.coderodde.util</a> &gt; <span class="el_source">Finger.java</span></div><h1>Finger.java</h1><pre class="source lang-java linenums">package com.github.coderodde.util;
+
+// This class implements the finger into the doubly-linked list.
+
+class Finger&lt;E&gt; {
+ 
+    Node&lt;E&gt; node;
+    int index; // Index at which 'node' is located.
+    int updateIndex;
+
+<span class="fc" id="L11">    Finger(Node&lt;E&gt; node, int index) {</span>
+<span class="fc" id="L12">        this.node = node;</span>
+<span class="fc" id="L13">        this.index = index;</span>
+<span class="fc" id="L14">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L18">        return &quot;[Finger; index = &quot; + index + </span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">                &quot;, item = &quot; + ((node == null) ? &quot;null&quot; : node.item) + </span>
+                &quot;]&quot;;
+    }
+    
+    // Moves this finger 'steps' position to the left
+    void rewindLeft(int steps) {
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        for (int i = 0; i &lt; steps; i++) {</span>
+<span class="fc" id="L26">            node = node.prev;</span>
+        }
+
+<span class="fc" id="L29">        index -= steps;</span>
+<span class="fc" id="L30">    }</span>
+
+    // Moves this finger 'steps' position to the right
+    void rewindRight(int steps) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (int i = 0; i &lt; steps; i++) {</span>
+<span class="fc" id="L35">            node = node.next;</span>
+        }
+
+<span class="fc" id="L38">        index += steps;</span>
+<span class="fc" id="L39">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
