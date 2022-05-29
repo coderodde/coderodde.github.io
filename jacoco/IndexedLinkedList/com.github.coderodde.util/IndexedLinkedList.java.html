@@ -1,0 +1,3101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IndexedLinkedList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LinkedList</a> &gt; <a href="index.source.html" class="el_package">com.github.coderodde.util</a> &gt; <span class="el_source">IndexedLinkedList.java</span></div><h1>IndexedLinkedList.java</h1><pre class="source lang-java linenums">package com.github.coderodde.util;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.ConcurrentModificationException;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+
+/**
+ * This class implements the indexed doubly-linked list data structure.
+ * 
+ * @author Rodion &quot;rodde&quot; Efremov
+ * @version 1.61 (Sep 26, 2021)
+ * @since 1.6 (Sep 1, 2021)
+ */
+public class IndexedLinkedList&lt;E&gt; implements Deque&lt;E&gt;, 
+                                             List&lt;E&gt;, 
+                                             Cloneable, 
+                                             java.io.Serializable {
+    /**
+     * This inner class implements the finger list data structure for managing
+     * list fingers.
+     * 
+     * @param &lt;E&gt; the list node item type.
+     */
+    class FingerList&lt;E&gt; {
+
+        // This is also the minimum capacity.
+        private static final int INITIAL_CAPACITY = 8;
+
+        // The actual list storage array:
+<span class="fc" id="L43">        Finger&lt;E&gt;[] fingerArray = new Finger[INITIAL_CAPACITY];</span>
+
+        // The number of fingers stored in the list. This field does not count
+        // the end-of-list sentinel finger 'F' for which 'F.index = size'.
+        private int size;
+
+        // Constructs the empty finger list consisting only of end-of-list 
+        // sentinel finger.
+<span class="fc" id="L51">        private FingerList() {</span>
+<span class="fc" id="L52">            fingerArray[0] = new Finger&lt;&gt;(null, 0);</span>
+<span class="fc" id="L53">        }</span>
+        
+        @Override
+        public String toString() {
+<span class="nc" id="L57">            return &quot;[FingerList, size = &quot; + size + &quot;]&quot;;</span>
+        }
+        
+        // Appends the input finger to the tail of the finger list:
+        void appendFinger(Finger&lt;E&gt; finger) {
+<span class="fc" id="L62">            size++;</span>
+<span class="fc" id="L63">            enlargeFingerArrayIfNeeded(size + 1);</span>
+<span class="fc" id="L64">            fingerArray[size] = fingerArray[size - 1];</span>
+<span class="fc" id="L65">            fingerArray[size - 1] = finger;</span>
+<span class="fc" id="L66">            fingerArray[size].index = IndexedLinkedList.this.size;</span>
+<span class="fc" id="L67">        }</span>
+
+        // Not 'private' since is used in the unit tests.
+        void clear() {
+<span class="fc" id="L71">            Arrays.fill(fingerArray, 0, size, null);</span>
+<span class="fc" id="L72">            fingerArray[0] = fingerArray[size];</span>
+<span class="fc" id="L73">            fingerArray[0].index = 0;</span>
+            
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (size != 0) {</span>
+<span class="fc" id="L76">                fingerArray[size] = null;</span>
+<span class="fc" id="L77">                size = 0;</span>
+            }
+<span class="fc" id="L79">        }</span>
+        
+        Finger&lt;E&gt; get(int index) {
+<span class="fc" id="L82">            return fingerArray[index];</span>
+        }
+        
+        // Returns the index of the finger that is closest to the 
+        // 'elementIndex'th list element.
+        int getFingerIndex(int elementIndex) {
+<span class="fc" id="L88">            return normalize(getFingerIndexImpl(elementIndex), elementIndex);</span>
+        }
+
+        int size() {
+<span class="fc" id="L92">            return size;</span>
+        }
+        
+        private void adjustOnRemoveFirst() {
+<span class="fc" id="L96">            int lastPrefixIndex = Integer.MAX_VALUE;</span>
+            
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            for (int i = 0; i &lt; size; ++i) {</span>
+<span class="fc" id="L99">                Finger&lt;E&gt; finger = fingerArray[i];</span>
+                
+<span class="fc bfc" id="L101" title="All 2 branches covered.">                if (finger.index != i) {</span>
+<span class="fc" id="L102">                    lastPrefixIndex = i;</span>
+<span class="fc" id="L103">                    break;</span>
+                } else {
+<span class="fc" id="L105">                    finger.node = finger.node.next;</span>
+                }
+            }
+            
+<span class="fc" id="L109">            shiftFingerIndicesToLeftOnceUntil(lastPrefixIndex, size - 1);</span>
+<span class="fc" id="L110">        }</span>
+        
+        // We can save some space while keeping the finger array operations 
+        // amortized O(1). The 'nextSize' defines the requested finger array 
+        // size not counting the end-of-finger-list sentinel finger:
+        private void contractFingerArrayIfNeeded(int nextSize) {
+            // Can we contract at least once?
+<span class="fc bfc" id="L117" title="All 4 branches covered.">            if ((nextSize + 1) * 4 &lt; fingerArray.length </span>
+                    &amp;&amp; fingerArray.length &gt; 2 * INITIAL_CAPACITY) {
+<span class="fc" id="L119">                int nextCapacity = fingerArray.length / 4;</span>
+  
+                // Good, we can. But can we keep on splitting in half the 
+                // capacity any further?
+<span class="pc bpc" id="L123" title="1 of 4 branches missed.">                while (nextCapacity &gt;= 2 * (nextSize + 1)</span>
+                        &amp;&amp; nextCapacity &gt; INITIAL_CAPACITY) {
+                    // Yes, we can do it as well.
+<span class="fc" id="L126">                    nextCapacity /= 2;</span>
+                }
+                
+<span class="fc" id="L129">                fingerArray = Arrays.copyOf(fingerArray, nextCapacity);</span>
+            }
+<span class="fc" id="L131">        }</span>
+
+        // Makes sure that the next finger fits in this finger stack:
+        private void enlargeFingerArrayIfNeeded(int requestedSize) {
+            // If the finger array is full, double the capacity:
+<span class="fc bfc" id="L136" title="All 2 branches covered.">            if (requestedSize &gt; fingerArray.length) {</span>
+<span class="fc" id="L137">                int nextCapacity = 2 * fingerArray.length;</span>
+                
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                while (nextCapacity &lt; size + 1) {</span>
+                    // If 'requestedSize' is too large, we may need to keep on
+                    // doubling the next capacity until it's large enought to 
+                    // accommodate 'requestedSiz
+<span class="fc" id="L143">                    nextCapacity *= 2;</span>
+                }
+                
+<span class="fc" id="L146">                fingerArray = Arrays.copyOf(fingerArray, nextCapacity);</span>
+            }
+<span class="fc" id="L148">        }</span>
+
+        // Returns the finger index 'i', such that 'fingerArray[i].index' is no
+        // less than 'i', and is closest to 'i'. This algorithm is translated
+        // from https://en.cppreference.com/w/cpp/algorithm/lower_bound 
+        private int getFingerIndexImpl(int elementIndex) {
+<span class="fc" id="L154">            int count = size + 1; // + 1 for the end sentinel.</span>
+            int it;
+<span class="fc" id="L156">            int idx = 0;</span>
+
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            while (count &gt; 0) {</span>
+<span class="fc" id="L159">                it = idx;</span>
+<span class="fc" id="L160">                int step = count / 2;</span>
+<span class="fc" id="L161">                it += step;</span>
+
+<span class="fc bfc" id="L163" title="All 2 branches covered.">                if (fingerArray[it].index &lt; elementIndex) {</span>
+<span class="fc" id="L164">                    idx = ++it;</span>
+<span class="fc" id="L165">                    count -= step + 1;</span>
+                } else {
+<span class="fc" id="L167">                    count = step;</span>
+                }
+<span class="fc" id="L169">            }</span>
+            
+<span class="fc" id="L171">            return idx;</span>
+        }
+        
+        // Inserts the input finger into the finger list such that the entire
+        // finger list is sorted by indices:
+        private void insertFingerAndShiftOnceToRight(Finger&lt;E&gt; finger) {
+<span class="fc" id="L177">            enlargeFingerArrayIfNeeded(size + 2);</span>
+<span class="fc" id="L178">            int beforeFingerIndex = getFingerIndex(finger.index);</span>
+<span class="fc" id="L179">            System.arraycopy(</span>
+                    fingerArray, 
+                    beforeFingerIndex, 
+                    fingerArray, 
+                    beforeFingerIndex + 1, 
+                    size + 1 - beforeFingerIndex);
+            
+            // Shift fingerArray[beforeFingerIndex ... size] one position to the
+            // right (towards larger index values:
+<span class="fc" id="L188">            shiftFingerIndicesToRightOnce(beforeFingerIndex + 1);</span>
+
+<span class="fc" id="L190">            fingerArray[beforeFingerIndex] = finger;</span>
+<span class="fc" id="L191">            fingerArray[++size].index = IndexedLinkedList.this.size;</span>
+<span class="fc" id="L192">        }</span>
+        
+        // Make sure we can insert 'roomSize' fingers starting from 
+        // 'fingerIndex', shifting all the fingers starting from 'fingerIndex'
+        // 'numberOfNodes' to the right:
+        private void makeRoomAtIndex(int fingerIndex, int roomSize, int numberOfNodes) {
+<span class="fc" id="L198">            shiftFingerIndicesToRight(fingerIndex, numberOfNodes);</span>
+<span class="fc" id="L199">            size += roomSize;</span>
+<span class="fc" id="L200">            enlargeFingerArrayIfNeeded(size + 1); // +1 for the end of list</span>
+                                                  // sentinel.
+<span class="fc" id="L202">            System.arraycopy(fingerArray, </span>
+                             fingerIndex, 
+                             fingerArray, 
+                             fingerIndex + roomSize,
+                             size - roomSize - fingerIndex + 1);
+<span class="fc" id="L207">        }</span>
+        
+        // Moves 'numberOfFingers' fingers to the prefix ending in 'fromIndex':
+        private void moveFingersToPrefix(int fromIndex, int numberOfFingers) {
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            if (numberOfFingers == 0) {</span>
+                // Here, nothing to move:
+<span class="fc" id="L213">                return;</span>
+            }
+            
+<span class="fc" id="L216">            int fromFingerIndex = getFingerIndex(fromIndex);</span>
+            
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            if (fromFingerIndex == 0) {</span>
+                // Here, the prefix is empty:
+<span class="fc" id="L220">                moveFingersToPrefixOnEmptyPrefix(</span>
+                        fromIndex, 
+                        numberOfFingers);
+                
+<span class="fc" id="L224">                return;</span>
+            }
+            
+            int i;
+<span class="fc" id="L228">            int targetIndex = -1;</span>
+<span class="fc" id="L229">            Finger&lt;E&gt; targetFinger = null;</span>
+            
+            // Find the rightmost finger index after which we can put
+            // 'numberOfFingers' fingers:
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">            for (i = fromFingerIndex - 1; i &gt;= 0; --i) {</span>
+<span class="fc" id="L234">                Finger&lt;E&gt; finger = fingerArray[i];</span>
+                
+<span class="fc bfc" id="L236" title="All 2 branches covered.">                if (finger.index + numberOfFingers - 1 + i &lt; fromIndex) {</span>
+<span class="fc" id="L237">                    targetFinger = finger;</span>
+<span class="fc" id="L238">                    targetIndex = i;</span>
+<span class="fc" id="L239">                    break;</span>
+                }
+            }
+            
+            // Pack the rest of the prefix fingers:
+<span class="fc bfc" id="L244" title="All 2 branches covered.">            for (int j = targetIndex + 1; j &lt; numberOfFingers; ++j) {</span>
+<span class="fc" id="L245">                Finger&lt;E&gt; predecessorFinger = fingerArray[j - 1];</span>
+<span class="fc" id="L246">                Finger&lt;E&gt; currentFinger = fingerArray[j];</span>
+<span class="fc" id="L247">                currentFinger.index = predecessorFinger.index + 1;</span>
+<span class="fc" id="L248">                currentFinger.node = predecessorFinger.node.next;</span>
+            }
+<span class="fc" id="L250">        }</span>
+        
+        // Move 'numberOfFingers' fingers to the empty prefix:
+        private void moveFingersToPrefixOnEmptyPrefix(int fromIndex,
+                                                      int numberOfFingers) {
+<span class="fc" id="L255">            Finger&lt;E&gt; firstFinger = fingerArray[0];</span>
+<span class="fc" id="L256">            int toMove = firstFinger.index - fromIndex + numberOfFingers;</span>
+
+<span class="fc bfc" id="L258" title="All 2 branches covered.">            for (int i = 0; i &lt; toMove; ++i) {</span>
+<span class="fc" id="L259">                firstFinger.node = firstFinger.node.prev;</span>
+            }
+
+<span class="fc" id="L262">            firstFinger.index -= toMove;</span>
+
+<span class="fc bfc" id="L264" title="All 2 branches covered.">            for (int i = 1; i &lt; numberOfFingers; ++i) {</span>
+<span class="fc" id="L265">                Finger&lt;E&gt; previousFinger = fingerArray[i - 1];</span>
+<span class="fc" id="L266">                Finger&lt;E&gt; currentFinger = fingerArray[i];</span>
+<span class="fc" id="L267">                currentFinger.node = previousFinger.node.next;</span>
+<span class="fc" id="L268">                currentFinger.index = previousFinger.index + 1;</span>
+            }
+<span class="fc" id="L270">        }</span>
+        
+        // Moves 'numberOfFingers' fingers to the suffix starting in 
+        // 'toIndex':
+        private void moveFingersToSuffix(int toIndex, int numberOfFingers) {
+<span class="fc bfc" id="L275" title="All 2 branches covered.">            if (numberOfFingers == 0) {</span>
+                // Here, nothing to move:
+<span class="fc" id="L277">                return;</span>
+            }
+            
+<span class="fc" id="L280">            int toFingerIndex = getFingerIndexImpl(toIndex);</span>
+            
+<span class="fc bfc" id="L282" title="All 2 branches covered.">            if (toFingerIndex == fingerList.size) {</span>
+                // Here, the suffix is empty:
+<span class="fc" id="L284">                moveFingersToSuffixOnEmptySuffix(toIndex, numberOfFingers);</span>
+<span class="fc" id="L285">                return;</span>
+            }
+            
+            int i;
+<span class="fc" id="L289">            Finger&lt;E&gt; targetFinger = null;</span>
+            
+            // Find the leftmost finger index before which we can put
+            // 'numberOfFingers' fingers:
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            for (i = toFingerIndex; i &lt; size; ++i) {</span>
+<span class="fc" id="L294">                Finger&lt;E&gt; finger = fingerArray[i];</span>
+                
+<span class="fc bfc" id="L296" title="All 2 branches covered.">                if (finger.index - numberOfFingers + 1 &gt;= toIndex) {</span>
+<span class="fc" id="L297">                    targetFinger = finger;</span>
+<span class="fc" id="L298">                    break;</span>
+                }
+            }
+            
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            if (targetFinger == null) {</span>
+                // Here, all the 'numberOfFingers' do not fit. Make some room:
+<span class="fc" id="L304">                Finger&lt;E&gt; f = fingerArray[size - 1];</span>
+<span class="fc" id="L305">                int toMove = toIndex + numberOfFingers - 1 - f.index;</span>
+                
+<span class="fc bfc" id="L307" title="All 2 branches covered.">                for (int j = 0; j &lt; toMove; ++j) {</span>
+<span class="fc" id="L308">                    f.node = f.node.next;</span>
+                }
+                
+<span class="fc" id="L311">                f.index += toMove;</span>
+<span class="fc" id="L312">                i = size - 1;</span>
+            }
+
+<span class="fc" id="L315">            int stopIndex = numberOfFingers - (size - i);</span>
+            
+            // Pack the rest of the suffix fingers:
+<span class="fc bfc" id="L318" title="All 2 branches covered.">            for (int j = i - 1, k = 0; k &lt; stopIndex; ++k, --j) {</span>
+<span class="fc" id="L319">                Finger&lt;E&gt; predecessorFinger = fingerArray[j];</span>
+<span class="fc" id="L320">                Finger&lt;E&gt; currentFinger = fingerArray[j + 1];</span>
+<span class="fc" id="L321">                predecessorFinger.index = currentFinger.index - 1;</span>
+<span class="fc" id="L322">                predecessorFinger.node = currentFinger.node.prev;</span>
+            }
+<span class="fc" id="L324">        }</span>
+
+        // Move 'numberOfFingers' fingers to the empty suffix:
+        private void moveFingersToSuffixOnEmptySuffix(int toIndex,
+                                                      int numberOfFingers) {
+<span class="fc" id="L329">            int toMove = toIndex </span>
+                       - fingerArray[size - 1].index 
+                       + numberOfFingers - 1;
+
+<span class="fc" id="L333">            Finger&lt;E&gt; finger = fingerArray[size - 1];</span>
+
+<span class="fc bfc" id="L335" title="All 2 branches covered.">            for (int i = 0; i &lt; toMove; ++i) {</span>
+<span class="fc" id="L336">                finger.node = finger.node.next;</span>
+            }   
+
+<span class="fc" id="L339">            finger.index += toMove;</span>
+
+<span class="fc bfc" id="L341" title="All 2 branches covered.">            for (int i = 1; i &lt; numberOfFingers; ++i) {</span>
+<span class="fc" id="L342">                Finger&lt;E&gt; predecessorFinger = fingerArray[size - i - 1];</span>
+<span class="fc" id="L343">                Finger&lt;E&gt; currentFinger = fingerArray[size - i];</span>
+<span class="fc" id="L344">                predecessorFinger.index = currentFinger.index - 1;</span>
+<span class="fc" id="L345">                predecessorFinger.node = currentFinger.node.prev;</span>
+            }
+<span class="fc" id="L347">        }</span>
+
+        // Returns the 'i'th node of this linked list. The closest finger is 
+        // updated to point to the returned node:
+        private Node&lt;E&gt; node(int index) {
+<span class="fc" id="L352">            Finger finger = fingerArray[getFingerIndex(index)];</span>
+<span class="fc" id="L353">            int steps = finger.index - index;</span>
+
+<span class="fc bfc" id="L355" title="All 2 branches covered.">            if (steps &gt; 0) {</span>
+<span class="fc" id="L356">                finger.rewindLeft(steps);</span>
+            } else {
+<span class="fc" id="L358">                finger.rewindRight(-steps);</span>
+            }
+
+<span class="fc" id="L361">            return finger.node;</span>
+        }
+        
+        // Makes sure that the returned finger index 'i' points to the closest
+        // finger in the finger array:
+        private int normalize(int fingerIndex, int elementIndex) {
+<span class="fc bfc" id="L367" title="All 2 branches covered.">            if (fingerIndex == 0) {</span>
+                // Since we cannot point to '-1'th finger, return 0:
+<span class="fc" id="L369">                return 0;</span>
+            }
+            
+<span class="fc bfc" id="L372" title="All 2 branches covered.">            if (fingerIndex == size) {</span>
+                // Don't go outside of 'size - 1*:
+<span class="fc" id="L374">                return size - 1;</span>
+            }
+            
+<span class="fc" id="L377">            Finger finger1 = fingerArray[fingerIndex - 1];</span>
+<span class="fc" id="L378">            Finger finger2 = fingerArray[fingerIndex];</span>
+            
+<span class="fc" id="L380">            int distance1 = Math.abs(elementIndex - finger1.index);</span>
+<span class="fc" id="L381">            int distance2 = Math.abs(elementIndex - finger2.index);</span>
+            
+            // Return the closest finger index:
+<span class="fc bfc" id="L384" title="All 2 branches covered.">            return distance1 &lt; distance2 ? fingerIndex - 1 : fingerIndex;</span>
+        }
+        
+        // Removes the last finger residing right before the end-of-finger-list
+        // sentinel finger:
+        private void removeFinger() {
+<span class="fc" id="L390">            contractFingerArrayIfNeeded(--size);</span>
+<span class="fc" id="L391">            fingerArray[size] = fingerArray[size + 1];</span>
+<span class="fc" id="L392">            fingerArray[size + 1] = null;</span>
+<span class="fc" id="L393">            fingerArray[size].index = IndexedLinkedList.this.size;</span>
+<span class="fc" id="L394">        }</span>
+        
+        // Removes the finger range [startFingerIndex, endFingerIndex).
+        private void removeRange(int prefixSize, 
+                                 int suffixSize,
+                                 int nodesToRemove) {
+<span class="fc" id="L400">            int fingersToRemove = size - suffixSize - prefixSize;</span>
+            
+<span class="fc" id="L402">            shiftFingerIndicesToLeft(size - suffixSize, nodesToRemove);</span>
+            
+<span class="fc" id="L404">            System.arraycopy(fingerArray, </span>
+                             size - suffixSize, 
+                             fingerArray, 
+                             prefixSize,
+                             suffixSize + 1);
+            
+<span class="fc" id="L410">            size -= fingersToRemove;</span>
+<span class="fc" id="L411">            contractFingerArrayIfNeeded(size);</span>
+            
+<span class="fc" id="L413">            Arrays.fill(fingerArray,</span>
+                        size + 1,
+<span class="fc" id="L415">                        Math.min(fingerArray.length, </span>
+                                 size + 1 + fingersToRemove),
+                        null);
+<span class="fc" id="L418">        }</span>
+        
+        private void setFinger(int index, Finger&lt;E&gt; finger) {
+<span class="fc" id="L421">            fingerArray[index] = finger;</span>
+<span class="fc" id="L422">        }</span>
+
+        // Moves all the fingers in range [startFingerIndex, size] 
+        // 'shiftLength' positions to the left (towards smaller indices):
+        private void shiftFingerIndicesToLeft(int startFingerIndex,      
+                                              int shiftLength) {
+<span class="fc bfc" id="L428" title="All 2 branches covered.">            for (int i = startFingerIndex; i &lt;= size; ++i) {</span>
+<span class="fc" id="L429">                fingerArray[i].index -= shiftLength;</span>
+            }
+<span class="fc" id="L431">        }</span>
+        
+        // Moves all the fingers in range [startFingerIndex, endFingerIndex] one 
+        // position to the left (towards smaller indices):
+        private void shiftFingerIndicesToLeftOnceUntil(int startFingerIndex,
+                                                       int endFingerIndex) {
+<span class="fc bfc" id="L437" title="All 2 branches covered.">            for (int i = startFingerIndex; i &lt;= endFingerIndex; ++i) {</span>
+<span class="fc" id="L438">                fingerArray[i].index--;</span>
+            }
+<span class="fc" id="L440">        }</span>
+        
+        // Moves all the fingers in range [startFingerIndex, size] 
+        // 'shiftLength' positions to the right (towards larger indices):
+        private void shiftFingerIndicesToRight(int startIndex,      
+                                               int shiftLength) {
+<span class="fc bfc" id="L446" title="All 2 branches covered.">            for (int i = startIndex; i &lt;= size; ++i) {</span>
+<span class="fc" id="L447">                fingerArray[i].index += shiftLength;</span>
+            }
+<span class="fc" id="L449">        }</span>
+        
+        // Moves all the fingers in range [startFingerIndex, size] one  
+        // position to the right (towards larger indices):
+        private void shiftFingerIndicesToRightOnce(int startIndex) {
+<span class="fc" id="L454">            shiftFingerIndicesToRight(startIndex, 1);</span>
+<span class="fc" id="L455">        }</span>
+    }
+    
+    /**
+     * The cached number of elements in this list.
+     */
+    private int size;
+    
+    /**
+     * The modification counter. Used to detect state changes.
+     */
+    private transient int modCount;
+    private transient Node&lt;E&gt; first;
+    private transient Node&lt;E&gt; last;
+    
+    // Without 'private' since it is accessed in unit tests.
+<span class="fc" id="L471">    transient FingerList&lt;E&gt; fingerList = new FingerList&lt;&gt;();</span>
+    
+    /**
+     * Constructs an empty list.
+     */
+<span class="fc" id="L476">    public IndexedLinkedList() {</span>
+        
+<span class="fc" id="L478">    }</span>
+    
+    /**
+     * Constructs a new list and copies the data in {@code c} to it.
+     * 
+     * @param c the collection to copy. 
+     */
+    public IndexedLinkedList(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L486">        this();</span>
+<span class="fc" id="L487">        addAll(c);</span>
+<span class="fc" id="L488">    }</span>
+    
+    /**
+     * Appends the specified element to the end of this list.
+     *
+     * &lt;p&gt;This method is equivalent to {@link #addLast}.
+     *
+     * @param e element to be appended to this list.
+     * @return {@code true} (as specified by {@link Collection#add}).
+     */
+    @Override
+    public boolean add(E e) {
+<span class="fc" id="L500">        linkLast(e);</span>
+<span class="fc" id="L501">        return true;</span>
+    }
+    
+    /**
+     * Inserts the specified element at the specified position in this list.
+     * The affected finger indices will be incremented by one. A finger 
+     * {@code F} is &lt;i&gt;affected&lt;/i&gt;, if {@code F.index &gt;= index}.
+     *
+     * @param index index at which the specified element is to be inserted.
+     * @param element element to be inserted.
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    @Override
+    public void add(int index, E element) {
+<span class="fc" id="L515">        checkPositionIndex(index);</span>
+        
+<span class="fc bfc" id="L517" title="All 2 branches covered.">        if (index == size) {</span>
+<span class="fc" id="L518">            linkLast(element);</span>
+        } else {
+<span class="fc" id="L520">            linkBefore(element, node(index), index);</span>
+        }
+<span class="fc" id="L522">    }</span>
+    
+    /**
+     * Appends all of the elements in the specified collection to the end of
+     * this list, in the order they are returned by the specified collection's
+     * iterator.  The behavior of this operation is undefined if the specified 
+     * collection is modified while the operation is in progress. (Note that 
+     * this will occur if the specified collection is this list, and it's
+     * nonempty.)
+     *
+     * @param c collection containing elements to be added to this list.
+     * @return {@code true} if this list changed as a result of the call.
+     * @throws NullPointerException if the specified collection is null.
+     */
+    @Override
+    public boolean addAll(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L538">        return addAll(size, c);</span>
+    }
+    
+    /**
+     * Inserts all of the elements in the specified collection into this list, 
+     * starting at the specified position. For each finger {@code F} with 
+     * {@code F.index &gt;= index} will increment {@code F.index} by 1.
+     *
+     * @param index index at which to insert the first element from the
+     *              specified collection.
+     * @param c collection containing elements to be added to this list.
+     * @return {@code true} if this list changed as a result of the call.
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @throws NullPointerException if the specified collection is null
+     */
+    @Override
+    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L555">        checkPositionIndex(index);</span>
+        
+<span class="fc bfc" id="L557" title="All 2 branches covered.">        if (c.isEmpty()) {</span>
+<span class="fc" id="L558">            return false;</span>
+        }
+
+<span class="fc bfc" id="L561" title="All 2 branches covered.">        if (size == 0) {</span>
+<span class="fc" id="L562">            setAll(c);</span>
+<span class="fc bfc" id="L563" title="All 2 branches covered.">        } else if (index == 0) {</span>
+<span class="fc" id="L564">            prependAll(c);</span>
+<span class="fc bfc" id="L565" title="All 2 branches covered.">        } else if (index == size) {</span>
+<span class="fc" id="L566">            appendAll(c);</span>
+        } else {
+<span class="fc" id="L568">            insertAll(c, node(index), index);</span>
+        }
+        
+<span class="fc" id="L571">        return true;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    public void addFirst(E e) {
+<span class="fc" id="L578">        linkFirst(e);</span>
+<span class="fc" id="L579">    }</span>
+    
+    /**
+     * {@inheritDoc }
+     */
+    public void addLast(E e) {
+<span class="fc" id="L585">        linkLast(e);</span>
+<span class="fc" id="L586">    }</span>
+    
+    /**
+     * Checks the data structure invariant. Throws 
+     * {@link java.lang.IllegalStateException} on invalid invariant. The 
+     * invariant is valid if:
+     * &lt;ol&gt;
+     * &lt;li&gt;All the fingers in the finger list are sorted by indices.&lt;/li&gt;
+     * &lt;li&gt;There is no duplicate indices.&lt;/li&gt;
+     * &lt;li&gt;The index of the leftmost finger is no less than zero.&lt;/li&gt;
+     * &lt;li&gt;There must be an end-of-list sentinel finger {@code F}, such that 
+     * {@code F.index = } &lt;i&gt;size of linked list&lt;/i&gt; and {@code F.node} is 
+     * {@code null}.
+     * &lt;/li&gt;
+     * &lt;li&gt;Each finger {@code F} points to the {@code i}th linked list node,
+     * where {@code i = F.index}.&lt;/li&gt;
+     * &lt;/ol&gt;
+     */
+    public void checkInvarant() {
+<span class="fc bfc" id="L605" title="All 2 branches covered.">        for (int i = 0; i &lt; fingerList.size() - 1; ++i) {</span>
+<span class="fc" id="L606">            Finger&lt;E&gt; left = fingerList.get(i);</span>
+<span class="fc" id="L607">            Finger&lt;E&gt; right = fingerList.get(i + 1);</span>
+            
+<span class="pc bpc" id="L609" title="1 of 2 branches missed.">            if (left.index &gt;= right.index) {</span>
+<span class="nc" id="L610">                throw new IllegalStateException(</span>
+                        &quot;FingerList failed: fingerList[&quot; 
+                                + i
+                                + &quot;].index = &quot; 
+                                + left.index 
+                                + &quot; &gt;= &quot; 
+                                + right.index 
+                                + &quot; = fingerList[&quot; 
+                                + (i + 1) 
+                                + &quot;]&quot;);
+            }
+        }
+        
+<span class="fc" id="L623">        Finger&lt;E&gt; sentinelFinger = fingerList.get(fingerList.size());</span>
+        
+<span class="pc bpc" id="L625" title="2 of 4 branches missed.">        if (sentinelFinger.index != this.size || sentinelFinger.node != null) {</span>
+<span class="nc" id="L626">            throw new IllegalStateException(</span>
+                    &quot;Invalid end-of-list sentinel: &quot; + sentinelFinger);
+        }
+        
+<span class="fc" id="L630">        Finger&lt;E&gt; finger = fingerList.get(0);</span>
+<span class="fc" id="L631">        Node&lt;E&gt; node = first;</span>
+<span class="fc" id="L632">        int fingerCount = 0;</span>
+<span class="fc" id="L633">        int tentativeSize = 0;</span>
+        
+<span class="fc bfc" id="L635" title="All 2 branches covered.">        while (node != null) {</span>
+<span class="fc" id="L636">            tentativeSize++;</span>
+            
+<span class="fc bfc" id="L638" title="All 2 branches covered.">            if (finger.node == node) {</span>
+<span class="fc" id="L639">                finger = fingerList.get(++fingerCount);</span>
+            }
+            
+<span class="fc" id="L642">            node = node.next;</span>
+        }
+        
+<span class="pc bpc" id="L645" title="1 of 2 branches missed.">        if (size != tentativeSize) {</span>
+<span class="nc" id="L646">            throw new IllegalStateException(</span>
+                    &quot;Number of nodes mismatch: size = &quot; 
+                            + size 
+                            + &quot;, tentativeSize = &quot; 
+                            + tentativeSize);
+        }
+        
+<span class="pc bpc" id="L653" title="1 of 2 branches missed.">        if (fingerList.size() != fingerCount) {</span>
+<span class="nc" id="L654">            throw new IllegalStateException(</span>
+                    &quot;Number of fingers mismatch: fingerList.size() = &quot; 
+<span class="nc" id="L656">                            + fingerList.size() </span>
+                            + &quot;, fingerCount = &quot; 
+                            + fingerCount);
+        }
+<span class="fc" id="L660">    }</span>
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void clear() {
+<span class="fc" id="L667">        fingerList.clear();</span>
+<span class="fc" id="L668">        size = 0;</span>
+        
+        // Help GC:
+<span class="fc bfc" id="L671" title="All 2 branches covered.">        for (Node&lt;E&gt; node = first; node != null;) {</span>
+<span class="fc" id="L672">            node.prev = null;</span>
+<span class="fc" id="L673">            node.item = null;</span>
+<span class="fc" id="L674">            Node&lt;E&gt; next = node.next;</span>
+<span class="fc" id="L675">            node.next = null;</span>
+<span class="fc" id="L676">            node = next;</span>
+<span class="fc" id="L677">        }</span>
+
+<span class="fc" id="L679">        first = last = null;</span>
+<span class="fc" id="L680">        modCount++;</span>
+<span class="fc" id="L681">    }</span>
+    
+    @Override
+    public Object clone() {
+<span class="nc" id="L685">        return new IndexedLinkedList&lt;&gt;(this);</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean contains(Object o) {
+<span class="fc bfc" id="L693" title="All 2 branches covered.">        return indexOf(o) &gt;= 0;</span>
+    }
+    
+    @Override
+    public boolean containsAll(Collection&lt;?&gt; c) {
+<span class="nc bnc" id="L698" title="All 2 branches missed.">        for (Object o : c) {</span>
+<span class="nc bnc" id="L699" title="All 2 branches missed.">            if (!contains(o)) {</span>
+<span class="nc" id="L700">                return false;</span>
+            }
+<span class="nc" id="L702">        }</span>
+        
+<span class="nc" id="L704">        return true;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public Iterator&lt;E&gt; descendingIterator() {
+<span class="fc" id="L712">        return new DescendingIterator();</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E element() {
+<span class="fc" id="L720">        return getFirst();</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L728" title="All 2 branches covered.">        if (o == this) {</span>
+<span class="fc" id="L729">            return true;</span>
+        }
+        
+<span class="fc bfc" id="L732" title="All 2 branches covered.">        if (!(o instanceof List)) {</span>
+<span class="fc" id="L733">            return false;</span>
+        }
+        
+<span class="fc" id="L736">        int expectedModCount = modCount;</span>
+        
+<span class="fc" id="L738">        List&lt;?&gt; otherList = (List&lt;?&gt;) o;</span>
+<span class="fc" id="L739">        boolean equal = equalsRange(otherList, 0, size);</span>
+        
+<span class="fc" id="L741">        checkForComodification(expectedModCount);</span>
+<span class="fc" id="L742">        return equal;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E get(int index) {
+<span class="fc" id="L750">        checkElementIndex(index);</span>
+<span class="fc" id="L751">        return node(index).item;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E getFirst() {
+<span class="fc bfc" id="L759" title="All 2 branches covered.">        if (first == null) {</span>
+<span class="fc" id="L760">            throw new NoSuchElementException(</span>
+                    &quot;Getting the head element from an empty list.&quot;);
+        }
+        
+<span class="fc" id="L764">        return first.item;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E getLast() {
+<span class="fc bfc" id="L772" title="All 2 branches covered.">        if (last == null) {</span>
+<span class="fc" id="L773">            throw new NoSuchElementException(</span>
+                    &quot;Getting the tail element from an empty list.&quot;);
+        }
+        
+<span class="fc" id="L777">        return last.item;</span>
+    }
+    
+    public int hashCode() {
+<span class="nc" id="L781">        int expectedModCount = modCount;</span>
+<span class="nc" id="L782">        int hash = hashCodeRange(0, size);</span>
+<span class="nc" id="L783">        checkForComodification(expectedModCount);</span>
+<span class="nc" id="L784">        return hash;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public int indexOf(Object obj) {
+<span class="fc" id="L792">        return indexOfRange(obj, 0, size);</span>
+    }
+    
+    /**
+     * {@inheritDoc } 
+     */
+    @Override
+    public boolean isEmpty() {
+<span class="fc bfc" id="L800" title="All 2 branches covered.">        return size == 0;</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public Iterator&lt;E&gt; iterator() {
+<span class="fc" id="L808">        return new BasicIterator();</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public int lastIndexOf(Object obj) {
+<span class="fc" id="L816">        return lastIndexOfRange(obj, 0, size);</span>
+    }
+    
+    @Override
+    public ListIterator&lt;E&gt; listIterator() {
+<span class="fc" id="L821">        return new EnhancedIterator(0);</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public ListIterator&lt;E&gt; listIterator(int index) {
+<span class="fc" id="L829">        return new EnhancedIterator(index);</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean offer(E e) {
+<span class="fc" id="L837">        return add(e);</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean offerFirst(E e) {
+<span class="fc" id="L845">        addFirst(e);</span>
+<span class="fc" id="L846">        return true;</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean offerLast(E e) {
+<span class="fc" id="L854">        addLast(e);</span>
+<span class="fc" id="L855">        return true;</span>
+    }
+    
+    /**
+     * Moves all the fingers such that they are evenly distributed.
+     */
+    public void optimize() {
+<span class="fc" id="L862">        distributeFingersEvenly();</span>
+<span class="fc" id="L863">    }</span>
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E peek() {
+<span class="fc bfc" id="L870" title="All 2 branches covered.">        return first == null ? null : first.item;</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E peekFirst() {
+<span class="pc bpc" id="L878" title="1 of 2 branches missed.">        return first == null ? null : first.item;</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E peekLast() {
+<span class="pc bpc" id="L886" title="1 of 2 branches missed.">        return last == null ? null : last.item;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E poll() {
+<span class="fc bfc" id="L894" title="All 2 branches covered.">        return first == null ? null : removeFirst();</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E pollFirst() {
+<span class="fc bfc" id="L902" title="All 2 branches covered.">        return first == null ? null : removeFirst();</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E pollLast() {
+<span class="fc bfc" id="L910" title="All 2 branches covered.">        return last == null ? null : removeLast();</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E pop() {
+<span class="fc" id="L918">        return removeFirst();</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void push(E e) {
+<span class="fc" id="L926">        addFirst(e);</span>
+<span class="fc" id="L927">    }</span>
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E remove() {
+<span class="pc bpc" id="L934" title="1 of 2 branches missed.">        if (size == 0) {</span>
+<span class="nc" id="L935">            throw new NoSuchElementException(&quot;remove() from empty LinkedList.&quot;);</span>
+        }
+        
+<span class="fc" id="L938">        return removeFirst();</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean remove(Object o) {
+<span class="fc" id="L946">        int index = 0;</span>
+
+<span class="fc bfc" id="L948" title="All 2 branches covered.">        for (Node&lt;E&gt; x = first; x != null; x = x.next, index++) {</span>
+<span class="fc bfc" id="L949" title="All 2 branches covered.">            if (Objects.equals(o, x.item)) {</span>
+<span class="fc" id="L950">                removeObjectImpl(x, index);</span>
+<span class="fc" id="L951">                return true;</span>
+            }
+        }
+
+<span class="fc" id="L955">        return false;</span>
+    }
+    
+    /**
+     * Removes the element residing at the given index.
+     * 
+     * @param index the index of the element to remove.
+     * @return the removed element. (The one that resided at the index 
+     *         {@code index}.)
+    */
+    @Override
+    public E remove(int index) {
+<span class="fc" id="L967">        checkElementIndex(index);</span>
+        
+<span class="fc" id="L969">        int closestFingerIndex = fingerList.getFingerIndex(index);</span>
+<span class="fc" id="L970">        Finger&lt;E&gt; closestFinger = fingerList.get(closestFingerIndex);</span>
+        
+        E returnValue;
+        Node&lt;E&gt; nodeToRemove;
+        
+<span class="fc bfc" id="L975" title="All 2 branches covered.">        if (closestFinger.index == index) {</span>
+<span class="fc" id="L976">            nodeToRemove = closestFinger.node;</span>
+<span class="fc" id="L977">            moveFingerOutOfRemovalLocation(closestFinger, </span>
+                                           closestFingerIndex);    
+        } else {
+            // Keep the fingers at their original position.
+            // Find the target node:
+<span class="fc" id="L982">            int steps = closestFinger.index - index;</span>
+            
+<span class="fc" id="L984">            nodeToRemove =</span>
+<span class="fc" id="L985">                    traverseLinkedListBackwards(</span>
+                            closestFinger,
+                            steps);
+            
+<span class="fc" id="L989">            for (int i = closestFingerIndex + 1;</span>
+<span class="fc bfc" id="L990" title="All 2 branches covered.">                    i &lt;= fingerList.size(); </span>
+<span class="fc" id="L991">                    i++) {</span>
+<span class="fc" id="L992">                fingerList.get(i).index--;</span>
+            }
+            
+<span class="fc bfc" id="L995" title="All 2 branches covered.">            if (steps &gt; 0) {</span>
+<span class="fc" id="L996">                fingerList.get(closestFingerIndex).index--;</span>
+            }
+        }
+        
+<span class="fc" id="L1000">        returnValue = nodeToRemove.item;</span>
+<span class="fc" id="L1001">        unlink(nodeToRemove);</span>
+<span class="fc" id="L1002">        decreaseSize();</span>
+
+<span class="fc bfc" id="L1004" title="All 2 branches covered.">        if (mustRemoveFinger()) {</span>
+<span class="fc" id="L1005">            removeFinger();</span>
+        }
+
+<span class="fc" id="L1008">        return returnValue;</span>
+    }
+    
+    public boolean removeAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L1012">        return batchRemove(c, true, 0, size);</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E removeFirst() {
+<span class="fc bfc" id="L1020" title="All 2 branches covered.">        if (size == 0) {</span>
+<span class="fc" id="L1021">            throw new NoSuchElementException(</span>
+                    &quot;removeFirst from an empty LinkedList&quot;);
+        }
+        
+<span class="fc" id="L1025">        E returnValue = first.item;</span>
+<span class="fc" id="L1026">        decreaseSize();</span>
+        
+<span class="fc" id="L1028">        first = first.next;</span>
+        
+<span class="fc bfc" id="L1030" title="All 2 branches covered.">        if (first == null) {</span>
+<span class="fc" id="L1031">            last = null;</span>
+        } else {
+<span class="fc" id="L1033">            first.prev = null;</span>
+        }
+        
+<span class="fc" id="L1036">        fingerList.adjustOnRemoveFirst();</span>
+        
+<span class="fc bfc" id="L1038" title="All 2 branches covered.">        if (mustRemoveFinger()) {</span>
+<span class="fc" id="L1039">            removeFinger();</span>
+        }
+
+<span class="fc" id="L1042">        fingerList.get(fingerList.size()).index = size;</span>
+<span class="fc" id="L1043">        return returnValue;</span>
+    }
+    
+    /**
+     * Removes the leftmost occurrence of {@code o}.
+     * 
+     * @return {@code true} only if {@code o} was present in the list and was 
+     *         successfully removed.
+     */
+    @Override
+    public boolean removeFirstOccurrence(Object o) {
+<span class="fc" id="L1054">        int index = 0;</span>
+        
+<span class="fc bfc" id="L1056" title="All 2 branches covered.">        for (Node&lt;E&gt; x = first; x != null; x = x.next, index++) {</span>
+<span class="fc bfc" id="L1057" title="All 2 branches covered.">            if (Objects.equals(o, x.item)) {</span>
+<span class="fc" id="L1058">                removeObjectImpl(x, index);</span>
+<span class="fc" id="L1059">                return true;</span>
+            }
+        }
+        
+<span class="fc" id="L1063">        return false;</span>
+    }
+    
+    public boolean removeIf(Predicate&lt;? super E&gt; filter) {
+<span class="fc" id="L1067">        return removeIf(filter, 0, size);</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public E removeLast() {
+<span class="fc bfc" id="L1075" title="All 2 branches covered.">        if (size == 0) {</span>
+<span class="fc" id="L1076">            throw new NoSuchElementException(&quot;removeLast on empty LinkedList&quot;);</span>
+        }
+        
+<span class="fc" id="L1079">        E returnValue = last.item;</span>
+<span class="fc" id="L1080">        decreaseSize();</span>
+        
+<span class="fc" id="L1082">        last = last.prev;</span>
+        
+<span class="fc bfc" id="L1084" title="All 2 branches covered.">        if (last == null) {</span>
+<span class="fc" id="L1085">            first = null;</span>
+        } else {
+<span class="fc" id="L1087">            last.next = null;</span>
+        }
+        
+<span class="fc bfc" id="L1090" title="All 2 branches covered.">        if (mustRemoveFinger()) {</span>
+<span class="fc" id="L1091">            removeFinger();</span>
+        }
+        
+<span class="fc" id="L1094">        return returnValue;</span>
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean removeLastOccurrence(Object o) {
+<span class="fc" id="L1102">        int index = size - 1;</span>
+
+<span class="fc bfc" id="L1104" title="All 2 branches covered.">        for (Node&lt;E&gt; x = last; x != null; x = x.prev, index--) {</span>
+<span class="fc bfc" id="L1105" title="All 2 branches covered.">            if (Objects.equals(o, x.item)) {</span>
+<span class="fc" id="L1106">                removeObjectImpl(x, index);</span>
+<span class="fc" id="L1107">                return true;</span>
+            }
+        }
+
+<span class="fc" id="L1111">        return false;</span>
+    }
+
+    @Override
+    public void replaceAll(UnaryOperator&lt;E&gt; operator) {
+<span class="nc" id="L1116">        replaceAllRange(operator, 0, size);</span>
+<span class="nc" id="L1117">        modCount++;</span>
+<span class="nc" id="L1118">    }</span>
+    
+    @Override
+    public boolean retainAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L1122">        return batchRemove(c, false, 0, size);</span>
+    }
+    
+    /**
+     * Sets the element at index {@code index} to {@code element} and returns
+     * the old element.
+     * 
+     * @param index   the target index.
+     * @param element the element to set.
+     * @return the previous element at the given index.
+     */
+    @Override
+    public E set(int index, E element) {
+<span class="fc" id="L1135">        checkElementIndex(index);</span>
+<span class="fc" id="L1136">        Node&lt;E&gt; node = node(index);</span>
+<span class="fc" id="L1137">        E oldElement = node.item;</span>
+<span class="fc" id="L1138">        node.item = element;</span>
+<span class="fc" id="L1139">        return oldElement;</span>
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public int size() {
+<span class="fc" id="L1147">        return size;</span>
+    }
+    
+    @Override
+    public void sort(Comparator&lt;? super E&gt; c) {
+<span class="pc bpc" id="L1152" title="1 of 2 branches missed.">        if (size == 0) {</span>
+<span class="nc" id="L1153">            return;</span>
+        }
+        
+<span class="fc" id="L1156">        Object[] array = toArray();</span>
+<span class="fc" id="L1157">        Arrays.sort((E[]) array, c);</span>
+        
+<span class="fc" id="L1159">        Node&lt;E&gt; node = first;</span>
+        
+        // Rearrange the items over the linked list nodes:
+<span class="fc bfc" id="L1162" title="All 2 branches covered.">        for (int i = 0; i &lt; array.length; ++i, node = node.next) {</span>
+<span class="fc" id="L1163">            E item = (E) array[i];</span>
+<span class="fc" id="L1164">            node.item = item;</span>
+        }
+        
+<span class="fc" id="L1167">        distributeFingersEvenly();</span>
+<span class="fc" id="L1168">        modCount++;</span>
+<span class="fc" id="L1169">    }</span>
+    
+    private void distributeFingers(int fromIndex, int toIndex) {
+<span class="fc" id="L1172">        int rangeLength = toIndex - fromIndex;</span>
+        
+<span class="pc bpc" id="L1174" title="1 of 2 branches missed.">        if (rangeLength == 0) {</span>
+<span class="nc" id="L1175">            return;</span>
+        }
+        
+<span class="fc" id="L1178">        int fingerPrefixLength = fingerList.getFingerIndexImpl(fromIndex);</span>
+<span class="fc" id="L1179">        int fingerSuffixLength = fingerList.size() </span>
+<span class="fc" id="L1180">                               - fingerList.getFingerIndexImpl(toIndex);</span>
+        
+<span class="fc" id="L1182">        int numberOfRangeFingers = fingerList.size()</span>
+                                 - fingerPrefixLength 
+                                 - fingerSuffixLength;
+        
+<span class="fc" id="L1186">        int numberOfFingersPerFinger = rangeLength / numberOfRangeFingers;</span>
+<span class="fc" id="L1187">        int startOffset = numberOfFingersPerFinger / 2;</span>
+<span class="fc" id="L1188">        int index = fromIndex + startOffset;</span>
+        
+<span class="fc" id="L1190">        Node&lt;E&gt; node = node(fromIndex);</span>
+        
+<span class="fc bfc" id="L1192" title="All 2 branches covered.">        for (int i = 0; i &lt; startOffset; ++i) {</span>
+<span class="fc" id="L1193">            node = node.next;</span>
+        }
+        
+<span class="fc bfc" id="L1196" title="All 2 branches covered.">        for (int i = 0; i &lt; numberOfRangeFingers - 1; ++i) {</span>
+<span class="fc" id="L1197">            Finger&lt;E&gt; finger = fingerList.get(i);</span>
+<span class="fc" id="L1198">            finger.node = node;</span>
+<span class="fc" id="L1199">            finger.index = index;</span>
+            
+<span class="fc bfc" id="L1201" title="All 2 branches covered.">            for (int j = 0; j &lt; numberOfFingersPerFinger; ++j) {</span>
+<span class="fc" id="L1202">                node = node.next;</span>
+            }
+            
+<span class="fc" id="L1205">            index += numberOfFingersPerFinger;</span>
+        }
+        
+<span class="fc" id="L1208">        Finger&lt;E&gt; lastFinger = fingerList.get(fingerList.size() - 1);</span>
+<span class="fc" id="L1209">        lastFinger.node = node;</span>
+<span class="fc" id="L1210">        lastFinger.index = index;</span>
+<span class="fc" id="L1211">    }</span>
+    
+    private void distributeFingersEvenly() {
+<span class="fc" id="L1214">        distributeFingers(0, size);</span>
+<span class="fc" id="L1215">    }</span>
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public Spliterator&lt;E&gt; spliterator() {
+<span class="fc" id="L1222">        return new LinkedListSpliterator&lt;&gt;(this, first, size, 0, modCount);</span>
+    }
+    
+    public List&lt;E&gt; subList(int fromIndex, int toIndex) {
+<span class="fc" id="L1226">        subListRangeCheck(fromIndex, toIndex, size);</span>
+<span class="fc" id="L1227">        return new EnhancedSubList(this, fromIndex, toIndex);</span>
+    }
+    
+    @Override
+    public Object[] toArray() {
+<span class="fc" id="L1232">        Object[] arr = new Object[size];</span>
+<span class="fc" id="L1233">        int index = 0;</span>
+        
+<span class="fc bfc" id="L1235" title="All 2 branches covered.">        for (Node&lt;E&gt; node = first; node != null; node = node.next) {</span>
+<span class="fc" id="L1236">            arr[index++] = node.item;</span>
+        }
+        
+<span class="fc" id="L1239">        return arr;</span>
+    }
+    
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T[] toArray(T[] a) {
+<span class="nc bnc" id="L1244" title="All 2 branches missed.">        if (a.length &lt; size) {</span>
+<span class="nc" id="L1245">            a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);</span>
+        }
+        
+<span class="nc" id="L1248">        int index = 0;</span>
+        
+<span class="nc bnc" id="L1250" title="All 2 branches missed.">        for (Node&lt;E&gt; node = first; node != null; node = node.next) {</span>
+<span class="nc" id="L1251">            a[index++] = (T) node.item;</span>
+        }
+        
+<span class="nc bnc" id="L1254" title="All 2 branches missed.">        if (a.length &gt; size) {</span>
+<span class="nc" id="L1255">            a[size] = null;</span>
+        }
+        
+<span class="nc" id="L1258">        return a;</span>
+    }
+    
+    @Override
+    public String toString() {
+<span class="nc" id="L1263">        StringBuilder stringBuilder = new StringBuilder();</span>
+<span class="nc" id="L1264">        stringBuilder.append(&quot;[&quot;);</span>
+        
+<span class="nc" id="L1266">        boolean firstIteration = true;</span>
+        
+<span class="nc bnc" id="L1268" title="All 2 branches missed.">        for (E element : this) {</span>
+<span class="nc bnc" id="L1269" title="All 2 branches missed.">            if (firstIteration) {</span>
+<span class="nc" id="L1270">                firstIteration = false;</span>
+            } else {
+<span class="nc" id="L1272">                stringBuilder.append(&quot;, &quot;);</span>
+            }
+            
+<span class="nc" id="L1275">            stringBuilder.append(element);</span>
+<span class="nc" id="L1276">        }</span>
+        
+<span class="nc" id="L1278">        return stringBuilder.append(&quot;]&quot;).toString();</span>
+    }
+    
+    private static void subListRangeCheck(int fromIndex, 
+                                          int toIndex, 
+                                          int size) {
+<span class="pc bpc" id="L1284" title="1 of 2 branches missed.">        if (fromIndex &lt; 0) {</span>
+<span class="nc" id="L1285">            throw new IndexOutOfBoundsException(&quot;fromIndex = &quot; + fromIndex);</span>
+        }
+
+<span class="pc bpc" id="L1288" title="1 of 2 branches missed.">        if (toIndex &gt; size){</span>
+<span class="nc" id="L1289">            throw new IndexOutOfBoundsException(</span>
+                    &quot;toIndex(&quot; + toIndex + &quot;) &gt; size(&quot; + size + &quot;)&quot;);
+        }
+
+<span class="pc bpc" id="L1293" title="1 of 2 branches missed.">        if (fromIndex &gt; toIndex)</span>
+<span class="nc" id="L1294">            throw new IllegalArgumentException(</span>
+                    &quot;fromIndex(&quot; + fromIndex + &quot;) &gt; toIndex(&quot; 
+                            + toIndex + &quot;)&quot;);
+<span class="fc" id="L1297">    }</span>
+    
+    @java.io.Serial
+    private static final long serialVersionUID = -1L;
+    
+    // Appends the input collection to the tail of this list.
+    private void appendAll(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L1304">        Node&lt;E&gt; prev = last;</span>
+<span class="fc" id="L1305">        Node&lt;E&gt; oldLast = last;</span>
+
+<span class="fc bfc" id="L1307" title="All 2 branches covered.">        for (E item : c) {</span>
+<span class="fc" id="L1308">            Node&lt;E&gt; newNode = new Node&lt;&gt;(item);</span>
+<span class="fc" id="L1309">            newNode.item = item;</span>
+<span class="fc" id="L1310">            newNode.prev = prev;</span>
+<span class="fc" id="L1311">            prev.next = newNode;</span>
+<span class="fc" id="L1312">            prev = newNode;</span>
+<span class="fc" id="L1313">        }</span>
+
+<span class="fc" id="L1315">        last = prev;</span>
+<span class="fc" id="L1316">        int sz = c.size();</span>
+<span class="fc" id="L1317">        size += sz;</span>
+<span class="fc" id="L1318">        modCount++;</span>
+<span class="fc" id="L1319">        addFingersAfterAppendAll(oldLast.next, size - sz, sz);</span>
+<span class="fc" id="L1320">    }</span>
+    
+    /**
+     * This class implements a basic iterator over this list.
+     */
+    public final class BasicIterator implements Iterator&lt;E&gt; {
+        
+        private Node&lt;E&gt; lastReturned;
+<span class="fc" id="L1328">        private Node&lt;E&gt; next = first;</span>
+        private int nextIndex;
+<span class="fc" id="L1330">        int expectedModCount = IndexedLinkedList.this.modCount;</span>
+
+        /**
+         * Constructs the basic iterator pointing to the first element.
+         */
+<span class="fc" id="L1335">        BasicIterator() {</span>
+            
+<span class="fc" id="L1337">        }</span>
+        
+        @Override
+        public boolean hasNext() {
+<span class="fc bfc" id="L1341" title="All 2 branches covered.">            return nextIndex &lt; size;</span>
+        }
+
+        @Override
+        public E next() {
+<span class="fc" id="L1346">            checkForComodification();</span>
+            
+<span class="fc bfc" id="L1348" title="All 2 branches covered.">            if (!hasNext()) {</span>
+<span class="fc" id="L1349">                throw new NoSuchElementException();</span>
+            }
+
+<span class="fc" id="L1352">            lastReturned = next;</span>
+<span class="fc" id="L1353">            next = next.next;</span>
+<span class="fc" id="L1354">            nextIndex++;</span>
+<span class="fc" id="L1355">            return lastReturned.item;</span>
+        }
+
+        @Override
+        public void remove() {
+<span class="fc bfc" id="L1360" title="All 2 branches covered.">            if (lastReturned == null) {</span>
+<span class="fc" id="L1361">                throw new IllegalStateException();</span>
+            }
+            
+<span class="fc" id="L1364">            checkForComodification();</span>
+            
+<span class="fc" id="L1366">            int removalIndex = nextIndex - 1;</span>
+<span class="fc" id="L1367">            removeObjectImpl(lastReturned, removalIndex);</span>
+<span class="fc" id="L1368">            nextIndex--;</span>
+<span class="fc" id="L1369">            lastReturned = null;</span>
+<span class="fc" id="L1370">            expectedModCount++;</span>
+<span class="fc" id="L1371">        }</span>
+
+        @Override
+        public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+<span class="fc" id="L1375">            Objects.requireNonNull(action);</span>
+            
+<span class="fc bfc" id="L1377" title="All 4 branches covered.">            while (modCount == expectedModCount &amp;&amp; nextIndex &lt; size) {</span>
+<span class="fc" id="L1378">                action.accept(next.item);</span>
+<span class="fc" id="L1379">                next = next.next;</span>
+<span class="fc" id="L1380">                nextIndex++;</span>
+            }
+            
+<span class="fc" id="L1383">            checkForComodification();</span>
+<span class="fc" id="L1384">        }</span>
+
+        private void checkForComodification() {
+<span class="fc bfc" id="L1387" title="All 2 branches covered.">            if (modCount != expectedModCount) {</span>
+<span class="fc" id="L1388">                throw new ConcurrentModificationException();</span>
+            }
+<span class="fc" id="L1390">        }</span>
+    }
+    
+    boolean batchRemove(Collection&lt;?&gt; c,
+                        boolean complement,
+                        int from,
+                        int end) {
+<span class="fc" id="L1397">        Objects.requireNonNull(c);</span>
+        
+<span class="pc bpc" id="L1399" title="1 of 2 branches missed.">        if (c.isEmpty()) {</span>
+<span class="nc" id="L1400">            return false;</span>
+        }
+        
+<span class="fc" id="L1403">        boolean modified = false;</span>
+        
+<span class="fc" id="L1405">        int numberOfNodesToIterate = end - from;</span>
+<span class="fc" id="L1406">        int i = 0;</span>
+<span class="fc" id="L1407">        int nodeIndex = from;</span>
+        
+<span class="fc bfc" id="L1409" title="All 2 branches covered.">        for (Node&lt;E&gt; node = node(from); i &lt; numberOfNodesToIterate; ++i) {</span>
+<span class="fc" id="L1410">            Node&lt;E&gt; nextNode = node.next;</span>
+            
+<span class="fc bfc" id="L1412" title="All 2 branches covered.">            if (c.contains(node.item) == complement) {</span>
+<span class="fc" id="L1413">                modified = true;</span>
+<span class="fc" id="L1414">                removeObjectImpl(node, nodeIndex);</span>
+            } else {
+<span class="fc" id="L1416">                nodeIndex++;</span>
+            }
+            
+<span class="fc" id="L1419">            node = nextNode;</span>
+        }
+        
+<span class="fc" id="L1422">        return modified;</span>
+    }
+    
+    // Checks the element index. In the case of non-empty list, valid indices 
+    // are '{ 0, 1, ..., size - 1 }'.
+    private void checkElementIndex(int index) {
+<span class="fc bfc" id="L1428" title="All 2 branches covered.">        if (!isElementIndex(index)) {</span>
+<span class="fc" id="L1429">            throw new IndexOutOfBoundsException(getOutOfBoundsMessage(index));</span>
+        }
+<span class="fc" id="L1431">    }</span>
+    
+    private void checkForComodification(int expectedModCount) {
+<span class="pc bpc" id="L1434" title="1 of 2 branches missed.">        if (modCount != expectedModCount) {</span>
+<span class="nc" id="L1435">            throw new ConcurrentModificationException();</span>
+        }
+<span class="fc" id="L1437">    }</span>
+    
+    // Checks that the input index is a valid position index for add operation 
+    // or iterator position. In other words, checks that {@code index} is in the 
+    // set '{ 0, 1, ..., size}'.
+    private void checkPositionIndex(int index) {
+<span class="fc bfc" id="L1443" title="All 2 branches covered.">        if (!isPositionIndex(index)) {</span>
+<span class="fc" id="L1444">            throw new IndexOutOfBoundsException(getOutOfBoundsMessage(index));</span>
+        }
+<span class="fc" id="L1446">    }</span>
+    
+    private void decreaseSize() {
+<span class="fc" id="L1449">        size--;</span>
+<span class="fc" id="L1450">        modCount++;</span>
+<span class="fc" id="L1451">    }   </span>
+    
+    // Implements the descending list iterator over this list.
+<span class="fc" id="L1454">    private final class DescendingIterator implements Iterator&lt;E&gt; {</span>
+
+        private Node&lt;E&gt; lastReturned;
+<span class="fc" id="L1457">        private Node&lt;E&gt; nextToIterate = last;</span>
+<span class="fc" id="L1458">        private int nextIndex = IndexedLinkedList.this.size - 1;</span>
+<span class="fc" id="L1459">        int expectedModCount = IndexedLinkedList.this.modCount;</span>
+        
+        @Override
+        public boolean hasNext() {
+<span class="fc bfc" id="L1463" title="All 2 branches covered.">            return nextIndex &gt; -1;</span>
+        }
+        
+        @Override
+        public E next() {
+<span class="fc" id="L1468">            checkForComodification();</span>
+            
+<span class="pc bpc" id="L1470" title="1 of 2 branches missed.">            if (!hasNext()) {</span>
+<span class="nc" id="L1471">                throw new NoSuchElementException();</span>
+            }
+            
+<span class="fc" id="L1474">            lastReturned = nextToIterate;</span>
+<span class="fc" id="L1475">            nextToIterate = nextToIterate.prev;</span>
+<span class="fc" id="L1476">            nextIndex--;</span>
+<span class="fc" id="L1477">            return lastReturned.item;</span>
+        }
+        
+        @Override
+        public void remove() {
+<span class="pc bpc" id="L1482" title="1 of 2 branches missed.">            if (lastReturned == null) {</span>
+<span class="nc" id="L1483">                throw new IllegalStateException();</span>
+            }
+            
+<span class="fc" id="L1486">            checkForComodification();</span>
+            
+<span class="fc" id="L1488">            removeObjectImpl(lastReturned, nextIndex + 1);</span>
+<span class="fc" id="L1489">            lastReturned = null;</span>
+<span class="fc" id="L1490">            expectedModCount++;</span>
+<span class="fc" id="L1491">        }</span>
+        
+        @Override
+        public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+<span class="fc" id="L1495">            Objects.requireNonNull(action);</span>
+            
+<span class="pc bpc" id="L1497" title="1 of 4 branches missed.">            while (modCount == expectedModCount &amp;&amp; hasNext()) {</span>
+<span class="fc" id="L1498">                action.accept(nextToIterate.item);</span>
+<span class="fc" id="L1499">                nextToIterate = nextToIterate.prev;</span>
+<span class="fc" id="L1500">                nextIndex--;</span>
+            }
+            
+<span class="fc" id="L1503">            checkForComodification();</span>
+<span class="fc" id="L1504">        }</span>
+        
+        private void checkForComodification() {
+<span class="pc bpc" id="L1507" title="1 of 2 branches missed.">            if (modCount != expectedModCount) {</span>
+<span class="nc" id="L1508">                throw new ConcurrentModificationException();</span>
+            }
+<span class="fc" id="L1510">        }</span>
+    }
+    
+    // Implements the enhanced list iterator over this list.
+    final class EnhancedIterator implements ListIterator&lt;E&gt; {
+
+        private Node&lt;E&gt; lastReturned;
+        private Node&lt;E&gt; next;
+        private int nextIndex;
+        
+        // Package-private for the sake of unit testing:
+<span class="fc" id="L1521">        int expectedModCount = modCount;</span>
+        
+<span class="fc" id="L1523">        EnhancedIterator(int index) {</span>
+<span class="pc bpc" id="L1524" title="1 of 2 branches missed.">            next = (index == size) ? null : node(index);</span>
+<span class="fc" id="L1525">            nextIndex = index;</span>
+<span class="fc" id="L1526">        }</span>
+        
+        @Override
+        public boolean hasNext() {
+<span class="fc bfc" id="L1530" title="All 2 branches covered.">            return nextIndex &lt; size;</span>
+        }
+        
+        @Override
+        public E next() {
+<span class="fc" id="L1535">            checkForComdification();</span>
+            
+<span class="fc bfc" id="L1537" title="All 2 branches covered.">            if (!hasNext()) {</span>
+<span class="fc" id="L1538">                throw new NoSuchElementException();</span>
+            }
+            
+<span class="fc" id="L1541">            lastReturned = next;</span>
+<span class="fc" id="L1542">            next = next.next;</span>
+<span class="fc" id="L1543">            nextIndex++;</span>
+<span class="fc" id="L1544">            return lastReturned.item;</span>
+        }
+
+        @Override
+        public boolean hasPrevious() {
+<span class="fc bfc" id="L1549" title="All 2 branches covered.">            return nextIndex &gt; 0;</span>
+        }
+
+        @Override
+        public E previous() {
+<span class="fc" id="L1554">            checkForComdification();</span>
+            
+<span class="fc bfc" id="L1556" title="All 2 branches covered.">            if (!hasPrevious()) {</span>
+<span class="fc" id="L1557">                throw new NoSuchElementException();</span>
+            }
+            
+<span class="fc bfc" id="L1560" title="All 2 branches covered.">            lastReturned = next = (next == null) ? last : next.prev;</span>
+<span class="fc" id="L1561">            nextIndex--;</span>
+<span class="fc" id="L1562">            return lastReturned.item;</span>
+        }
+
+        @Override
+        public int nextIndex() {
+<span class="fc" id="L1567">            return nextIndex;</span>
+        }
+
+        @Override
+        public int previousIndex() {
+<span class="fc" id="L1572">            return nextIndex - 1;</span>
+        }
+
+        @Override
+        public void remove() {
+<span class="fc" id="L1577">            checkForComdification();</span>
+            
+<span class="fc bfc" id="L1579" title="All 2 branches covered.">            if (lastReturned == null) {</span>
+<span class="fc" id="L1580">                throw new IllegalStateException();</span>
+            }
+            
+<span class="fc" id="L1583">            Node&lt;E&gt; lastNext = lastReturned.next;</span>
+<span class="fc" id="L1584">            int removalIndex = nextIndex - 1;</span>
+<span class="fc" id="L1585">            removeObjectImpl(lastReturned, removalIndex);</span>
+            
+<span class="fc bfc" id="L1587" title="All 2 branches covered.">            if (next == lastReturned) {</span>
+<span class="fc" id="L1588">                next = lastNext;</span>
+            } else {
+<span class="fc" id="L1590">                nextIndex = removalIndex;</span>
+            }
+            
+<span class="fc" id="L1593">            lastReturned = null;</span>
+<span class="fc" id="L1594">            expectedModCount++;</span>
+<span class="fc" id="L1595">        }</span>
+
+        @Override
+        public void set(E e) {
+<span class="fc bfc" id="L1599" title="All 2 branches covered.">            if (lastReturned == null) {</span>
+<span class="fc" id="L1600">                throw new IllegalStateException();</span>
+            }
+            
+<span class="fc" id="L1603">            checkForComdification();</span>
+<span class="fc" id="L1604">            lastReturned.item = e;</span>
+<span class="fc" id="L1605">        }</span>
+
+        @Override
+        public void add(E e) {
+<span class="fc" id="L1609">            checkForComdification();</span>
+            
+<span class="fc" id="L1611">            lastReturned = null;</span>
+            
+<span class="fc bfc" id="L1613" title="All 2 branches covered.">            if (next == null) {</span>
+<span class="fc" id="L1614">                linkLast(e);</span>
+            } else {
+<span class="fc" id="L1616">                linkBefore(e, next, nextIndex);</span>
+            }
+            
+<span class="fc" id="L1619">            nextIndex++;</span>
+<span class="fc" id="L1620">            expectedModCount++;</span>
+<span class="fc" id="L1621">        }</span>
+        
+        @Override
+        public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+<span class="fc" id="L1625">            Objects.requireNonNull(action);</span>
+            
+<span class="fc bfc" id="L1627" title="All 4 branches covered.">            while (modCount == expectedModCount &amp;&amp; nextIndex &lt; size) {</span>
+<span class="fc" id="L1628">                action.accept(next.item);</span>
+<span class="fc" id="L1629">                next = next.next;</span>
+<span class="fc" id="L1630">                nextIndex++;</span>
+            }
+            
+<span class="fc" id="L1633">            checkForComdification();</span>
+<span class="fc" id="L1634">        }</span>
+        
+        private void checkForComdification() {
+<span class="fc bfc" id="L1637" title="All 2 branches covered.">            if (modCount != expectedModCount) {</span>
+<span class="fc" id="L1638">                throw new ConcurrentModificationException();</span>
+            }
+<span class="fc" id="L1640">        }</span>
+    }
+    
+    private boolean equalsRange(List&lt;?&gt; other, int from, int to) {
+<span class="fc" id="L1644">        Iterator&lt;?&gt; otherIterator = other.iterator();</span>
+        
+<span class="fc bfc" id="L1646" title="All 2 branches covered.">        for (Node&lt;E&gt; node = node(from); from &lt; to; from++, node = node.next) {</span>
+<span class="pc bpc" id="L1647" title="1 of 2 branches missed.">            if (!otherIterator.hasNext() || </span>
+<span class="fc bfc" id="L1648" title="All 2 branches covered.">                    !Objects.equals(node.item, otherIterator.next())) {</span>
+<span class="fc" id="L1649">                return false;</span>
+            }
+        }
+        
+<span class="fc" id="L1653">        return true;</span>
+    }
+
+    private int hashCodeRange(int from, int to) {
+<span class="nc" id="L1657">        int hashCode = 1;</span>
+        
+<span class="nc" id="L1659">        Node&lt;E&gt; node = node(from);</span>
+        
+<span class="nc bnc" id="L1661" title="All 2 branches missed.">        while (from++ &lt; to) {</span>
+<span class="nc" id="L1662">            hashCode =</span>
+                    31 * hashCode + 
+<span class="nc bnc" id="L1664" title="All 2 branches missed.">                    (node.item == null ? 0 : node.item.hashCode());</span>
+            
+<span class="nc" id="L1666">            node = node.next;</span>
+        }
+        
+<span class="nc" id="L1669">        return hashCode;</span>
+    }
+    
+    // Constructs an IndexOutOfBoundsException detail message.
+    private String getOutOfBoundsMessage(int index) {
+<span class="fc" id="L1674">        return &quot;Index: &quot; + index + &quot;, Size: &quot; + size;</span>
+    }
+
+    // Computes the recommended number of fingers.
+    private int getRecommendedNumberOfFingers() {
+<span class="fc" id="L1679">        return (int) Math.ceil(Math.sqrt(size));</span>
+    }
+    
+    // Computes the recommended number of fingers for 'size' elements.
+    private static int getRecommendedNumberOfFingers(int size) {
+<span class="fc" id="L1684">        return (int) Math.ceil(Math.sqrt(size));</span>
+    }
+    
+    // Increases the size of the list and its modification count.
+    private void increaseSize() {
+<span class="fc" id="L1689">        ++size;</span>
+<span class="fc" id="L1690">        ++modCount;</span>
+<span class="fc" id="L1691">    }</span>
+    
+    private int indexOfRange(Object o, int start, int end) {
+<span class="fc" id="L1694">        int index = start;</span>
+        
+<span class="fc bfc" id="L1696" title="All 2 branches covered.">        if (o == null) {</span>
+<span class="fc" id="L1697">            for (Node&lt;E&gt; node = node(start);</span>
+<span class="fc bfc" id="L1698" title="All 2 branches covered.">                    index &lt; end; </span>
+<span class="fc" id="L1699">                    index++, node = node.next) {</span>
+<span class="fc bfc" id="L1700" title="All 2 branches covered.">                if (node.item == null) {</span>
+<span class="fc" id="L1701">                    return index;</span>
+                }
+            }
+        } else {
+<span class="fc" id="L1705">            for (Node&lt;E&gt; node = node(start);</span>
+<span class="fc bfc" id="L1706" title="All 2 branches covered.">                    index &lt; end;</span>
+<span class="fc" id="L1707">                    index++, node = node.next) {</span>
+<span class="fc bfc" id="L1708" title="All 2 branches covered.">                if (o.equals(node.item)) {</span>
+<span class="fc" id="L1709">                    return index;</span>
+                }
+            }
+        }
+        
+<span class="fc" id="L1714">        return -1;</span>
+    }
+
+    // Tells if the argument is the index of an existing element.
+    private boolean isElementIndex(int index) {
+<span class="fc bfc" id="L1719" title="All 4 branches covered.">        return index &gt;= 0 &amp;&amp; index &lt; size;</span>
+    }
+
+    // Tells if the argument is the index of a valid position for an iterator or 
+    // an add operation.
+    private boolean isPositionIndex(int index) {
+<span class="fc bfc" id="L1725" title="All 4 branches covered.">        return index &gt;= 0 &amp;&amp; index &lt;= size;</span>
+    }
+    
+    // Returns the last appearance index of 'obj'.
+    private int lastIndexOfRange(Object o, int start, int end) {
+<span class="fc" id="L1730">        int index = end - 1;</span>
+        
+<span class="fc bfc" id="L1732" title="All 2 branches covered.">        if (o == null) {</span>
+<span class="fc" id="L1733">            for (Node&lt;E&gt; node = node(index);</span>
+<span class="fc bfc" id="L1734" title="All 2 branches covered.">                    index &gt;= start; </span>
+<span class="fc" id="L1735">                    index--, node = node.prev) {</span>
+<span class="fc bfc" id="L1736" title="All 2 branches covered.">                if (node.item == null) {</span>
+<span class="fc" id="L1737">                    return index;</span>
+                }
+            }
+        } else {
+<span class="fc" id="L1741">            for (Node&lt;E&gt; node = node(index);</span>
+<span class="fc bfc" id="L1742" title="All 2 branches covered.">                    index &gt;= start;</span>
+<span class="fc" id="L1743">                    index--, node = node.prev) {</span>
+<span class="fc bfc" id="L1744" title="All 2 branches covered.">                if (o.equals(node.item)) {</span>
+<span class="fc" id="L1745">                    return index;</span>
+                }
+            }
+        }
+        
+<span class="fc" id="L1750">        return -1;</span>
+    }
+    
+    // Links the input element right before the node 'succ'.
+    private void linkBefore(E e, Node&lt;E&gt; succ, int index) {
+<span class="fc" id="L1755">        Node&lt;E&gt; pred = succ.prev;</span>
+<span class="fc" id="L1756">        Node&lt;E&gt; newNode = new Node&lt;&gt;(e);</span>
+<span class="fc" id="L1757">        newNode.next = succ;</span>
+<span class="fc" id="L1758">        succ.prev = newNode;</span>
+
+<span class="fc bfc" id="L1760" title="All 2 branches covered.">        if (pred == null) {</span>
+<span class="fc" id="L1761">            first = newNode;</span>
+        } else {
+<span class="fc" id="L1763">            pred.next = newNode;</span>
+<span class="fc" id="L1764">            newNode.prev = pred;</span>
+        }
+
+<span class="fc" id="L1767">        size++;</span>
+<span class="fc" id="L1768">        modCount++;</span>
+
+<span class="fc bfc" id="L1770" title="All 2 branches covered.">        if (mustAddFinger()) {</span>
+<span class="fc" id="L1771">            fingerList.insertFingerAndShiftOnceToRight(</span>
+                    new Finger&lt;&gt;(newNode, index));
+        } else {
+<span class="fc" id="L1774">            int fingerIndex = fingerList.getFingerIndex(index);</span>
+<span class="fc" id="L1775">            fingerList.shiftFingerIndicesToRightOnce(fingerIndex);</span>
+        }
+<span class="fc" id="L1777">    }</span>
+    
+    // Prepends the input element to the head of this list.
+    private void linkFirst(E e) {
+<span class="fc" id="L1781">        Node&lt;E&gt; f = first;</span>
+<span class="fc" id="L1782">        Node&lt;E&gt; newNode = new Node&lt;&gt;(e);</span>
+<span class="fc" id="L1783">        newNode.next = f;</span>
+<span class="fc" id="L1784">        first = newNode;</span>
+
+<span class="fc bfc" id="L1786" title="All 2 branches covered.">        if (f == null) {</span>
+<span class="fc" id="L1787">            last = newNode;</span>
+        } else {
+<span class="fc" id="L1789">            f.prev = newNode;</span>
+        }
+
+<span class="fc" id="L1792">        increaseSize();</span>
+
+<span class="fc bfc" id="L1794" title="All 2 branches covered.">        if (mustAddFinger()) {</span>
+<span class="fc" id="L1795">            fingerList.insertFingerAndShiftOnceToRight(</span>
+                    new Finger&lt;&gt;(newNode, 0));
+        } else {
+<span class="fc" id="L1798">            fingerList.shiftFingerIndicesToRightOnce(0);</span>
+        }
+<span class="fc" id="L1800">    }</span>
+    
+    // Appends the input element to the tail of this list.
+    private void linkLast(E e) {
+<span class="fc" id="L1804">        Node&lt;E&gt; l = last;</span>
+<span class="fc" id="L1805">        Node&lt;E&gt; newNode = new Node&lt;&gt;(e);</span>
+<span class="fc" id="L1806">        newNode.prev = l;</span>
+<span class="fc" id="L1807">        last = newNode;</span>
+        
+<span class="fc bfc" id="L1809" title="All 2 branches covered.">        if (l == null) {</span>
+<span class="fc" id="L1810">            first = newNode;</span>
+        } else {
+<span class="fc" id="L1812">            l.next = newNode;</span>
+        }
+        
+<span class="fc" id="L1815">        increaseSize();</span>
+        
+<span class="fc bfc" id="L1817" title="All 2 branches covered.">        if (mustAddFinger()) {</span>
+<span class="fc" id="L1818">            appendFinger(newNode, size - 1);</span>
+        } else {
+<span class="fc" id="L1820">            fingerList.get(fingerList.size()).index++;</span>
+        }
+<span class="fc" id="L1822">    }</span>
+    
+    // Inserts the input collection right before the node 'succ'.
+    private void insertAll(Collection&lt;? extends E&gt; c,
+                           Node&lt;E&gt; succ,
+                           int succIndex) {
+        
+<span class="fc" id="L1829">        Node&lt;E&gt; pred = succ.prev;</span>
+<span class="fc" id="L1830">        Node&lt;E&gt; prev = pred;</span>
+
+<span class="fc bfc" id="L1832" title="All 2 branches covered.">        for (E item : c) {</span>
+<span class="fc" id="L1833">            Node&lt;E&gt; newNode = new Node&lt;&gt;(item);</span>
+<span class="fc" id="L1834">            newNode.prev = prev;</span>
+<span class="fc" id="L1835">            prev.next = newNode;</span>
+<span class="fc" id="L1836">            prev = newNode;</span>
+<span class="fc" id="L1837">        }</span>
+
+<span class="fc" id="L1839">        prev.next = succ;</span>
+<span class="fc" id="L1840">        succ.prev = prev;</span>
+
+<span class="fc" id="L1842">        int sz = c.size();</span>
+<span class="fc" id="L1843">        modCount++;</span>
+<span class="fc" id="L1844">        size += sz;</span>
+        
+        // Add fingers:
+<span class="fc" id="L1847">        addFingersAfterInsertAll(pred.next, </span>
+                                 succIndex,
+                                 sz);
+<span class="fc" id="L1850">    }</span>
+    
+    // Sets a finger that does not point to the element to remove. We need this
+    // in order to make sure that after removal, all the fingers point to valid
+    // nodes.
+    void moveFingerOutOfRemovalLocation(Finger&lt;E&gt; finger, int fingerIndex) {
+<span class="fc bfc" id="L1856" title="All 2 branches covered.">        if (fingerList.size() == size()) {</span>
+            // Here, fingerList.size() is 1 or 2 and the size of the list is the
+            // same:
+<span class="fc bfc" id="L1859" title="All 2 branches covered.">            if (fingerList.size() == 1) {</span>
+                // The only finger will be removed in 'remove(int)'. Return:
+<span class="fc" id="L1861">                return;</span>
+            }
+            
+            // Once here, 'fingerList.size() == 2'!
+<span class="pc bpc" id="L1865" title="1 of 3 branches missed.">            switch (fingerIndex) {</span>
+                case 0:
+                    // Shift 2nd and the sentinal fingers one position to the
+                    // left:
+<span class="fc" id="L1869">                    fingerList.setFinger(0, fingerList.get(1));</span>
+<span class="fc" id="L1870">                    fingerList.get(0).index = 0;</span>
+<span class="fc" id="L1871">                    fingerList.setFinger(1, fingerList.get(2));</span>
+<span class="fc" id="L1872">                    fingerList.get(1).index = 1;</span>
+<span class="fc" id="L1873">                    fingerList.setFinger(2, null);</span>
+<span class="fc" id="L1874">                    fingerList.size = 1;</span>
+<span class="fc" id="L1875">                    break;</span>
+                    
+                case 1:
+                    // Just remove the (last) finger:
+<span class="fc" id="L1879">                    fingerList.removeFinger();</span>
+<span class="fc" id="L1880">                    fingerList.get(1).index = 1;</span>
+                    break;
+            }
+            
+<span class="fc" id="L1884">            return;</span>
+        }
+        
+        // Try push the fingers to the right:
+<span class="fc bfc" id="L1888" title="All 2 branches covered.">        for (int f = fingerIndex; f &lt; fingerList.size(); ++f) {</span>
+<span class="fc" id="L1889">            Finger&lt;E&gt; fingerLeft  = fingerList.get(f);</span>
+<span class="fc" id="L1890">            Finger&lt;E&gt; fingerRight = fingerList.get(f + 1);</span>
+            
+<span class="fc bfc" id="L1892" title="All 2 branches covered.">            if (fingerLeft.index + 1 &lt; fingerRight.index) {</span>
+<span class="fc bfc" id="L1893" title="All 2 branches covered.">                for (int i = f; i &gt;= fingerIndex; --i) {</span>
+<span class="fc" id="L1894">                    Finger&lt;E&gt; fngr = fingerList.get(i);</span>
+<span class="fc" id="L1895">                    fngr.node = fngr.node.next;</span>
+                }
+                
+<span class="fc bfc" id="L1898" title="All 2 branches covered.">                for (int j = f + 1; j &lt;= fingerList.size(); ++j) {</span>
+<span class="fc" id="L1899">                    fingerList.get(j).index--;</span>
+                }
+                
+<span class="fc" id="L1902">                return;</span>
+            }
+        }
+        
+        // Could not push the fingers to the right. Push to the left. Since the
+        // number of fingers here is smaller than the list size, there must be
+        // a spot to move to some fingers:
+<span class="fc bfc" id="L1909" title="All 2 branches covered.">        for (int f = fingerIndex; f &gt; 0; --f) {</span>
+<span class="fc" id="L1910">            Finger&lt;E&gt; fingerLeft  = fingerList.get(f - 1);</span>
+<span class="fc" id="L1911">            Finger&lt;E&gt; fingerRight = fingerList.get(f);</span>
+            
+<span class="fc bfc" id="L1913" title="All 2 branches covered.">            if (fingerLeft.index + 1 &lt; fingerRight.index) {</span>
+<span class="fc bfc" id="L1914" title="All 2 branches covered.">                for (int i = fingerIndex; i &gt; 0; --i) {</span>
+<span class="fc" id="L1915">                    Finger&lt;E&gt; fngr = fingerList.get(i);</span>
+<span class="fc" id="L1916">                    fngr.node = fngr.node.prev;</span>
+<span class="fc" id="L1917">                    fngr.index--;</span>
+                }
+                
+<span class="fc bfc" id="L1920" title="All 2 branches covered.">                for (int i = fingerIndex + 1; i &lt;= fingerList.size(); ++i) {</span>
+<span class="fc" id="L1921">                    fingerList.get(i).index--;</span>
+                }
+                
+<span class="fc" id="L1924">                return;</span>
+            }
+        }
+        
+        // Once here, the only free spots are at the very beginning of the
+        // finger list:
+<span class="fc bfc" id="L1930" title="All 2 branches covered.">        for (int i = 0; i &lt; fingerList.size(); ++i) {</span>
+<span class="fc" id="L1931">            Finger&lt;E&gt; fngr = fingerList.get(i);</span>
+<span class="fc" id="L1932">            fngr.index--;</span>
+<span class="fc" id="L1933">            fngr.node = fngr.node.prev;</span>
+        }
+        
+        // The end-of-finger-list node has no Finger&lt;E&gt;.node defined. Take it 
+        // outside of the above loop and decrement its index manually:cd 
+<span class="fc" id="L1938">        fingerList.get(fingerList.size()).index--;</span>
+<span class="fc" id="L1939">    }</span>
+    
+    // Returns true only if this list requires more fingers.
+    private boolean mustAddFinger() {
+        // Here, fingerStack.size() == getRecommendedFingerCount(), or,
+        // fingerStack.size() == getRecommendedFingerCount() - 1
+<span class="fc bfc" id="L1945" title="All 2 branches covered.">        return fingerList.size() != getRecommendedNumberOfFingers();</span>
+    }
+    
+    // Returns true only if this list requires less fingers.
+    private boolean mustRemoveFinger() {
+        // Here, fingerStack.size() == getRecommendedFingerCount(), or,
+        // fingerStack.size() == getRecommendedFingerCount() + 1
+<span class="fc bfc" id="L1952" title="All 2 branches covered.">        return fingerList.size() != getRecommendedNumberOfFingers();</span>
+    }
+    
+    // Returns the node at index 'elementIndex'.
+    private Node&lt;E&gt; node(int elementIndex) {
+<span class="fc" id="L1957">         return fingerList.node(elementIndex);</span>
+    }
+    
+    /**
+     * Reconstitutes this {@code LinkedList} instance from a stream (that is, 
+     * deserializes it).
+     * 
+     * @param s the object input stream.
+     * 
+     * @serialData first, the size of the list is read. Then all the node items
+     *             are read and stored in the deserialization order, that is the
+     *             same order as in serialization.
+     * 
+     * @throws java.io.IOException if I/O fails.
+     * @throws ClassNotFoundException if the class is not found.
+     */
+    @java.io.Serial
+    private void readObject(java.io.ObjectInputStream s) 
+            throws java.io.IOException, ClassNotFoundException {
+        // Read in any hidden serialization magic
+<span class="fc" id="L1977">        s.defaultReadObject();</span>
+
+<span class="fc" id="L1979">        int size = s.readInt();</span>
+<span class="fc" id="L1980">        this.size = size;</span>
+<span class="fc" id="L1981">        this.fingerList = new FingerList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L1983" title="All 3 branches covered.">        switch (size) {</span>
+            case 0:
+<span class="fc" id="L1985">                return;</span>
+                
+            case 1:
+<span class="fc" id="L1988">                Node&lt;E&gt; newNode = new Node&lt;&gt;((E) s.readObject());</span>
+<span class="fc" id="L1989">                first = last = newNode;</span>
+<span class="fc" id="L1990">                fingerList.appendFinger(new Finger&lt;&gt;(newNode, 0));</span>
+<span class="fc" id="L1991">                return;</span>
+        }
+        
+<span class="fc" id="L1994">        Node&lt;E&gt; rightmostNode = new Node&lt;&gt;((E) s.readObject());</span>
+<span class="fc" id="L1995">        first = rightmostNode;</span>
+        
+<span class="fc" id="L1997">        int numberOfRequestedFingers = getRecommendedNumberOfFingers(size);</span>
+<span class="fc" id="L1998">        int distance = size / numberOfRequestedFingers;</span>
+<span class="fc" id="L1999">        int startOffset = distance / 2;</span>
+        
+        // Read in all elements in the proper order.
+<span class="fc bfc" id="L2002" title="All 2 branches covered.">        for (int i = 1; i &lt; size; i++) {</span>
+<span class="fc" id="L2003">            Node&lt;E&gt; node = new Node&lt;&gt;((E) s.readObject());</span>
+            
+<span class="fc bfc" id="L2005" title="All 2 branches covered.">            if ((i - startOffset) % distance == 0) {</span>
+<span class="fc" id="L2006">                fingerList.appendFinger(new Finger&lt;&gt;(node, i));</span>
+            }
+            
+<span class="fc" id="L2009">            rightmostNode.next = node;</span>
+<span class="fc" id="L2010">            node.prev = rightmostNode;</span>
+<span class="fc" id="L2011">            rightmostNode = node;</span>
+        }
+        
+<span class="fc" id="L2014">        last = rightmostNode;</span>
+<span class="fc" id="L2015">    }</span>
+    
+    /**
+     * Saves the state of this {@code LinkedList} instance to a stream (that is, 
+     * serializes it).
+     * 
+     * @param s the object output stream.
+     *
+     * @serialData The size of the list (the number of elements it
+     *             contains) is emitted (int), followed by all of its
+     *             elements (each an Object) in the proper order.
+     * 
+     * @throws java.io.IOException if the I/O fails.
+     */
+    @java.io.Serial
+    private void writeObject(java.io.ObjectOutputStream s)
+        throws java.io.IOException {
+        // Write out any hidden serialization magic
+<span class="fc" id="L2033">        s.defaultWriteObject();</span>
+
+        // Write out size
+<span class="fc" id="L2036">        s.writeInt(size);</span>
+
+        // Write out all elements in the proper order.
+<span class="fc bfc" id="L2039" title="All 2 branches covered.">        for (Node&lt;E&gt; x = first; x != null; x = x.next) {</span>
+<span class="fc" id="L2040">            s.writeObject(x.item);</span>
+        }
+<span class="fc" id="L2042">    }</span>
+    
+    private void removeFinger() {
+<span class="fc" id="L2045">        fingerList.removeFinger();</span>
+<span class="fc" id="L2046">    }</span>
+    
+    // Removes all the items that satisfy the given predicate.
+    private boolean removeIf(Predicate&lt;? super E&gt; filter,
+                             int fromIndex, 
+                             int toIndex) {
+<span class="fc" id="L2052">        subListRangeCheck(fromIndex, toIndex, size);</span>
+        
+<span class="fc" id="L2054">        boolean modified = false;</span>
+<span class="fc" id="L2055">        int numberOfNodesToIterate = toIndex - fromIndex;</span>
+<span class="fc" id="L2056">        int i = 0;</span>
+<span class="fc" id="L2057">        int nodeIndex = fromIndex;</span>
+        
+<span class="fc bfc" id="L2059" title="All 2 branches covered.">        for (Node&lt;E&gt; node = node(fromIndex); i &lt; numberOfNodesToIterate; ++i) {</span>
+<span class="fc" id="L2060">            Node&lt;E&gt; nextNode = node.next;</span>
+            
+<span class="fc bfc" id="L2062" title="All 2 branches covered.">            if (filter.test(node.item)) {</span>
+<span class="fc" id="L2063">                modified = true;</span>
+<span class="fc" id="L2064">                removeObjectImpl(node, nodeIndex);</span>
+            } else {
+<span class="fc" id="L2066">                nodeIndex++;</span>
+            }
+            
+<span class="fc" id="L2069">            node = nextNode;</span>
+        }
+        
+<span class="fc" id="L2072">        return modified;</span>
+    }
+    
+    // Implements the node removal. 
+    private void removeObjectImpl(Node&lt;E&gt; node, int index) {
+<span class="fc" id="L2077">        int closestFingerIndex = fingerList.getFingerIndex(index);</span>
+<span class="fc" id="L2078">        Finger&lt;E&gt; closestFinger = fingerList.get(closestFingerIndex);</span>
+        
+<span class="fc bfc" id="L2080" title="All 2 branches covered.">        if (closestFinger.index == index) {</span>
+            // Make sure no finger is pointing to 'node':
+<span class="fc" id="L2082">            moveFingerOutOfRemovalLocation(closestFinger, closestFingerIndex);</span>
+        } else {
+<span class="fc" id="L2084">            for (int i = closestFingerIndex + 1;</span>
+<span class="fc bfc" id="L2085" title="All 2 branches covered.">                    i &lt;= fingerList.size();</span>
+<span class="fc" id="L2086">                    i++) {</span>
+<span class="fc" id="L2087">                fingerList.get(i).index--;</span>
+            }
+            
+<span class="fc" id="L2090">            int steps = closestFinger.index - index;</span>
+            
+<span class="fc bfc" id="L2092" title="All 2 branches covered.">            if (steps &gt; 0) {</span>
+<span class="fc" id="L2093">                fingerList.get(closestFingerIndex).index--;</span>
+            }
+        }
+        
+<span class="fc" id="L2097">        unlink(node);</span>
+<span class="fc" id="L2098">        decreaseSize();</span>
+        
+<span class="fc bfc" id="L2100" title="All 2 branches covered.">        if (mustRemoveFinger()) {</span>
+<span class="fc" id="L2101">            removeFinger();</span>
+        }
+<span class="fc" id="L2103">    }</span>
+    
+    // Removes the finger range 'fingereList[fromIndex], ..., 
+    // fingerList[toIndex - 1]'.
+    private void removeRange(int fromIndex, int toIndex) {
+<span class="fc" id="L2108">        int removalSize = toIndex - fromIndex;</span>
+        
+<span class="fc bfc" id="L2110" title="All 2 branches covered.">        if (removalSize == 0) {</span>
+<span class="fc" id="L2111">            return;</span>
+        }
+        
+<span class="pc bpc" id="L2114" title="1 of 2 branches missed.">        if (removalSize == size) {</span>
+<span class="nc" id="L2115">            clear();</span>
+<span class="nc" id="L2116">            return;</span>
+        }
+        
+<span class="fc" id="L2119">        Node&lt;E&gt; firstNodeToRemove = node(fromIndex);</span>
+        
+<span class="fc" id="L2121">        int nextFingerCount = getRecommendedNumberOfFingers(size - removalSize);</span>
+<span class="fc" id="L2122">        int prefixSize = fromIndex;</span>
+<span class="fc" id="L2123">        int suffixSize = size - toIndex;</span>
+<span class="fc" id="L2124">        int prefixFingersSize = fingerList.getFingerIndexImpl(fromIndex);</span>
+<span class="fc" id="L2125">        int suffixFingersSize = fingerList.size - </span>
+<span class="fc" id="L2126">                                fingerList.getFingerIndexImpl(toIndex);</span>
+        
+<span class="fc" id="L2128">        int prefixFreeSpotCount = prefixSize - prefixFingersSize;</span>
+<span class="fc" id="L2129">        int suffixFreeSpotCount = suffixSize - suffixFingersSize;</span>
+
+<span class="fc bfc" id="L2131" title="All 2 branches covered.">        if (prefixFreeSpotCount == 0) {</span>
+<span class="fc bfc" id="L2132" title="All 2 branches covered.">            if (suffixFreeSpotCount == 0) {</span>
+<span class="fc" id="L2133">                removeRangeNoPrefixNoSuffix(firstNodeToRemove,</span>
+                                            fromIndex, 
+                                            removalSize);
+            } else {
+<span class="fc" id="L2137">                int numberOfFingersToMove = nextFingerCount - prefixFingersSize;</span>
+                
+                // Once here, prefixFreeSpotCount = 0 and 
+                // suffixFreeSpotCount &gt; 0. In other words, we are moving to 
+                // suffix.
+<span class="fc" id="L2142">                fingerList.moveFingersToSuffix(toIndex, numberOfFingersToMove);</span>
+<span class="fc" id="L2143">                fingerList.removeRange(0, suffixFingersSize, removalSize);</span>
+<span class="fc" id="L2144">                removeRangeNodes(firstNodeToRemove, removalSize);</span>
+<span class="fc" id="L2145">            }</span>
+        } else {
+<span class="fc bfc" id="L2147" title="All 2 branches covered.">            if (suffixFreeSpotCount == 0) {</span>
+<span class="fc" id="L2148">                int numberOfFingersToMove = </span>
+<span class="fc" id="L2149">                        Math.min(</span>
+                                nextFingerCount - prefixFingersSize, 
+                                prefixFreeSpotCount);
+                
+                // Once here, suffixFreeSpotCount = 0 and 
+                // prefixFreeSpotCount &gt; 0. In other words, we are moving a to
+                // prefix:
+<span class="fc" id="L2156">                fingerList.moveFingersToPrefix(</span>
+                        fromIndex,
+                        numberOfFingersToMove);
+                
+<span class="fc" id="L2160">                fingerList.removeRange(numberOfFingersToMove, 0, removalSize);</span>
+<span class="fc" id="L2161">                removeRangeNodes(firstNodeToRemove, removalSize);</span>
+<span class="fc" id="L2162">            } else {</span>
+<span class="fc" id="L2163">                int prefixSuffixFreeSpotCount = prefixFreeSpotCount </span>
+                                              + suffixFreeSpotCount;
+
+<span class="fc" id="L2166">                float prefixLoadFactor = ((float)(prefixFreeSpotCount)) /</span>
+                                         ((float)(prefixSuffixFreeSpotCount));
+
+<span class="fc" id="L2169">                int numberOfFingersOnLeft = </span>
+                        (int)(prefixLoadFactor * nextFingerCount);
+
+<span class="fc" id="L2172">                int numberOfFingersOnRight = </span>
+                        nextFingerCount - numberOfFingersOnLeft;
+
+<span class="fc" id="L2175">                fingerList.moveFingersToPrefix(fromIndex, </span>
+                                               numberOfFingersOnLeft);
+                
+<span class="fc" id="L2178">                fingerList.moveFingersToSuffix(toIndex, numberOfFingersOnRight);</span>
+
+<span class="fc" id="L2180">                fingerList.removeRange(numberOfFingersOnLeft,</span>
+                                       numberOfFingersOnRight, 
+                                       removalSize);
+                
+<span class="fc" id="L2184">                removeRangeNodes(firstNodeToRemove, removalSize);</span>
+            }
+        }
+        
+<span class="fc" id="L2188">        modCount++;</span>
+<span class="fc" id="L2189">        size -= removalSize;</span>
+<span class="fc" id="L2190">    }</span>
+    
+    // Removes the unnecessary fingers when the prefix and suffix are empty.
+    void removeRangeNoPrefixNoSuffix(Node&lt;E&gt; node,
+                                     int fromIndex, 
+                                     int removalSize) {
+<span class="fc" id="L2196">        int nextListSize = IndexedLinkedList.this.size - removalSize;</span>
+<span class="fc" id="L2197">        int nextFingerListSize =</span>
+<span class="fc" id="L2198">                getRecommendedNumberOfFingers(nextListSize);</span>
+
+<span class="fc" id="L2200">        int fingersToRemove = fingerList.size() - nextFingerListSize;</span>
+<span class="fc" id="L2201">        int firstFingerIndex = fingerList.getFingerIndexImpl(fromIndex);</span>
+<span class="fc" id="L2202">        int fingerCount = 0;</span>
+        
+<span class="fc" id="L2204">        Finger&lt;E&gt; finger1 = fingerList.get(firstFingerIndex);</span>
+<span class="fc" id="L2205">        Finger&lt;E&gt; finger2 = fingerList.get(firstFingerIndex + 1);</span>
+<span class="fc" id="L2206">        Node&lt;E&gt; prefixLastNode = node.prev;</span>
+<span class="fc" id="L2207">        Node&lt;E&gt; nextNode = node;</span>
+        
+<span class="fc bfc" id="L2209" title="All 2 branches covered.">        for (int i = 0; i &lt; removalSize - 1; ++i) {</span>
+<span class="fc" id="L2210">            Finger&lt;E&gt; f = fingerList.get(firstFingerIndex + fingerCount);</span>
+            
+<span class="fc bfc" id="L2212" title="All 2 branches covered.">            if (finger1 == f) {</span>
+<span class="fc bfc" id="L2213" title="All 2 branches covered.">                if (fingersToRemove != 0) {</span>
+<span class="fc" id="L2214">                    fingersToRemove--;</span>
+<span class="fc" id="L2215">                    fingerCount++;</span>
+<span class="fc" id="L2216">                    finger1 = finger2;</span>
+<span class="fc" id="L2217">                    finger2 = fingerList.get(firstFingerIndex + fingerCount);</span>
+                }
+            }
+            
+<span class="fc" id="L2221">            nextNode = node.next;</span>
+<span class="fc" id="L2222">            node.next = null;</span>
+<span class="fc" id="L2223">            node.prev = null;</span>
+<span class="fc" id="L2224">            node.item = null;</span>
+<span class="fc" id="L2225">            node = nextNode;</span>
+        }
+
+<span class="fc" id="L2228">        Node&lt;E&gt; suffixFirstNode = nextNode.next;</span>
+<span class="fc" id="L2229">        nextNode.next = null;</span>
+<span class="fc" id="L2230">        nextNode.prev = null;</span>
+<span class="fc" id="L2231">        nextNode.item = null;</span>
+        
+<span class="fc bfc" id="L2233" title="All 2 branches covered.">        if (fingersToRemove != 0) {</span>
+            // Count the last finger:
+<span class="fc" id="L2235">            fingerCount++;</span>
+        }
+
+<span class="fc bfc" id="L2238" title="All 2 branches covered.">        if (prefixLastNode != null) {</span>
+<span class="pc bpc" id="L2239" title="1 of 2 branches missed.">            if (suffixFirstNode == null) {</span>
+<span class="fc" id="L2240">                prefixLastNode.next = null;</span>
+<span class="fc" id="L2241">                last = prefixLastNode;</span>
+            } else {
+<span class="nc" id="L2243">                prefixLastNode.next = suffixFirstNode;</span>
+<span class="nc" id="L2244">                suffixFirstNode.prev = prefixLastNode;</span>
+            }
+        } else {
+<span class="fc" id="L2247">            suffixFirstNode.prev = null;</span>
+<span class="fc" id="L2248">            first = suffixFirstNode;</span>
+        }
+        
+<span class="fc" id="L2251">        fingerList.removeRange(</span>
+                firstFingerIndex, 
+<span class="fc" id="L2253">                fingerList.size() - firstFingerIndex - fingerCount, </span>
+                removalSize);
+<span class="fc" id="L2255">    }</span>
+    
+    // Unlinks the 'numberOfNodesToRemove' consecutive nodes starting from 
+    // 'node'.
+    private void removeRangeNodes(Node&lt;E&gt; node, int numberOfNodesToRemove) {
+<span class="fc" id="L2260">        Node&lt;E&gt; prefixLastNode = node.prev;</span>
+<span class="fc" id="L2261">        Node&lt;E&gt; nextNode = node;</span>
+        
+<span class="fc bfc" id="L2263" title="All 2 branches covered.">        for (int i = 0; i &lt; numberOfNodesToRemove - 1; ++i) {</span>
+<span class="fc" id="L2264">            nextNode = node.next;</span>
+<span class="fc" id="L2265">            node.next = null;</span>
+<span class="fc" id="L2266">            node.prev = null;</span>
+<span class="fc" id="L2267">            node.item = null;</span>
+<span class="fc" id="L2268">            node = nextNode;</span>
+        }
+        
+<span class="fc" id="L2271">        Node&lt;E&gt; suffixFirstNode = nextNode.next;</span>
+<span class="fc" id="L2272">        nextNode.next = null;</span>
+<span class="fc" id="L2273">        nextNode.prev = null;</span>
+<span class="fc" id="L2274">        nextNode.item = null;</span>
+        
+<span class="fc bfc" id="L2276" title="All 2 branches covered.">        if (prefixLastNode != null) {</span>
+<span class="fc bfc" id="L2277" title="All 2 branches covered.">            if (suffixFirstNode == null) {</span>
+<span class="fc" id="L2278">                prefixLastNode.next = null;</span>
+<span class="fc" id="L2279">                last = prefixLastNode;</span>
+            } else {
+<span class="fc" id="L2281">                prefixLastNode.next = suffixFirstNode;</span>
+<span class="fc" id="L2282">                suffixFirstNode.prev = prefixLastNode;</span>
+            }
+        } else {
+<span class="fc" id="L2285">            suffixFirstNode.prev = null;</span>
+<span class="fc" id="L2286">            first = suffixFirstNode;</span>
+        }
+<span class="fc" id="L2288">    }</span>
+    
+    
+    private void replaceAllRange(UnaryOperator&lt;E&gt; operator, int i, int end) {
+<span class="fc" id="L2292">        Objects.requireNonNull(operator);</span>
+<span class="fc" id="L2293">        int expectedModCount = modCount;</span>
+<span class="fc" id="L2294">        Node&lt;E&gt; node = node(i);</span>
+        
+<span class="pc bpc" id="L2296" title="1 of 4 branches missed.">        while (modCount == expectedModCount &amp;&amp; i &lt; end) {</span>
+<span class="fc" id="L2297">            node.item = operator.apply(node.item);</span>
+<span class="fc" id="L2298">            node = node.next;</span>
+<span class="fc" id="L2299">            i++;</span>
+        }
+        
+<span class="pc bpc" id="L2302" title="1 of 2 branches missed.">        if (modCount != expectedModCount) {</span>
+<span class="nc" id="L2303">            throw new ConcurrentModificationException();</span>
+        }
+<span class="fc" id="L2305">    }</span>
+    
+    // Adds fingers after appending a collection to this list.
+    private void addFingersAfterAppendAll(
+            Node&lt;E&gt; first,
+            int firstIndex,
+            int collectionSize) {
+<span class="fc" id="L2312">        int numberOfNewFingers = </span>
+<span class="fc" id="L2313">                getRecommendedNumberOfFingers() - fingerList.size();</span>
+
+<span class="pc bpc" id="L2315" title="1 of 2 branches missed.">        if (numberOfNewFingers == 0) {</span>
+<span class="nc" id="L2316">            fingerList.get(fingerList.size()).index += collectionSize;</span>
+<span class="nc" id="L2317">            return;</span>
+        }
+
+<span class="fc" id="L2320">        int distanceBetweenFingers = collectionSize / numberOfNewFingers;</span>
+<span class="fc" id="L2321">        int nodesToSkip = distanceBetweenFingers / 2;</span>
+<span class="fc" id="L2322">        int index = firstIndex + nodesToSkip;</span>
+<span class="fc" id="L2323">        Node&lt;E&gt; node = first;</span>
+
+<span class="fc bfc" id="L2325" title="All 2 branches covered.">        for (int i = 0; i &lt; nodesToSkip; i++) {</span>
+<span class="fc" id="L2326">            node = node.next;</span>
+        }
+        
+<span class="fc" id="L2329">        int fingerIndex = fingerList.size();</span>
+        
+<span class="fc" id="L2331">        fingerList.makeRoomAtIndex(fingerIndex, </span>
+                                   numberOfNewFingers, 
+                                   collectionSize);
+
+<span class="fc" id="L2335">        fingerList.setFinger(fingerIndex++, new Finger&lt;&gt;(node, index));</span>
+
+<span class="fc bfc" id="L2337" title="All 2 branches covered.">        for (int i = 1; i &lt; numberOfNewFingers; i++) {</span>
+<span class="fc" id="L2338">            index += distanceBetweenFingers;</span>
+
+<span class="fc bfc" id="L2340" title="All 2 branches covered.">            for  (int j = 0; j &lt; distanceBetweenFingers; j++) {</span>
+<span class="fc" id="L2341">                node = node.next;</span>
+            }
+
+<span class="fc" id="L2344">            fingerList.setFinger(fingerIndex++, new Finger&lt;&gt;(node, index));</span>
+        }
+<span class="fc" id="L2346">    }</span>
+    
+    // Adds fingers after inserting a collection in this list.
+    private void addFingersAfterInsertAll(Node&lt;E&gt; headNodeOfInsertedRange,
+                                          int indexOfInsertedRangeHead,
+                                          int collectionSize) {
+<span class="fc" id="L2352">        int numberOfNewFingers =</span>
+<span class="fc" id="L2353">                getRecommendedNumberOfFingers() - fingerList.size();</span>
+
+<span class="fc bfc" id="L2355" title="All 2 branches covered.">        if (numberOfNewFingers == 0) {</span>
+<span class="fc" id="L2356">            int fingerIndex = </span>
+<span class="fc" id="L2357">                    fingerList.getFingerIndexImpl(indexOfInsertedRangeHead);</span>
+            
+<span class="fc" id="L2359">            fingerList.shiftFingerIndicesToRight(fingerIndex, collectionSize);</span>
+<span class="fc" id="L2360">            return;</span>
+        }
+
+<span class="fc" id="L2363">        int distanceBetweenFingers = collectionSize / numberOfNewFingers;</span>
+<span class="fc" id="L2364">        int startOffset = distanceBetweenFingers / 2;</span>
+<span class="fc" id="L2365">        int index = indexOfInsertedRangeHead + startOffset;</span>
+<span class="fc" id="L2366">        Node&lt;E&gt; node = headNodeOfInsertedRange;</span>
+        
+<span class="fc bfc" id="L2368" title="All 2 branches covered.">        for (int i = 0; i &lt; startOffset; i++) {</span>
+<span class="fc" id="L2369">           node = node.next;</span>
+        }
+
+<span class="fc" id="L2372">        int startFingerIndex =</span>
+<span class="fc" id="L2373">                fingerList.getFingerIndexImpl(indexOfInsertedRangeHead);</span>
+        
+<span class="fc" id="L2375">        fingerList.makeRoomAtIndex(startFingerIndex, </span>
+                                   numberOfNewFingers, 
+                                   collectionSize);
+        
+<span class="fc" id="L2379">        fingerList.setFinger(startFingerIndex, new Finger&lt;&gt;(node, index));</span>
+
+<span class="fc bfc" id="L2381" title="All 2 branches covered.">        for (int i = 1; i &lt; numberOfNewFingers; i++) {</span>
+<span class="fc" id="L2382">            index += distanceBetweenFingers;</span>
+
+<span class="fc bfc" id="L2384" title="All 2 branches covered.">            for (int j = 0; j &lt; distanceBetweenFingers; j++) {</span>
+<span class="fc" id="L2385">                node = node.next;</span>
+            }
+
+<span class="fc" id="L2388">            fingerList.setFinger(startFingerIndex + i, </span>
+                                 new Finger&lt;&gt;(node, index));
+        }
+<span class="fc" id="L2391">    }</span>
+    
+    // Adds fingers after prepending a collection to this list.
+    private void addFingersAfterPrependAll(Node&lt;E&gt; first, int collectionSize) {
+<span class="fc" id="L2395">        int numberOfNewFingers =</span>
+<span class="fc" id="L2396">                getRecommendedNumberOfFingers() - fingerList.size();</span>
+
+<span class="fc bfc" id="L2398" title="All 2 branches covered.">        if (numberOfNewFingers == 0) {</span>
+<span class="fc" id="L2399">            fingerList.shiftFingerIndicesToRight(0, collectionSize);</span>
+<span class="fc" id="L2400">            return;</span>
+        }
+        
+<span class="fc" id="L2403">        fingerList.makeRoomAtIndex(0, numberOfNewFingers, collectionSize);</span>
+
+<span class="fc" id="L2405">        int distance = collectionSize / numberOfNewFingers;</span>
+<span class="fc" id="L2406">        int startIndex = distance / 2;</span>
+<span class="fc" id="L2407">        int index = startIndex;</span>
+<span class="fc" id="L2408">        Node&lt;E&gt; node = first;</span>
+
+<span class="fc bfc" id="L2410" title="All 2 branches covered.">        for (int i = 0; i &lt; startIndex; i++) {</span>
+<span class="fc" id="L2411">            node = node.next;</span>
+        }
+        
+<span class="fc" id="L2414">        int fingerIndex = 0;</span>
+        
+<span class="fc" id="L2416">        fingerList.setFinger(fingerIndex++, new Finger&lt;&gt;(node, index));</span>
+
+<span class="fc bfc" id="L2418" title="All 2 branches covered.">        for (int i = 1; i &lt; numberOfNewFingers; i++) {</span>
+<span class="fc" id="L2419">            index += distance;</span>
+
+<span class="fc bfc" id="L2421" title="All 2 branches covered.">            for (int j = 0; j &lt; distance; j++) {</span>
+<span class="fc" id="L2422">                node = node.next;</span>
+            }
+
+<span class="fc" id="L2425">            fingerList.setFinger(fingerIndex++, new Finger&lt;&gt;(node, index)); </span>
+        }
+<span class="fc" id="L2427">    }</span>
+    
+    // Adds fingers after setting a collection as a list.
+    private void addFingersAfterSetAll(int collectionSize) {
+<span class="fc" id="L2431">        int numberOfNewFingers = getRecommendedNumberOfFingers();</span>
+
+<span class="pc bpc" id="L2433" title="1 of 2 branches missed.">        if (numberOfNewFingers == 0) {</span>
+<span class="nc" id="L2434">            return;</span>
+        }
+
+<span class="fc" id="L2437">        int distance = size / numberOfNewFingers;</span>
+<span class="fc" id="L2438">        int startIndex = distance / 2;</span>
+<span class="fc" id="L2439">        int index = startIndex;</span>
+<span class="fc" id="L2440">        fingerList.makeRoomAtIndex(0,</span>
+                                   numberOfNewFingers, 
+                                   collectionSize);
+        
+<span class="fc" id="L2444">        Node&lt;E&gt; node = first;</span>
+
+<span class="fc bfc" id="L2446" title="All 2 branches covered.">        for (int i = 0; i &lt; startIndex; i++) {</span>
+<span class="fc" id="L2447">            node = node.next;</span>
+        }
+        
+<span class="fc" id="L2450">        fingerList.setFinger(0, new Finger&lt;&gt;(node, startIndex));</span>
+
+<span class="fc bfc" id="L2452" title="All 2 branches covered.">        for (int i = 1; i &lt; numberOfNewFingers; i++) {</span>
+<span class="fc" id="L2453">            index += distance;</span>
+
+<span class="fc bfc" id="L2455" title="All 2 branches covered.">            for (int j = 0; j &lt; distance; j++) {</span>
+<span class="fc" id="L2456">                node = node.next;</span>
+            }
+
+<span class="fc" id="L2459">            fingerList.setFinger(i, new Finger&lt;&gt;(node, index));</span>
+        }
+<span class="fc" id="L2461">    }</span>
+    
+    // Prepends the input collection to the head of this list.
+    private void prependAll(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L2465">        Iterator&lt;? extends E&gt; iterator = c.iterator();</span>
+<span class="fc" id="L2466">        Node&lt;E&gt; oldFirst = first;</span>
+<span class="fc" id="L2467">        first = new Node&lt;&gt;(iterator.next());</span>
+
+<span class="fc" id="L2469">        Node&lt;E&gt; prevNode = first;</span>
+
+<span class="fc bfc" id="L2471" title="All 2 branches covered.">        for (int i = 1, sz = c.size(); i &lt; sz; i++) {</span>
+<span class="fc" id="L2472">            Node&lt;E&gt; newNode = new Node&lt;&gt;(iterator.next());</span>
+<span class="fc" id="L2473">            newNode.prev = prevNode;</span>
+<span class="fc" id="L2474">            prevNode.next = newNode;</span>
+<span class="fc" id="L2475">            prevNode = newNode;</span>
+        }
+
+<span class="fc" id="L2478">        prevNode.next = oldFirst;</span>
+<span class="fc" id="L2479">        oldFirst.prev = prevNode;</span>
+
+<span class="fc" id="L2481">        int sz = c.size();</span>
+<span class="fc" id="L2482">        modCount++;</span>
+<span class="fc" id="L2483">        size += sz;</span>
+
+        // Now, add the missing fingers:
+<span class="fc" id="L2486">        addFingersAfterPrependAll(first, sz);</span>
+<span class="fc" id="L2487">    }</span>
+    
+    // If steps &gt; 0, rewind to the left. Otherwise, rewind to the right.
+    private Node&lt;E&gt; traverseLinkedListBackwards(Finger&lt;E&gt; finger, int steps) {
+<span class="fc" id="L2491">        Node&lt;E&gt; node = finger.node;</span>
+        
+<span class="fc bfc" id="L2493" title="All 2 branches covered.">        if (steps &gt; 0) {</span>
+<span class="fc bfc" id="L2494" title="All 2 branches covered.">            for (int i = 0; i &lt; steps; i++) {</span>
+<span class="fc" id="L2495">                node = node.prev;</span>
+            }
+        } else {
+<span class="fc" id="L2498">            steps = -steps;</span>
+            
+<span class="fc bfc" id="L2500" title="All 2 branches covered.">            for (int i = 0; i &lt; steps; i++) {</span>
+<span class="fc" id="L2501">                node = node.next;</span>
+            }
+        }
+        
+<span class="fc" id="L2505">        return node;</span>
+    }
+    
+//    private void removeFromRange()
+    
+    // Adds the finger to the tail of the finger list and before the end-of-
+    // finger-list sentinel.
+    private void appendFinger(Node&lt;E&gt; node, int index) {
+<span class="fc" id="L2513">        Finger&lt;E&gt; finger = new Finger&lt;&gt;(node, index);</span>
+<span class="fc" id="L2514">        fingerList.appendFinger(finger);</span>
+<span class="fc" id="L2515">    }</span>
+    
+    // Sets the input collection as a list.
+    private void setAll(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L2519">        Iterator&lt;? extends E&gt; iterator = c.iterator();</span>
+
+<span class="fc" id="L2521">        first = new Node&lt;&gt;(iterator.next());</span>
+<span class="fc" id="L2522">        Node&lt;E&gt; prevNode = first;</span>
+
+<span class="fc bfc" id="L2524" title="All 2 branches covered.">        for (int i = 1, sz = c.size(); i &lt; sz; i++) {</span>
+<span class="fc" id="L2525">            Node&lt;E&gt; newNode = new Node&lt;&gt;(iterator.next());</span>
+<span class="fc" id="L2526">            prevNode.next = newNode;</span>
+<span class="fc" id="L2527">            newNode.prev = prevNode;</span>
+<span class="fc" id="L2528">            prevNode = newNode;</span>
+        }
+
+<span class="fc" id="L2531">        last = prevNode;</span>
+<span class="fc" id="L2532">        size = c.size();</span>
+<span class="fc" id="L2533">        modCount++;</span>
+
+<span class="fc" id="L2535">        addFingersAfterSetAll(c.size());</span>
+<span class="fc" id="L2536">    }</span>
+    
+    // Unlinks the input node from the actual doubly-linked list.
+    private void unlink(Node&lt;E&gt; x) {
+<span class="fc" id="L2540">        Node&lt;E&gt; next = x.next;</span>
+<span class="fc" id="L2541">        Node&lt;E&gt; prev = x.prev;</span>
+
+<span class="fc bfc" id="L2543" title="All 2 branches covered.">        if (prev == null) {</span>
+<span class="fc" id="L2544">            first = next;</span>
+        } else {
+<span class="fc" id="L2546">            prev.next = next;</span>
+<span class="fc" id="L2547">            x.prev = null;</span>
+        }
+
+<span class="fc bfc" id="L2550" title="All 2 branches covered.">        if (next == null) {</span>
+<span class="fc" id="L2551">            last = prev;</span>
+        } else {
+<span class="fc" id="L2553">            next.prev = prev;</span>
+<span class="fc" id="L2554">            x.next = null;</span>
+        }
+<span class="fc" id="L2556">    }</span>
+    
+    static final class LinkedListSpliterator&lt;E&gt; implements Spliterator&lt;E&gt; {
+        
+        static final long MINIMUM_BATCH_SIZE = 1 &lt;&lt; 10; // 1024 items
+        
+        private final IndexedLinkedList&lt;E&gt; list;
+        private Node&lt;E&gt; node;
+        private long lengthOfSpliterator;
+        private long numberOfProcessedElements;
+        private long offsetOfSpliterator;
+        private final int expectedModCount;
+        
+        private LinkedListSpliterator(IndexedLinkedList&lt;E&gt; list,
+                                      Node&lt;E&gt; node,
+                                      long lengthOfSpliterator,
+                                      long offsetOfSpliterator,
+<span class="fc" id="L2573">                                      int expectedModCount) {</span>
+<span class="fc" id="L2574">            this.list = list;</span>
+<span class="fc" id="L2575">            this.node = node;</span>
+<span class="fc" id="L2576">            this.lengthOfSpliterator = lengthOfSpliterator;</span>
+<span class="fc" id="L2577">            this.offsetOfSpliterator = offsetOfSpliterator;</span>
+<span class="fc" id="L2578">            this.expectedModCount = expectedModCount;</span>
+<span class="fc" id="L2579">        }</span>
+
+        @Override
+        public boolean tryAdvance(Consumer&lt;? super E&gt; action) {
+<span class="fc bfc" id="L2583" title="All 2 branches covered.">            if (action == null) {</span>
+<span class="fc" id="L2584">                throw new NullPointerException();</span>
+            }
+            
+<span class="fc bfc" id="L2587" title="All 2 branches covered.">            if (numberOfProcessedElements == lengthOfSpliterator) {</span>
+<span class="fc" id="L2588">                return false;</span>
+            }
+            
+<span class="fc" id="L2591">            numberOfProcessedElements++;</span>
+<span class="fc" id="L2592">            E item = node.item;</span>
+<span class="fc" id="L2593">            action.accept(item);</span>
+<span class="fc" id="L2594">            node = node.next;</span>
+            
+<span class="fc bfc" id="L2596" title="All 2 branches covered.">            if (list.modCount != expectedModCount) {</span>
+<span class="fc" id="L2597">                throw new ConcurrentModificationException();</span>
+            }
+                
+<span class="fc" id="L2600">            return true;</span>
+        }
+
+        @Override
+        public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+<span class="fc" id="L2605">            Objects.requireNonNull(action);</span>
+            
+<span class="fc" id="L2607">            for (long i = numberOfProcessedElements; </span>
+<span class="fc bfc" id="L2608" title="All 2 branches covered.">                 i &lt; lengthOfSpliterator; </span>
+<span class="fc" id="L2609">                 i++) {</span>
+<span class="fc" id="L2610">                E item = node.item;</span>
+<span class="fc" id="L2611">                action.accept(item);</span>
+<span class="fc" id="L2612">                node = node.next;</span>
+            }
+            
+<span class="fc" id="L2615">            numberOfProcessedElements = lengthOfSpliterator;</span>
+            
+<span class="fc bfc" id="L2617" title="All 2 branches covered.">            if (list.modCount != expectedModCount) {</span>
+<span class="fc" id="L2618">                throw new ConcurrentModificationException();</span>
+            }
+<span class="fc" id="L2620">        }</span>
+        
+        @Override
+        public Spliterator&lt;E&gt; trySplit() {
+<span class="fc" id="L2624">            long sizeLeft = estimateSize();</span>
+            
+<span class="fc bfc" id="L2626" title="All 2 branches covered.">            if (sizeLeft == 0) {</span>
+<span class="fc" id="L2627">                return null;</span>
+            }
+                
+<span class="fc" id="L2630">            long thisSpliteratorNewLength = sizeLeft / 2L;</span>
+            
+<span class="fc bfc" id="L2632" title="All 2 branches covered.">            if (thisSpliteratorNewLength &lt; MINIMUM_BATCH_SIZE) {</span>
+<span class="fc" id="L2633">                return null;</span>
+            }
+            
+<span class="fc" id="L2636">            long newSpliteratorLength = sizeLeft - thisSpliteratorNewLength;</span>
+<span class="fc" id="L2637">            long newSpliteratorOffset = this.offsetOfSpliterator;</span>
+            
+<span class="fc" id="L2639">            this.offsetOfSpliterator += newSpliteratorLength;</span>
+<span class="fc" id="L2640">            this.lengthOfSpliterator -= newSpliteratorLength;</span>
+            
+<span class="fc" id="L2642">            Node&lt;E&gt; newSpliteratorNode = this.node;</span>
+            
+<span class="fc" id="L2644">            this.node = list.node((int) this.offsetOfSpliterator);</span>
+            
+<span class="fc" id="L2646">            return new LinkedListSpliterator&lt;&gt;(</span>
+                    list,
+                    newSpliteratorNode,
+                    newSpliteratorLength, // length
+                    newSpliteratorOffset, // offset
+                    expectedModCount);
+        }
+
+        @Override
+        public long estimateSize() {
+<span class="fc" id="L2656">            return (long)(lengthOfSpliterator - numberOfProcessedElements);</span>
+        }
+
+        @Override
+        public long getExactSizeIfKnown() {
+<span class="fc" id="L2661">            return estimateSize();</span>
+        }
+
+        @Override
+        public int characteristics() {
+<span class="fc" id="L2666">            return Spliterator.ORDERED | </span>
+                   Spliterator.SUBSIZED |
+                   Spliterator.SIZED;
+        }
+        
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+<span class="fc bfc" id="L2673" title="All 2 branches covered.">            return switch (characteristics) {</span>
+                case Spliterator.ORDERED, 
+                     Spliterator.SIZED, 
+<span class="fc" id="L2676">                     Spliterator.SUBSIZED -&gt; true;</span>
+                    
+<span class="fc" id="L2678">                default -&gt; false;</span>
+            };
+        }
+    }
+    
+    private class EnhancedSubList implements List&lt;E&gt; {
+        
+        private final IndexedLinkedList&lt;E&gt; root;
+        private final EnhancedSubList parent;
+        private final int offset;
+        private int size;
+        private int modCount;
+        
+        public EnhancedSubList(IndexedLinkedList&lt;E&gt; root, 
+                               int fromIndex, 
+<span class="fc" id="L2693">                               int toIndex) {</span>
+            
+<span class="fc" id="L2695">            this.root = root;</span>
+<span class="fc" id="L2696">            this.parent = null;</span>
+<span class="fc" id="L2697">            this.offset = fromIndex;</span>
+<span class="fc" id="L2698">            this.size = toIndex - fromIndex;</span>
+<span class="fc" id="L2699">            this.modCount = root.modCount;</span>
+<span class="fc" id="L2700">        }</span>
+        
+        private EnhancedSubList(EnhancedSubList parent, 
+                                int fromIndex, 
+<span class="fc" id="L2704">                                int toIndex) {</span>
+            
+<span class="fc" id="L2706">            this.root = parent.root;</span>
+<span class="fc" id="L2707">            this.parent = parent;</span>
+<span class="fc" id="L2708">            this.offset = parent.offset + fromIndex;</span>
+<span class="fc" id="L2709">            this.size = toIndex - fromIndex;</span>
+<span class="fc" id="L2710">            this.modCount = root.modCount;</span>
+<span class="fc" id="L2711">        }</span>
+
+        @Override
+        public boolean add(E e) {
+<span class="fc" id="L2715">            checkInsertionIndex(size);</span>
+<span class="fc" id="L2716">            checkForComodification();</span>
+<span class="fc" id="L2717">            root.add(offset + size, e);</span>
+<span class="fc" id="L2718">            updateSizeAndModCount(1);</span>
+<span class="fc" id="L2719">            return true;</span>
+        }
+        
+        @Override
+        public void add(int index, E element) {
+<span class="fc" id="L2724">            checkInsertionIndex(index);</span>
+<span class="fc" id="L2725">            checkForComodification();</span>
+<span class="fc" id="L2726">            root.add(offset + index, element);</span>
+<span class="fc" id="L2727">            updateSizeAndModCount(1);</span>
+<span class="fc" id="L2728">        }</span>
+        
+        @Override
+        public boolean addAll(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L2732">            return addAll(this.size, c);</span>
+        }
+        
+        @Override
+        public boolean addAll(int index, Collection&lt;? extends E&gt; collection) {
+<span class="fc" id="L2737">            checkInsertionIndex(index);</span>
+<span class="fc" id="L2738">            int collectionSize = collection.size();</span>
+            
+<span class="pc bpc" id="L2740" title="1 of 2 branches missed.">            if (collectionSize == 0) {</span>
+<span class="nc" id="L2741">                return false;</span>
+            }
+            
+<span class="fc" id="L2744">            checkForComodification();</span>
+<span class="fc" id="L2745">            root.addAll(offset + index, collection);</span>
+<span class="fc" id="L2746">            updateSizeAndModCount(collectionSize);</span>
+<span class="fc" id="L2747">            return true;</span>
+        }
+        
+        @Override
+        public void clear() {
+<span class="fc" id="L2752">            checkForComodification();</span>
+<span class="fc" id="L2753">            root.removeRange(offset, offset + size);</span>
+<span class="fc" id="L2754">            updateSizeAndModCount(-size);</span>
+<span class="fc" id="L2755">        }</span>
+
+        @Override
+        public boolean contains(Object o) {
+<span class="fc bfc" id="L2759" title="All 2 branches covered.">            return indexOf(o) &gt;= 0;</span>
+        }
+
+        @Override
+        public boolean containsAll(Collection&lt;?&gt; c) {
+<span class="fc bfc" id="L2764" title="All 2 branches covered.">            for (Object o : c) {</span>
+<span class="fc bfc" id="L2765" title="All 2 branches covered.">                if (!contains(o)) {</span>
+<span class="fc" id="L2766">                    return false;</span>
+                }
+<span class="fc" id="L2768">            }</span>
+            
+<span class="fc" id="L2770">            return true;</span>
+        }
+
+        @Override
+        public void forEach(Consumer&lt;? super E&gt; action) {
+<span class="fc" id="L2775">            Objects.requireNonNull(action);</span>
+<span class="fc" id="L2776">            int expectedModCount = modCount;</span>
+<span class="fc" id="L2777">            int iterated = 0;</span>
+            
+<span class="fc" id="L2779">            for (Node&lt;E&gt; node = node(offset); </span>
+<span class="pc bpc" id="L2780" title="1 of 4 branches missed.">                    modCount == expectedModCount &amp;&amp; iterated &lt; size; </span>
+<span class="fc" id="L2781">                    node = node.next, ++iterated) {</span>
+                
+<span class="fc" id="L2783">                action.accept(node.item);</span>
+            }
+            
+<span class="pc bpc" id="L2786" title="1 of 2 branches missed.">            if (modCount != expectedModCount) {</span>
+<span class="nc" id="L2787">                throw new ConcurrentModificationException();</span>
+            }
+<span class="fc" id="L2789">        }</span>
+        
+        @Override
+        public E get(int index) {
+<span class="fc" id="L2793">            Objects.checkIndex(index, size);</span>
+<span class="fc" id="L2794">            checkForComodification();</span>
+<span class="fc" id="L2795">            return root.get(offset + index);</span>
+        }
+
+        @Override
+        public int indexOf(Object o) {
+<span class="fc" id="L2800">            int index = root.indexOfRange(o, offset, offset + size);</span>
+<span class="fc" id="L2801">            checkForComodification();</span>
+<span class="fc bfc" id="L2802" title="All 2 branches covered.">            return index &gt;= 0 ? index - offset : -1;</span>
+        }
+        
+        @Override
+        public boolean isEmpty() {
+<span class="fc bfc" id="L2807" title="All 2 branches covered.">            return size == 0;</span>
+        }
+        
+        @Override
+        public Iterator&lt;E&gt; iterator() {
+<span class="fc" id="L2812">            return listIterator();</span>
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+<span class="fc" id="L2817">            int index = root.lastIndexOfRange(o, offset, offset + size);</span>
+<span class="fc" id="L2818">            checkForComodification();</span>
+<span class="fc bfc" id="L2819" title="All 2 branches covered.">            return index &gt;= 0 ? index - offset : -1;</span>
+        }
+
+        @Override
+        public ListIterator&lt;E&gt; listIterator() {
+<span class="fc" id="L2824">            return listIterator(0);</span>
+        }
+        
+        @Override
+        public ListIterator&lt;E&gt; listIterator(int index) {
+<span class="fc" id="L2829">            checkForComodification();</span>
+<span class="fc" id="L2830">            checkInsertionIndex(index);</span>
+            
+<span class="fc" id="L2832">            return new ListIterator&lt;E&gt;() {</span>
+<span class="fc" id="L2833">                private final ListIterator&lt;E&gt; i = </span>
+<span class="fc" id="L2834">                        root.listIterator(offset + index);</span>
+                
+                public boolean hasNext() {
+<span class="fc bfc" id="L2837" title="All 2 branches covered.">                    return nextIndex() &lt; size;</span>
+                }
+                
+                public E next() {
+<span class="pc bpc" id="L2841" title="1 of 2 branches missed.">                    if (hasNext()) {</span>
+<span class="fc" id="L2842">                        return i.next();</span>
+                    } 
+                    
+<span class="nc" id="L2845">                    throw new NoSuchElementException();</span>
+                }
+                
+                public boolean hasPrevious() {
+<span class="pc bpc" id="L2849" title="1 of 2 branches missed.">                    return previousIndex() &gt;= 0;</span>
+                }
+                
+                public E previous() {
+<span class="pc bpc" id="L2853" title="1 of 2 branches missed.">                    if (hasPrevious()) {</span>
+<span class="fc" id="L2854">                        return i.previous();</span>
+                    }
+                    
+<span class="nc" id="L2857">                    throw new NoSuchElementException();</span>
+                }
+                
+                public int nextIndex() {
+<span class="fc" id="L2861">                    return i.nextIndex() - offset;</span>
+                }
+                
+                public int previousIndex() {
+<span class="fc" id="L2865">                    return i.previousIndex() - offset;</span>
+                }
+                
+                public void remove() {
+<span class="fc" id="L2869">                    i.remove();</span>
+<span class="fc" id="L2870">                    updateSizeAndModCount(-1);</span>
+<span class="fc" id="L2871">                }</span>
+                
+                public void set(E e) {
+<span class="nc" id="L2874">                    i.set(e);</span>
+<span class="nc" id="L2875">                }</span>
+                
+                public void add(E e) {
+<span class="nc" id="L2878">                    i.add(e);</span>
+<span class="nc" id="L2879">                    updateSizeAndModCount(1);</span>
+<span class="nc" id="L2880">                }</span>
+            };
+        }
+        
+        @Override
+        public boolean remove(Object o) {
+<span class="fc" id="L2886">            ListIterator&lt;E&gt; iterator = listIterator();</span>
+            
+<span class="fc bfc" id="L2888" title="All 2 branches covered.">            if (o == null) {</span>
+<span class="pc bpc" id="L2889" title="1 of 2 branches missed.">                while (iterator.hasNext()) {</span>
+<span class="fc bfc" id="L2890" title="All 2 branches covered.">                    if (iterator.next() == null) {</span>
+<span class="fc" id="L2891">                        iterator.remove();</span>
+<span class="fc" id="L2892">                        return true;</span>
+                    }
+                }
+            } else {
+<span class="fc bfc" id="L2896" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc bfc" id="L2897" title="All 2 branches covered.">                    if (o.equals(iterator.next())) {</span>
+<span class="fc" id="L2898">                        iterator.remove();</span>
+<span class="fc" id="L2899">                        return true;</span>
+                    }
+                }
+            }
+            
+<span class="fc" id="L2904">            return false;</span>
+        }
+        
+        @Override
+        public E remove(int index) {
+<span class="fc" id="L2909">            Objects.checkIndex(index, size);</span>
+<span class="fc" id="L2910">            checkForComodification();</span>
+<span class="fc" id="L2911">            E result = root.remove(offset + index);</span>
+<span class="fc" id="L2912">            updateSizeAndModCount(-1);</span>
+<span class="fc" id="L2913">            return result;</span>
+        }
+
+        @Override
+        public boolean removeAll(Collection&lt;?&gt; c) {
+<span class="fc" id="L2918">            return batchRemove(c, true);</span>
+        }
+
+        @Override
+        public boolean removeIf(Predicate&lt;? super E&gt; filter) {
+<span class="fc" id="L2923">            checkForComodification();</span>
+<span class="fc" id="L2924">            int oldSize = root.size;</span>
+<span class="fc" id="L2925">            boolean modified = root.removeIf(filter, offset, offset + size);</span>
+            
+<span class="pc bpc" id="L2927" title="1 of 2 branches missed.">            if (modified) {</span>
+<span class="fc" id="L2928">                updateSizeAndModCount(root.size - oldSize);</span>
+            }
+            
+<span class="fc" id="L2931">            return modified;</span>
+        }
+        
+        @Override
+        public void replaceAll(UnaryOperator&lt;E&gt; operator) {
+<span class="fc" id="L2936">            root.replaceAllRange(operator, offset, offset + size);</span>
+<span class="fc" id="L2937">        }</span>
+
+        @Override
+        public boolean retainAll(Collection&lt;?&gt; c) {
+<span class="fc" id="L2941">            return batchRemove(c, false);</span>
+        }
+        
+        @Override
+        public E set(int index, E element) {
+<span class="fc" id="L2946">            Objects.checkIndex(index, size);</span>
+<span class="fc" id="L2947">            checkForComodification();</span>
+<span class="fc" id="L2948">            return root.set(offset + index, element);</span>
+        }
+        
+        @Override
+        public int size() {
+<span class="fc" id="L2953">            checkForComodification();</span>
+<span class="fc" id="L2954">            return size;</span>
+        }
+        
+        @Override
+        @SuppressWarnings(&quot;unchecked&quot;)
+        public void sort(Comparator&lt;? super E&gt; c) {
+<span class="pc bpc" id="L2960" title="1 of 2 branches missed.">            if (size == 0) {</span>
+<span class="nc" id="L2961">                return;</span>
+            }
+            
+<span class="fc" id="L2964">            int expectedModCount = modCount;</span>
+<span class="fc" id="L2965">            Object[] array = toArray();</span>
+<span class="fc" id="L2966">            Node&lt;E&gt; node = node(offset);</span>
+
+<span class="fc" id="L2968">            Arrays.sort((E[]) array, c);</span>
+
+            // Rearrange the items over the linked list nodes:
+<span class="fc bfc" id="L2971" title="All 2 branches covered.">            for (int i = 0; i &lt; array.length; ++i, node = node.next) {</span>
+<span class="fc" id="L2972">                E item = (E) array[i];</span>
+<span class="fc" id="L2973">                node.item = item;</span>
+            }
+            
+<span class="fc" id="L2976">            distributeFingers(offset, offset + size);</span>
+<span class="fc" id="L2977">            modCount++;</span>
+<span class="fc" id="L2978">        }</span>
+        
+        @Override
+        public List&lt;E&gt; subList(int fromIndex, int toIndex) {
+<span class="fc" id="L2982">            subListRangeCheck(fromIndex, toIndex, size);</span>
+<span class="fc" id="L2983">            return new EnhancedSubList(this, fromIndex, toIndex);</span>
+        }
+
+        @Override
+        public Object[] toArray() {
+<span class="fc" id="L2988">            checkForComodification();</span>
+<span class="fc" id="L2989">            int expectedModCount = root.modCount;</span>
+<span class="fc" id="L2990">            Object[] array = new Object[this.size];</span>
+<span class="fc" id="L2991">            Node&lt;E&gt; node = node(offset);</span>
+            
+<span class="fc" id="L2993">            for (int i = 0; </span>
+<span class="pc bpc" id="L2994" title="1 of 4 branches missed.">                    i &lt; array.length &amp;&amp; expectedModCount == root.modCount;</span>
+<span class="fc" id="L2995">                    i++, node = node.next) {</span>
+<span class="fc" id="L2996">                array[i] = node.item;</span>
+            }
+            
+<span class="pc bpc" id="L2999" title="1 of 2 branches missed.">            if (expectedModCount != root.modCount) {</span>
+<span class="nc" id="L3000">                throw new ConcurrentModificationException();</span>
+            }
+            
+<span class="fc" id="L3003">            return array;</span>
+        }
+
+        @Override
+        public &lt;T&gt; T[] toArray(IntFunction&lt;T[]&gt; generator) {
+<span class="fc" id="L3008">            return toArray(generator.apply(0));</span>
+        }
+
+        @Override
+        public &lt;T&gt; T[] toArray(T[] a) {
+<span class="fc" id="L3013">            checkForComodification();</span>
+            
+<span class="fc" id="L3015">            int expectedModCount = root.modCount;</span>
+            
+<span class="fc bfc" id="L3017" title="All 2 branches covered.">            if (a.length &lt; size) {</span>
+<span class="fc" id="L3018">                a = (T[]) Array.newInstance(</span>
+<span class="fc" id="L3019">                        a.getClass().getComponentType(),</span>
+                        size);
+            }
+            
+<span class="fc" id="L3023">            int index = 0;</span>
+            
+<span class="fc" id="L3025">            for (Node&lt;E&gt; node = node(offset);</span>
+<span class="pc bpc" id="L3026" title="1 of 4 branches missed.">                    expectedModCount == root.modCount &amp;&amp; index &lt; size; </span>
+<span class="fc" id="L3027">                    ++index, node = node.next) {</span>
+                
+<span class="fc" id="L3029">                a[index] = (T) node.item;</span>
+            }
+            
+<span class="fc bfc" id="L3032" title="All 2 branches covered.">            if (a.length &gt; size) {</span>
+<span class="fc" id="L3033">                a[size] = null;</span>
+            }
+            
+<span class="fc" id="L3036">            return a;</span>
+        }
+        
+        @Override
+        public String toString() {
+<span class="nc" id="L3041">            StringBuilder stringBuilder = new StringBuilder();</span>
+<span class="nc" id="L3042">            stringBuilder.append(&quot;[&quot;);</span>
+
+<span class="nc" id="L3044">            boolean firstIteration = true;</span>
+
+<span class="nc bnc" id="L3046" title="All 2 branches missed.">            for (E element : this) {</span>
+<span class="nc bnc" id="L3047" title="All 2 branches missed.">                if (firstIteration) {</span>
+<span class="nc" id="L3048">                    firstIteration = false;</span>
+                } else {
+<span class="nc" id="L3050">                    stringBuilder.append(&quot;, &quot;);</span>
+                }
+
+<span class="nc" id="L3053">                stringBuilder.append(element);</span>
+<span class="nc" id="L3054">            }</span>
+
+<span class="nc" id="L3056">            return stringBuilder.append(&quot;]&quot;).toString();</span>
+        }
+    
+        private boolean batchRemove(Collection&lt;?&gt; c, boolean complement) {
+<span class="fc" id="L3060">            checkForComodification();</span>
+<span class="fc" id="L3061">            int oldSize = root.size;</span>
+<span class="fc" id="L3062">            boolean modified = root.batchRemove(c,</span>
+                                                complement, 
+                                                offset, 
+                                                offset + size);
+            
+<span class="pc bpc" id="L3067" title="1 of 2 branches missed.">            if (modified) {</span>
+<span class="fc" id="L3068">                updateSizeAndModCount(root.size - oldSize);</span>
+            }
+            
+<span class="fc" id="L3071">            return modified;</span>
+        }
+        
+        private void checkForComodification() {
+<span class="fc bfc" id="L3075" title="All 2 branches covered.">            if (root.modCount != this.modCount)</span>
+<span class="fc" id="L3076">                throw new ConcurrentModificationException();</span>
+<span class="fc" id="L3077">        }</span>
+
+        private void checkInsertionIndex(int index) {
+<span class="pc bpc" id="L3080" title="1 of 2 branches missed.">            if (index &lt; 0) {</span>
+<span class="nc" id="L3081">                throw new IndexOutOfBoundsException(&quot;Negative index: &quot; + index);</span>
+            }
+            
+<span class="pc bpc" id="L3084" title="1 of 2 branches missed.">            if (index &gt; this.size) {</span>
+<span class="nc" id="L3085">                throw new IndexOutOfBoundsException(</span>
+                        &quot;index(&quot; + index + &quot;) &gt; size(&quot; + size + &quot;)&quot;);
+            }
+<span class="fc" id="L3088">        }</span>
+        
+        private void updateSizeAndModCount(int sizeDelta) {
+<span class="fc" id="L3091">            EnhancedSubList subList = this;</span>
+            
+            do {
+<span class="fc" id="L3094">                subList.size += sizeDelta;</span>
+<span class="fc" id="L3095">                subList.modCount = root.modCount;</span>
+<span class="fc" id="L3096">                subList = subList.parent;</span>
+<span class="pc bpc" id="L3097" title="1 of 2 branches missed.">            } while (subList != null);</span>
+<span class="fc" id="L3098">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

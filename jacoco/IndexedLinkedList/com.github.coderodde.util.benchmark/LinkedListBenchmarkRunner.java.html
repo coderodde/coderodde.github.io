@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinkedListBenchmarkRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">LinkedList</a> &gt; <a href="index.source.html" class="el_package">com.github.coderodde.util.benchmark</a> &gt; <span class="el_source">LinkedListBenchmarkRunner.java</span></div><h1>LinkedListBenchmarkRunner.java</h1><pre class="source lang-java linenums">package com.github.coderodde.util.benchmark;
+
+import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * This class provides the entry point to the benchmark.
+ * 
+ * @author Rodion &quot;rodde&quot; Efremov
+ * @version 1.6
+ * @since 1.6
+ */
+public final class LinkedListBenchmarkRunner {
+
+    private static final String ALL_BENCHMARK_METHODS_FLAG = &quot;--all&quot;;
+    private static final String BENCHMARK_SUBLIST_CLEAR_FLAG = &quot;--clear&quot;;
+    private static final String BENCHMARK_REMOVE_ALL = &quot;--remove-all&quot;;
+    private static final String HELP = &quot;-h&quot;;
+    
+    private LinkedListBenchmarkRunner() {
+        
+    }
+    
+    /**
+     * Runs the benchmark.
+     * 
+     * @param args the command line arguments. Ignored. 
+     */
+    public static void main(String[] args) {
+<span class="nc" id="L31">        boolean runSubListClear = false;</span>
+<span class="nc" id="L32">        boolean runRemoveAll = false;</span>
+        
+<span class="nc" id="L34">        Set&lt;String&gt; commandLineArgumentSet = new HashSet&lt;&gt;(3);</span>
+        
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        for (String arg : args) {</span>
+<span class="nc" id="L37">            commandLineArgumentSet.add(arg);</span>
+        }
+        
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (commandLineArgumentSet.contains(HELP)) {</span>
+<span class="nc" id="L41">            printHelp();</span>
+<span class="nc" id="L42">            return;</span>
+        }
+        
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (commandLineArgumentSet.contains(ALL_BENCHMARK_METHODS_FLAG)) {</span>
+<span class="nc" id="L46">            runSubListClear = true;</span>
+<span class="nc" id="L47">            runRemoveAll = true;</span>
+        } else {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (commandLineArgumentSet.contains(BENCHMARK_SUBLIST_CLEAR_FLAG)) {</span>
+<span class="nc" id="L50">                runSubListClear = true;</span>
+            }
+            
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            if (commandLineArgumentSet.contains(BENCHMARK_REMOVE_ALL)) {</span>
+<span class="nc" id="L54">                runRemoveAll = true;</span>
+            }
+        }
+        
+<span class="nc" id="L58">        long seed = System.currentTimeMillis();</span>
+
+<span class="nc" id="L60">        System.out.println(&quot;&lt;&lt;&lt; Benchmark seed = &quot; + seed + &quot; &gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L61">        System.out.println();</span>
+        
+<span class="nc" id="L63">        System.out.println(&quot;&lt;&lt;&lt; Flags &gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L64">        System.out.println(&quot;runSubListClear: &quot; + runSubListClear);</span>
+<span class="nc" id="L65">        System.out.println(&quot;runRemoveAll   : &quot; + runRemoveAll);</span>
+<span class="nc" id="L66">        System.out.println();</span>
+
+<span class="nc" id="L68">        LinkedListBenchmark benchmark = </span>
+                new LinkedListBenchmark(seed, 
+                                        runSubListClear,
+                                        runRemoveAll);
+
+<span class="nc" id="L73">        benchmark.warmup();</span>
+<span class="nc" id="L74">        System.out.println();</span>
+<span class="nc" id="L75">        benchmark.benchmark();</span>
+<span class="nc" id="L76">    }</span>
+    
+    private static void printHelp() {
+<span class="nc" id="L79">        String jarFileName = getJarFileName();</span>
+        
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (jarFileName == null) {</span>
+<span class="nc" id="L82">            System.out.println(&quot;Could not read the name of the JAR file.&quot;);</span>
+<span class="nc" id="L83">            return;</span>
+        }
+        
+<span class="nc" id="L86">        String text = </span>
+                &quot;Usage: java -jar &quot; 
+                + jarFileName
+                + &quot; [&quot;  
+                + HELP
+                + &quot; | &quot; 
+                + ALL_BENCHMARK_METHODS_FLAG 
+                + &quot; | &quot; 
+                + BENCHMARK_SUBLIST_CLEAR_FLAG
+                + &quot; | &quot; 
+                + BENCHMARK_REMOVE_ALL + &quot;]\n&quot;;
+        
+<span class="nc" id="L98">        System.out.println(text);</span>
+<span class="nc" id="L99">    }</span>
+    
+    private static String getJarFileName() {
+        try {
+<span class="nc" id="L103">            String jarPath =</span>
+                    LinkedListBenchmarkRunner
+                            .class
+<span class="nc" id="L106">                            .getProtectionDomain()</span>
+<span class="nc" id="L107">                            .getCodeSource()</span>
+<span class="nc" id="L108">                            .getLocation()</span>
+<span class="nc" id="L109">                            .toURI()</span>
+<span class="nc" id="L110">                            .getPath();</span>
+            
+<span class="nc" id="L112">            return jarPath.substring(jarPath.lastIndexOf(&quot;/&quot;) + 1);</span>
+<span class="nc" id="L113">        } catch (URISyntaxException ex) {</span>
+<span class="nc" id="L114">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
