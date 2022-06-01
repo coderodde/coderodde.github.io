@@ -797,12 +797,10 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
                 W_N(f) = \frac{N}{2f} + f = \frac{N}{2\sqrt{N/2}} + \sqrt{N/2} = 2\sqrt{N/2} = \Theta(\sqrt{N}).
             \] 
             As $\sqrt{1/2} < 1$, in our implementation we set $f = \lceil \sqrt{N/2} \rceil$.
-
-            <p>(A Java implementation of the linked list under discussion may be found at <a href="https://github.com/coderodde/LinkedList">GitHub</a>.) 
         </article>
 
         <a href="#gtif"><h3>Generating trigonometric identities from $f_q(x) = \sin^qx$</h3></a>
-        <article>
+        <article>   
 	<p>
 	In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \in \mathbb{R} \setminus
     \{ 0 \}$. The idea is to, first, define the inverse function $f_q^{-1}$ and derivate it via direct derivation and via using the known identity
@@ -939,7 +937,7 @@ after which we compare the two results and cancel the common factors, possibly, 
             $$
             \alpha \log{N^{1/2}} = \frac{\alpha}{2} \log{N}.
             $$
-            Basically, we can say that instead of $\alpha \sqrt{N}$ steps, we do almost negligible number of steps, which improves the running time for single-element operations by the factor of two.
+            Basically, we can say that instead of $\alpha \sqrt{N}$ steps, we do almost negligible number of steps, which improves the running time for single-element operations by the factor of two. (The Java implementation of the discussed data structures may be found in <a href="https://github.com/coderodde/IndexedLinkedList">GitHub</a>.)
 	</article>
 
         <a href="#calc-force"><h3>Calculating the force between a charged particle and a charged line with infitesimal density</h3></a>
