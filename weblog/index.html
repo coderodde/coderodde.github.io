@@ -876,7 +876,7 @@ after which we compare the two results and cancel the common factors, possibly, 
                 <alg-while condition="$\mathrm{count} > 0$">
 
                     <alg-step>$\mathrm{it} \leftarrow \mathrm{idx}$</alg-step>
-                    <alg-step>$\mathrm{step} \leftarrow \mathrm{count} / 2$</alg-step>
+                    <alg-step>$\mathrm{step} \leftarrow \lceil \mathrm{count} / 2 \rceil$</alg-step>
                     <alg-step>$\mathrm{it} \leftarrow \mathrm{it} + \mathrm{step}$</alg-step>
 
                     <alg-if condition="$F.\mathrm{fingers}\texttt{[}\mathrm{it}\texttt{]}.\mathrm{index} < i$">
