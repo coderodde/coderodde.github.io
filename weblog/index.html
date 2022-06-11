@@ -943,8 +943,9 @@ after which we compare the two results and cancel the common factors, possibly, 
             We may ask, what happens when we keep adding the elements to the tail of this list. Suppose $f$ is the rightmost finger in the finger list. The distance between $f$ and $f - 1$ is given by 
             \[
                 \begin{aligned}
-                    f^2 - (f - 1)^2 &= f^2 - (f^2 - 2f + 1) \\
-                                    &= 2f - 1 = 2 \lceil \sqrt{n} \rceil - 1 \\
+                    f^2 - (f - 1)^2 &= f^2 - (f^2 - 2f + 1)         \\
+                                    &= 2f - 1                       \\ 
+                                    &= 2 \lceil \sqrt{n} \rceil - 1 \\
                                     &= \Theta(\sqrt{n}).
                 \end{aligned}
             \]
