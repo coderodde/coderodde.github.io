@@ -916,11 +916,11 @@ after which we compare the two results and cancel the common factors, possibly, 
                 $f_2 \leftarrow F.\mathrm{fingers}\texttt{[}f\texttt{]}$</alg-step>
 
                 <alg-step>
-                $d_1 \leftarrow |i - f_1.\mathrm{index}|$
+                $d_1 \leftarrow i - f_1.\mathrm{index}$
                 </alg-step>
 
                 <alg-step>
-                $d_2 \leftarrow |i - f_2.\mathrm{index}|$
+                $d_2 \leftarrow f_2.\mathrm{index} - i$
                 </alg-step>
 
                 <alg-if condition="$d_1 < d_2$">
