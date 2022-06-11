@@ -938,6 +938,10 @@ after which we compare the two results and cancel the common factors, possibly, 
             \alpha \log{N^{1/2}} = \frac{\alpha}{2} \log{N}.
             $$
             Basically, we can say that instead of $\alpha \sqrt{N}$ steps, we do almost negligible number of steps, which improves the running time for single-element operations by the factor of two. (The Java implementation of the discussed data structures may be found in <a href="https://github.com/coderodde/IndexedLinkedList">GitHub</a>.)
+
+        <p>
+            We may ask, what happens when we keep adding the elements to the tail of this list. Suppose we are given $f$th figner. The distance between $f$ and $f - 1$ is given by $f^2 - (f - 1)^2 = f^2 - (f^2 - 2f + 1) = 2f - 1 = 2 \lceil \sqrt{n} \rceil - 1 = \Theta(\sqrt{n})$. So we conclude that in such a setting, the fingers are (asymptotically) evenly distributed.
+            
 	</article>
 
         <a href="#calc-force"><h3>Calculating the force between a charged particle and a charged line with infitesimal density</h3></a>
