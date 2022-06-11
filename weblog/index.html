@@ -939,8 +939,9 @@ after which we compare the two results and cancel the common factors, possibly, 
             $$
             Basically, we can say that instead of $\alpha \sqrt{N}$ steps, we do almost negligible number of steps, which improves the running time for single-element operations by the factor of two. (The Java implementation of the discussed data structures may be found in <a href="https://github.com/coderodde/IndexedLinkedList">GitHub</a>.)
 
-        <p>
-            We may ask, what happens when we keep adding the elements to the tail of this list. Suppose $f$ is the rightmost finger in the finger list. The distance between $f$ and $f - 1$ is given by 
+        <p> 
+          
+            We may ask, what happens when we keep adding the elements to the tail of this list. In such a case, the sparsity of adjacent indices keeps growing as we keep creating new fingers. Suppose $f$ is the rightmost finger in the finger list. The distance between $f$ and $f - 1$ is given by 
             \[
                 \begin{aligned}
                     f^2 - (f - 1)^2 &= f^2 - (f^2 - 2f + 1)         \\
