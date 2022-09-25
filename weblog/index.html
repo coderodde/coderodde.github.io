@@ -993,6 +993,76 @@ after which we compare the two results and cancel the common factors, possibly, 
             $$
             So we conclude that the pull is always zero in this setting.
         </article>
+
+        <a href="#calc-force-vector"><h3>Calculating a particle's force vector to a finite rod with finite, constant density</h3></a>
+        <article>        
+            <p>
+            In this post, we will discuss a problem of calculating a force vector from a particle to a finite length rod with constant mass density. Now, let $\rho$ be the constant mass density of the given rod. The rod itself is given by the set of $x$-coordinates within range $[a, b]$. The particle projects to the rod at $x = 0$. The distance between the rod (at $x = 0$) and the particle is $d > 0$. The force vector $\vec{F}$ we seek for consists of two orthogonal force vectors: $\vec{F}_h$ as the horizontal force vector and $\vec{F}_v$ as the verti   cal force vector ($\vec{F} = \vec{F}_h + \vec{F}_v$). The vectors are defined as $\vec{F}_v = (0, v)$ and $\vec{F}_h = (h, 0)$.
+            <img class="figure_style" src="ForceVector.svg" alt="The attraction pull vector."/>
+
+            <p>
+            What comes to $\vec{F}_h$, it is defined as
+            $$
+            h = m\rho \int_a^b \frac{\sin(\arctan(x / d))}{d^2 + x^2} \, \mathrm{d}x.
+            $$
+
+            <a href="https://www.wolframalpha.com/input?i=sin%28arctan%28x%2Fd%29%29%2F%28d%5E2+%2B+x%5E2%29">According to WolframAlpha</a>, 
+            $$
+            \frac{\sin(\arctan(x / d))}{d^2 + x^2} = \frac{x}{(d^2 + x^2) \sqrt{d^2 + x^2}}.
+            $$
+            Once again, <a href="https://www.wolframalpha.com/input?i=integrate+sin%28arctan%28x%2Fd%29%29%2F%28d%5E2+%2B+x%5E2%29">according to WolframAlpha</a>, 
+            $$
+            \int \frac{\sin(\arctan(x / d))}{d^2 + x^2} \, \mathrm{d}x = -\frac{1}{\sqrt{d^2 + x^2}}.
+            $$
+            Next, we derivate the above integral:
+            \begin{aligned}
+                \frac{\mathrm{d}}{\mathrm{d}x} \Bigg( -\frac{1}{\sqrt{d^2 + x^2}} \Bigg) &= - \frac{ \frac{ \mathrm{d} }{ \mathrm{d}x } \Bigg( d^2 + x^2 \Bigg)^{\frac{1}{2}} }{d^2 + x^2} \\
+                                                                                         &= - \frac{\frac{1}{2} \Bigg( d^2 + x^2 \Bigg)^{-\frac{1}{2}} 2x}{d^2 + x^2} \\
+                                                                                         &= - \frac{x}{(d^2 + x^2) \sqrt{d^2 + x^2}}
+            \end{aligned}
+            <p>
+            Next, we need to deal with $\vec{F_v}$. To this end, we need to calculate
+            $$
+                v = -\int_a^b \frac{\cos(\arctan(x/d)) }{d^2 + x^2}.
+            $$
+
+            \begin{aligned}
+            v&= -\frac{ d }{ (d^2 + x^2) \sqrt{d^2 + x^2 } } \\
+                -\int \frac{ \cos(\arctan(x / d)) }{ d^2 + x^2 } \, \mathrm{d}x &= -\frac{ x }{ d\sqrt{d^2 + x^2} }
+            \end{aligned}
+
+            The derivative of the above integral is given by
+
+            \begin{aligned}
+                -\frac{\mathrm{d}}{\mathrm{d}x} \frac{ x }{ d\sqrt{d^2 + x^2} } &= -\frac{d\sqrt{d^2 + x^2} - x \frac{1}{2} d 2x ( d^2 + x^2 )^{-\frac{ 1 }{ 2 }}} { d^2 (d^2 + x^2) } \\
+                &= -\frac{1}{d\sqrt{d^2 + x^2}} + \frac{x^2}{d(d^2 + x^2)\sqrt{d^2 + x^2}} \\
+                &= -\frac{d^2 +´x^2}{d(d^2 + x^2)\sqrt{d^2 + x^2}} + \frac{x^2}{d(d^2 + x^2)\sqrt{d^2 + x^2}} \\
+                &= - \frac{d^2}{d(d^2 + x^2)\sqrt{d^2 + x^2}} \\
+                &= - \frac{d}{(d^2 + x^2)\sqrt{d^2 + x^2}},
+            \end{aligned}
+            as expected. Finally, the force vector in question is 
+            $$\vec{F} = \Bigg( \Bigg[ -\frac{m\rho}{\sqrt{d^2 + x^2}} \Bigg]_{x = a}^{x = b}, \Bigg[ -\frac{m\rho x}{d \sqrt{d^2 + x^2}} \Bigg]_{x = a}^{x = b} \Bigg).$$
+
+            Now, let us compute a sample force vector for the rod $x \in [-1, 2]$ $d = 3$ distance away from the particle with $m = \rho = 1$:
+            \begin{aligned}
+                \vec{F} &= \vec{F}_h + \vec{F}_v \\
+                        &= (h, v) \\
+                        &= \Bigg( -\frac{1}{ \sqrt{3^2 + 2^2} } + \frac{1}{ \sqrt{3^2 + (-1)^2} }, -\frac{2}{3\sqrt{3^2 + 2^2} } + \frac{-1}{ 3 \sqrt{ 3^2 + (-1)^2 } } \Bigg) \\
+                        &= \Bigg( -\frac{1}{ \sqrt{9 + 4} } + \frac{1}{ \sqrt{9 + 1} }, -\frac{2}{3\sqrt{9 + 4} } + \frac{-1}{ 3 \sqrt{ 9 + 1 } } \Bigg) \\
+                        &= \Bigg( -\frac{1}{ \sqrt{13} } + \frac{1}{ \sqrt{10} }, -\frac{2}{3\sqrt{13} } + \frac{-1}{ 3 \sqrt{ 10 } } \Bigg) \\
+                        &= \Bigg( -\frac{1}{ \sqrt{13} } + \frac{1}{ \sqrt{10} }, -\frac{2}{3\sqrt{13} } - \frac{1}{ 3 \sqrt{ 10 } } \Bigg) \\ 
+                        &\approx (0.039, -0.290).
+            \end{aligned}
+
+            <p>
+                Also, it might be of interest the case where $a = -b$ and $b \rightarrow \infty$:
+                \begin{aligned}
+                    \vec{F} &= \Bigg( - \frac{m\rho}{ \sqrt{d^2 + b^2} } - \frac{m\rho}{ \sqrt{d^2 + a^2}  } \Bigg) \\
+                            &= \Bigg( - \frac{m\rho}{ \sqrt{d^2 + b^2} } + \frac{m\rho }{ \sqrt{d^2 + (-b)^2} }\Bigg) \\ 
+                            &= (0, ).
+                \end{aligned}
+        </article>
+
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
             <script src="viewCounter.js"></script>
