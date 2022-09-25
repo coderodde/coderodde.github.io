@@ -1057,10 +1057,12 @@ after which we compare the two results and cancel the common factors, possibly, 
             <p>
                 Also, it might be of interest the case where $a = -b$ and $b \rightarrow \infty$:
                 \begin{aligned}
-                    \vec{F} &= \Bigg( - \frac{m\rho}{ \sqrt{d^2 + b^2} } - \frac{m\rho}{ \sqrt{d^2 + a^2}  } \Bigg) \\
-                            &= \Bigg( - \frac{m\rho}{ \sqrt{d^2 + b^2} } + \frac{m\rho }{ \sqrt{d^2 + (-b)^2} }\Bigg) \\ 
-                            &= (0, ).
+                    \vec{F} &= \Bigg( - \frac{m\rho}{ \sqrt{d^2 + b^2} } - \frac{m\rho}{ \sqrt{d^2 + a^2}  } ,  -\frac{m\rho b}{d\sqrt{d^2 + b^2} } + \frac{m\rho a}{d \sqrt{d^2 + a^2}}  \Bigg) \\
+                            &= \Bigg( - \frac{m\rho}{ \sqrt{d^2 + b^2} } + \frac{m\rho }{ \sqrt{d^2 + (-b)^2} }, \frac{m\rho(a - b)}{ d \sqrt{d^2 + b^2} }  \Bigg) \\ 
+                            &= \Bigg( 0, \frac{-2 m\rho b }{ d \sqrt{d^2 + b^2} }  \Bigg)
                 \end{aligned}
+
+                When $b \rightarrow \infty$, $\vec{F} \rightarrow (0, -2m \rho / d).$ Clearly, $\vec{F} \rightarrow (0, -\infty)$ as $d \rightarrow 0+$, and $\vec{F} \rightarrow (0, \infty)$ as $d \rightarrow 0-$.
         </article>
 
         <p id="counter_paragraph">
