@@ -997,7 +997,7 @@ after which we compare the two results and cancel the common factors, possibly, 
         <a href="#calc-force-vector"><h3>Calculating a particle's force vector to a finite rod with finite, constant density</h3></a>
         <article>        
             <p>
-            In this post, we will discuss a problem of calculating a force vector from a particle to a finite length rod with constant mass density. Now, let $\rho$ be the constant mass density of the given rod. The rod itself is given by the set of $x$-coordinates within range $[a, b]$. The particle projects to the rod at $x = 0$. The distance between the rod (at $x = 0$) and the particle is $d > 0$. The force vector $\vec{F}$ we seek for consists of two orthogonal force vectors: $\vec{F}_h$ as the horizontal force vector and $\vec{F}_v$ as the verti   cal force vector ($\vec{F} = \vec{F}_h + \vec{F}_v$). The vectors are defined as $\vec{F}_v = (0, v)$ and $\vec{F}_h = (h, 0)$.
+            In this post, we will discuss a problem of calculating a force vector from a particle to a finite length rod with constant mass density. Now, let $\rho$ be the constant mass density of the given rod. The rod itself is given by the set of $x$-coordinates within range $[a, b]$. The particle projects to the rod at $x = 0$. The distance between the rod (at $x = 0$) and the particle is $d > 0$. The force vector $\vec{F}$ we seek for consists of two orthogonal force vectors: $\vec{F}_h$ as the horizontal force vector and $\vec{F}_v$ as the vertical force vector ($\vec{F} = \vec{F}_h + \vec{F}_v$). The vectors are defined as $\vec{F}_v = (0, v)$ and $\vec{F}_h = (h, 0)$.
             <img class="figure_style" src="ForceVector.svg" alt="The attraction pull vector."/>
 
             <p>
@@ -1017,7 +1017,7 @@ after which we compare the two results and cancel the common factors, possibly, 
             Next, we derivate the above integral:
             \begin{aligned}
                 \frac{\mathrm{d}}{\mathrm{d}x} \Bigg( -\frac{1}{\sqrt{d^2 + x^2}} \Bigg) &= - \frac{ \frac{ \mathrm{d} }{ \mathrm{d}x } \Bigg( d^2 + x^2 \Bigg)^{\frac{1}{2}} }{d^2 + x^2} \\
-                                                                                         &= - \frac{\frac{1}{2} \Bigg( d^2 + x^2 \Bigg)^{-\frac{1}{2}} 2x}{d^2 + x^2} \\
+                                                                                         &= - \frac{\frac{1}{2} \Bigg( d^2 + x^ 2 \Bigg)^{-\frac{1}{2}} 2x}{d^2 + x^2} \\
                                                                                          &= - \frac{x}{(d^2 + x^2) \sqrt{d^2 + x^2}}
             \end{aligned}
             <p>
