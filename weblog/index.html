@@ -1061,6 +1061,27 @@ after which we compare the two results and cancel the common factors, possibly, 
 
                 When $b \rightarrow \infty$, $\vec{F} \rightarrow (0, -2m \rho / d).$ Clearly, $\vec{F} \rightarrow (0, -\infty)$ as $d \rightarrow 0+$, and $\vec{F} \rightarrow (0, \infty)$ as $d \rightarrow 0-$.
         </article>
+		
+		<a href="#rotenergy"><h3>Calculating rotational energy of a disk via integration</h3></a>
+		<article>
+			<p>
+			Let the disk have radius $R > 0$, mass $m > 0$, angular velocity of rotation $\omega > 0$, and the constant density $\rho = m / (\pi R^2)$. Now, consider the area element $\mathrm{d}A = r \, \mathrm{d}r \, \mathrm{d}\alpha$. The mass of that area element is given by 
+			$$\mathrm{d}m = \rho \, \mathrm{d}A = \frac{mr \, \mathrm{d}r \, \mathrm{d}\alpha}{\pi R^2}.$$ 
+			Next, the energy of that area is given by
+			$$\mathrm{d}E = \frac{1}{2} \mathrm{d}mv^2 = \frac{1}{2} \mathrm{d}m(r\omega)^2 = \frac{mr^3 \omega^2  \, \mathrm{d}r \, \mathrm{d}\alpha}{2\pi R^2}.$$
+
+			Finally, the rotational energy is
+			\begin{aligned}
+E_{rotational} &= \int_0^{2\pi} \int_0^R \mathrm{d}E \\
+               &= \int_0^{2\pi} \int_0^R \frac{mr^3 \omega^2 }{2\pi R^2} \, \mathrm{d}r \, \mathrm{d}\alpha\\
+               &= \frac{m\omega^2}{2\pi R^2} \int_0^{2\pi} \int_0^R r^3 \, \mathrm{d}r \, \mathrm{d}\alpha \\
+               &= \frac{m\omega^2}{2\pi R^2} \int_0^{2\pi} \Bigg[ \frac{1}{4} r^4 \Bigg]_{r = 0}^{r = R} \mathrm{d}\alpha \\
+               &= \frac{m\omega^2R^2}{8\pi} \int_0^{2\pi}\mathrm{d}\alpha \\
+               &= \frac{m\omega^2R^2}{8\pi} \Bigg[\alpha\Bigg]_{\alpha = 0}^{\alpha = 2\pi} \\
+               &= \frac{1}{4}m\omega^2R^2 \\
+			   &= \frac{1}{2}I\omega^2.
+			\end{aligned}
+		</article>
 
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
