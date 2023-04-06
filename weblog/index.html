@@ -1082,6 +1082,19 @@ E_{rotational} &= \int_0^{2\pi} \int_0^R \mathrm{d}E \\
 			   &= \frac{1}{2}I\omega^2.
 			\end{aligned}
 		</article>
+		
+		<a href="#riemann_sums"><h3>Riemann sums for proving an integral identity</h3></a>
+		<article>
+			<p> 
+			In this post, we wish to show that $$\int_a^b \int_c^d f(x)g(y) \, \mathrm{d}y \, \mathrm{d}x = \Bigg( \int_a^b f(x) \, \mathrm{d}x \Bigg) \Bigg( \int_c^d g(y) \, \mathrm{d}y \Bigg).$$ 
+			To this end, it follows straight from the linearity of integrals. However, if we are not convinced, we can prove it via Riemann sums:
+			\begin{aligned}
+				\int_a^b \int_c^d f(x)g(y) \, \mathrm{d}y \, \mathrm{d}x &= \lim_{\Delta x \to 0+} \lim_{\Delta y \to 0+} \sum_{i = 0}^{\Big\lceil \frac{b - a}{\Delta x} \Big\rceil} \sum_{j = 0}^{\Big\lceil \frac{d - c}{\Delta y} \Big\rceil} f(a + i \Delta x) g(c + j \Delta y) \\
+					                                                     &= \Bigg( \lim_{\Delta x \to 0+} \sum_{i = 0}^{\Big\lceil \frac{b - a}{\Delta x} \Big\rceil}  f(a + i \Delta x) \Bigg) \Bigg( \lim_{\Delta y \to 0+} \sum_{j = 0}^{\Big\lceil \frac{d - c}{\Delta y} \Big\rceil} g(c + j \Delta y) \Bigg) \\
+																		 &= \Bigg( \int_a^b f(x) \, \mathrm{d}x \Bigg) \Bigg( \int_c^d g(y) \, \mathrm{d}y \Bigg),
+			\end{aligned}
+			which concludes the proof.
+		</article>
 
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
