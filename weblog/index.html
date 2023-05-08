@@ -1095,6 +1095,64 @@ E_{rotational} &= \int_0^{2\pi} \int_0^R \mathrm{d}E \\
 			\end{aligned}
 			which concludes the proof.
 		</article>
+		
+		<a href="#swing_duration"><h3>Duration of a swing</h3></a>
+		<article>
+			<p>
+			In this post, we will calculate the swing duration of an object fastened to a pole above it. We start from the following figure:
+			<p style="text-align: center;"><img src="SwingingObject.png"/></p>
+			<p style="text-align: justify;">
+			
+Let $\theta_{\max}$ be the maximum angle. Let the radius be given: $r > 0$. 
+
+Now we know that the total energy equals the maximum potential energy, which is attained when the angle $\theta$ is either $-\theta_{\max}$ or $\theta_{\max}$. Next, the potential energy at the angle of $\theta \in (-\theta_\max, \theta_\max)$ is
+
+$$
+\begin{aligned}
+E_p^{\theta} &= mgh = mg(r - r\cos \theta) \\
+             &= mgr(1 - \cos \theta).
+\end{aligned}
+$$
+Now, the kinetic energy at the angle $\theta$ is given by 
+$$
+\begin{aligned}
+E_k^{\theta} &= E_{p,total} - E_p^\theta \\
+             &= mgr(1 - \cos \theta_{\max}) - mgr (1 - \cos \theta) \\
+             &= mgr(1 - \cos \theta_{\max} - 1 + \cos \theta) \\
+             &= mgr(\cos \theta - \cos \theta_{\max}) \\
+             &= \frac{1}{2} mv^2.
+\end{aligned}
+$$
+From above, we have that
+$$
+gr(\cos \theta - \cos \theta_{\max}) = \frac{1}{2} v^2,
+$$
+which is identical with
+$$
+v = \sqrt{2gr(\cos \theta - \cos \theta_{\max})}.
+$$
+Next, we must have 
+$$
+\mathrm{d}s = v \mathrm{d}t,
+$$
+where $\mathrm{d}s = r \mathrm{d}\theta$, and so
+$$
+\begin{aligned}
+\mathrm{d}t &= \frac{\mathrm{d}s}{v} \\
+            &= \frac{r\mathrm{d}\theta}{\sqrt{2gr(\cos \theta - \cos \theta_\max)}} \\
+            &= \frac{\sqrt{r}\mathrm{d}\theta}{\sqrt{2g(\cos \theta - \cos \theta_\max)}}.
+\end{aligned}
+$$
+Finally, 
+$$
+\begin{aligned}
+T &= \int_{-a}^a \frac{\sqrt{r}\mathrm{d}\theta}{\sqrt{2g(\cos \theta - \cos \theta_\max)}} \\
+  &= \sqrt{\frac{r}{2g}} \int_{-a}^a \frac{\mathrm{d}\theta}{\sqrt{\cos \theta - \cos a}},
+\end{aligned}
+$$
+where $a = \theta_\max \in [0, \pi / 2)$.
+			</p>
+		</article>
 
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
