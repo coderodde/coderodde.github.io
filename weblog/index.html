@@ -1147,10 +1147,17 @@ Finally,
 $$
 \begin{aligned}
 T &= \int_{-a}^a \frac{\sqrt{r}\mathrm{d}\theta}{\sqrt{2g(\cos \theta - \cos \theta_\max)}} \\
-  &= \sqrt{\frac{r}{2g}} \int_{-a}^a \frac{\mathrm{d}\theta}{\sqrt{\cos \theta - \cos a}},
+  &= \sqrt{\frac{r}{2g}} \int_{-a}^a \frac{\mathrm{d}\theta}{\sqrt{\cos \theta - \cos a}} \\
+  &\overset{(1)}{=} \sqrt{\frac{r}{2g}} \Bigg[ \frac{2F\Big( \frac{\theta}{2} \Big| \csc^2\Big( \frac{a}{2}\Big) \Big)}{\sqrt{1 - \cos a}}\Bigg]_{\theta = -a}^{\theta = a} \\
+  &= \sqrt{\frac{r}{2g}} \Bigg[ \frac{2F\Big( \frac{a}{2} \Big| \csc^2\Big( \frac{a}{2}\Big) \Big)}{\sqrt{1 - \cos a}}\Bigg] - \sqrt{\frac{r}{2g}} \Bigg[ \frac{2F\Big( -\frac{a}{2} \Big| \csc^2\Big( \frac{a}{2}\Big) \Big)}{\sqrt{1 - \cos a}} \Bigg] \\
+  &\overset{(2)}{=} \sqrt{\frac{r}{2g}} \frac{4F\Big( \frac{a}{2} \Big| \csc^2\Big( \frac{a}{2} \Big) \Big)}{\sqrt{1 - \cos a}},
 \end{aligned}
 $$
-where $a = \theta_\max \in [0, \pi / 2)$.
+where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following WolframAlpha search results:
+<ul>
+	<li>(1) <a href="https://www.wolframalpha.com/input?i=int+1%2Fsqrt%28cos+x+-+cos+a%29">Equation 1,</a></li>
+	<li>(2) <a href="https://www.wolframalpha.com/input?i=2+*+EllipticF%5Bx%2F2%2C+csc%5E2%28x%2F2%29%5D+%2F+sqrt%281+-+cos+x%29+-+2+*+EllipticF%5B-x%2F2%2C+csc%5E2%28x%2F2%29%5D+%2F+sqrt%281+-+cos+x%29">Equation 2.</a></li>
+</ul>
 			</p>
 		</article>
 
