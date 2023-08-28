@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Radial pie chart demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="rodde-radial-pie-chart.js" defer></script>
+    </head>
+    <body>
+        <h3>Introduction</h3>
+        <rodde-radial-pie-chart start-angle = "30" 
+                                maximum-radius = "200" 
+                                empty-pie-chart-color = "grey" 
+                                canvas-background-color = "#333">
+            <entry value="100" color="black"></entry>
+            <entry value="80" color="red"></entry>
+            <entry value="50" color="blue"></entry>
+        </rodde-radial-pie-chart>
+
+        <p>Some text here.</p>
+        
+        <rodde-radial-pie-chart>
+            <entry value="100" color="black" />
+            <entry value="80" color="red"></entry>
+            <entry value="50" color="blue"></entry>
+            <entry value="70" color="orange"></entry>
+        </rodde-radial-pie-chart>
+    </body>
+</html>
