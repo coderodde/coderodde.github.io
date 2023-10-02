@@ -1005,6 +1005,16 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 						  &= mgr (1 - \cos A(t)) + \frac{1}{2} mr^2\Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x. \\
 			\end{aligned}
 			$$
+			<p>
+			Next, we attempt to solve numerically $A(t)$. To this end, let us simplify the equation a bit by setting $r = m = \phi = 1$. Since we will derivate the above equation once, $E_{total}$ will change to $0$, and, thus, we don't need to be concerned with $\theta_{init}$.
+			
+			After derivation, we will obtain
+			$$
+			\begin{aligned}
+				0 &= \frac{\mathrm{d}}{\mathrm{d}t} \Bigg[ 1 - \cos A(t) + \frac{1}{2} \Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x \Bigg] \\
+				  &= \sin A(t) \times A'(t) + A' \times A^{''} + |A'(t)|.
+			\end{aligned}
+			$$
 		</article>
 		
 		<!--
