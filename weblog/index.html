@@ -983,12 +983,36 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 			</p>
 		</article>
 		
+		<a href="#swing_function"><h3>The model for damped oscillator system</h3></a>
+		<article>
+		    <p>
+			Suppose we are given a rod of length $r > 0$ and we attach to one of the ends an object of mass $m > 0$. We attach the opposite end of the rod to a static axis of rotation. Finally, we are given a friction coefficient $\phi$: for an angle $\theta$, the lost energy is $\phi \theta$. Then, we lift a bit the object around its axis such that the angle between the vertical line and the object becomes $\theta_{init}$, and we let it go.
+			<p>
+			
+			Now, the initial total energy is
+			$$E_{total} = mgr(1 - \cos \theta_{init}$$.
+			The idea is that while the object swings/oscillates, the sum of potential and kinetic energies decrease. What we want to calculate, is the function $A(t)$ returning the angle of the object as the function of time $t$.
+			<p>
+			We must have:
+			<ul>
+				<li>$A(0) = \theta_{init},$</li>
+				<li>$\lim_{t \to \infty} A(t) = 0.$</li>
+			</ul>
+			Finally, we came up with this integral/differential equation:
+			$$
+			\begin{aligned}
+				E_{total} &= E_p(t) + E_k(t) + W(t) \\\\
+						  &= mgr (1 - \cos A(t)) + \frac{1}{2} mr^2\Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x. \\
+			\end{aligned}
+			$$
+		</article>
 		
+		<!--
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
             <script src="viewCounter.js"></script>
             <script type="text/javascript">processViewCounter();</script>
-        </p>
+        </p>-->
         </div>
     </body>
 </html>
