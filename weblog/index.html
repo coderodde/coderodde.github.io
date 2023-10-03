@@ -1006,13 +1006,21 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 			\end{aligned}
 			$$
 			<p>
-			Next, we attempt to solve numerically $A(t)$. To this end, let us simplify the equation a bit by setting $r = m = \phi = 1$ and $g = 9.81$ (the gravitational acceleration). Since we will derivate the above equation once, $E_{total}$ will change to $0$, and, thus, we don't need to be concerned with $\theta_{init}$.
-			
-			After derivation, we will obtain
+			Next, we attempt to solve $A(t)$ numerically. In order to accomplish that task, we need to derivate the above expression once:
 			$$
 			\begin{aligned}
-				0 &= \frac{\mathrm{d}}{\mathrm{d}t} \Bigg[ g - g\cos A(t) + \frac{1}{2} \Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x \Bigg] \\
-				  &= g\sin A(t) \times A'(t) + A'(t) \times A^{''}(t) + |A'(t)|.
+				0 &= \frac{\mathrm{d}}{\mathrm{d}t} \Bigg[ mgr - mgr\cos A(t) + \frac{1}{2} mr^2 \Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x \Bigg] \\
+				  &= mgr \sin A(t) A'(t) + \frac{1}{2} mr^2 A'(t) A^{''}(t) + \phi |A'(t)|.
+			\end{aligned}
+			$$
+			Next, let us rewrite the above differential equation:
+			$$
+			\frac{1}{2}mr^2 A^{''}(t) A'(t) = - mgr \sin A(t) A'(t) - \phi |A'(t)|
+			$$
+			$$
+			\begin{aligned}
+			A^{''}(t) &= - \frac{-mgr \sin A(t) A'(t) - \phi |A'(t)|}{\frac{1}{2}mr^2 A'(t)} \\
+			          &= -\frac{2gA(t)}{r} - \frac{2\phi}{mr^2} \mathrm{sgn} \, A'(t).
 			\end{aligned}
 			$$
 		</article>
