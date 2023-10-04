@@ -343,60 +343,7 @@
                 <a href="#most-cost-effective-loan-problem.8.references"><h4 id="most-cost-effective-loan-problem.8.references">8 References</h4></a>
                 <b>[1]</b> <a id="ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
-            <!--
-            <a href="#inclusion-exclusion-principle"><h3 id="inclusion-exclusion-principle">Proving inclusion-exclusion principle</h3></a>
-            
-            <article>
-                <p>It is easy to check pictorially using a Venn diagram that given two sets, $A_1$ and $A_2$, $|A_1 \cup A_2| = |A_1| + |A_2| - |A_1 \cap A_2|$. 
-                   The <b>inclusion-exclusion principle</b> generalizes the previous identity to a collection of sets $A_1, A_2, \dots, A_n$, and is given by</p>
-                \begin{aligned}
-                    \Bigg\vert \bigcup_{i = 1}^n A_i \Bigg\vert = \sum_{i = 1}^n (-1)^{i + 1} \Bigg(\sum_{1 \leq k_1 < \dots < k_i \leq n}\Bigg\vert  \bigcap_{j = 1}^i A_{k_j}  \Bigg\vert\Bigg).
-                \end{aligned}
-                <p>We will use induction to prove also any case $n > 2$. Let $B = \bigcup_{i = 1}^n A_i$, and $A_{n + 1}$ given. Using the same principle for the case of only two sets, we must have
-                \[
-                    |B \cup A_{n + 1}| = |B| + |A_{n + 1}| - |B \cap A_{n + 1}|.
-                \]
-                Next, we need a simple lemma for extending distributive law to multiple sets:
-                </p> 
-                <p>
-                    <span class="lemma_name">Lemma 1 (Distributive law for multiple sets)</span>
-                    <span class="lemma_claim">For any sets $A_1, \dots, A_n, B$, we must have
-                    $$
-                    \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B = \bigcup_{i = 1}^n (A_i \cap B).
-                    $$
-                    </span><br/>
-                    First, let us verify the base case $n = 2$:
-                    \begin{aligned}
-                    \Bigg( \bigcup_{i = 1}^2 A_i \Bigg) \cap B &= (A_1 \cup A_2) \cap B \\
-                                                               &= (A_1 \cap B) \cup (A_2 \cap B) && \text{by distributive law}\\
-                                                               &= \bigcup_{i = 1}^2 (A_i \cap B).
-                    \end{aligned}
-                    
-                    Suppose the identity holds for $A_1, \dots, A_n$. Now, 
-                    \begin{aligned}
-                    \Bigg( \bigcup_{i = 1}^{n + 1} A_i \Bigg) \cap B &= \Bigg[ \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cup A_{n + 1} \Bigg] \cap B \\
-                                                                     &= \Bigg[ \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap B \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] && \text{by distributive law}\\
-                                                                     &= \Bigg[ \bigcup_{i = 1}^n (A_i \cap B) \Bigg] \cup \Bigg[ A_{n + 1} \cap B \Bigg] && \text{by induction hypothesis} \\
-                                                                     &= \bigcup_{i = 1}^{n + 1} (A_i \cap B)
-                    \end{aligned}
-                    as desired. Now
-                    \begin{aligned}
-                        \Bigg\lvert \bigcup_{i = 1}^{n + 1} A_i \Bigg\rvert &= \Bigg\lvert \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cup A_{n + 1} \Bigg\rvert \\
-                                                                            &= \Bigg\lvert \bigcup_{i = 1}^n A_i \Bigg\rvert + \Bigg\lvert A_{n + 1} \Bigg\rvert - \Bigg\lvert \Bigg( \bigcup_{i = 1}^n A_i \Bigg) \cap A_{n + 1}\Bigg\rvert\\
-                                                                            &= \Bigg\lvert \bigcup_{i = 1}^n A_i \Bigg\rvert + \Bigg\lvert A_{n + 1} \Bigg\rvert - \Bigg\lvert \bigcup_{i = 1}^n (A_i \cap A_{n + 1}) \Bigg\rvert \quad \text{by distributive law} \\
-                         &= \sum_{i = 1}^n (-1)^{i + 1} \Bigg(\sum_{1 \leq k_1 < \dots < k_i \leq n}\Bigg\vert  \bigcap_{j = 1}^i A_{k_j}  \Bigg\vert\Bigg) \quad \text{by induction hypothesis} \\
-                         &+ \vert A_{n + 1} \vert - \sum_{i = 1}^n (-1)^{i + 1} \Bigg( \sum_{1 \leq k_1 < \dots k_i\leq n} \Bigg\vert \bigcap_{j = 1}^i (A_{k_j} \cap A_{n+1})\Bigg\vert \Bigg) \\
-                         
-                         &= \vert A_{n + 1} \vert - \sum_{i = 1}^n (-1)^{i + 1} \Bigg( \sum_{1 \leq k_1 < \dots k_i\leq n} \Bigg\vert \bigcap_{j = 1}^i (A_{k_j} \cap A_{n+1})\Bigg\vert \Bigg) \\
-                         
-                         &+ \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n | A_i \cap A_{n + 1} | - \sum_{1 \leq i < j \leq n} \lvert (A_i \cap A_{n + 1}) \cap (A_j \cap A_{n + 1}) \rvert + \dots + (-1)^n \sum_{1 \leq x_1 < x_2 < \dots x_{n - 1} \leq n} \lvert (A_{x_1} \cap A_{n + 1}) \cap \dots \cap (A_{x_{n - 1}} \cap A_{n + 1}) \rvert + (-1)^{n + 1} \Bigg\lvert \bigcap_{i = 1}^n (A_i \cap A_{n + 1}) \Bigg\rvert\Bigg] \\
-                         &= \sum_{i = 1}^n \lvert A_i \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n} \lvert A_i \cap A_j \cap A_k \rvert + \dots + (-1)^{n + 1} \lvert A_1 \cap \dots \cap A_n\rvert \\
-                         &+ \lvert A_{n + 1} \rvert - \Bigg[ \sum_{i = 1}^n \lvert A_i \cap A_{n + 1} \rvert - \sum_{1 \leq i < j \leq n} \lvert A_i \cap A_j \cap A_{n + 1} \rvert + \dots + (-1)^n \sum_{1 \leq x_1 < x_2 < \dots < x_{n - 1} \leq n} \lvert A_{x_1} \cap A_{x_2} \dots A_{x_{n - 1}} \cap A_{n + 1} \rvert + (-1)^{n + 1} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert \Bigg] \\
-                         &= \sum_{i = 1}^{n + 1} \lvert A_i \rvert - \sum_{1 \leq i < j \leq n + 1} \lvert A_i \cap A_j \rvert + \sum_{1 \leq i < j < k \leq n + 1} \lvert A_i \cap A_j \cap A_k \rvert + \dots + (-1)^{n + 2} \Bigg\lvert \bigcap_{i = 1}^{n + 1} A_i \Bigg\rvert.
-                    \end{aligned}
-                </p>
-            </article>
-            -->
+			
             <a href="#biddfs"><h2 id="biddfs">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h2></a>
             <article>
                 <p>
@@ -1031,7 +978,8 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 			</p>
 			<p>
 			The above plot was rendered via the following Python script:
-				<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+				
+<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
 
@@ -1043,7 +991,10 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 
 
 <span class="k">def</span> <span class="nf">zpp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">g</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">r</span> <span class="o">-</span> <span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+            <span class="o">-</span><span class="n">g</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">r</span> <span class="o">-</span> 
+            <span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="o">/</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)]</span>
 
 
 <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
