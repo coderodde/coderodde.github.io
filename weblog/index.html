@@ -1010,21 +1010,136 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 			$$
 			\begin{aligned}
 				0 &= \frac{\mathrm{d}}{\mathrm{d}t} \Bigg[ mgr - mgr\cos A(t) + \frac{1}{2} mr^2 \Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x \Bigg] \\
-				  &= mgr \sin A(t) A'(t) + \frac{1}{2} mr^2 A'(t) A^{''}(t) + \phi |A'(t)|.
+				  &= mgr \sin A(t) A'(t) + mr^2 A'(t) A^{''}(t) + \phi |A'(t)|.
 			\end{aligned}
 			$$
 			Next, let us rewrite the above differential equation:
 			$$
-			\frac{1}{2}mr^2 A^{''}(t) A'(t) = - mgr \sin A(t) A'(t) - \phi |A'(t)|
+			mr^2 A^{''}(t) A'(t) = - mgr \sin A(t) A'(t) - \phi |A'(t)|
 			$$	
 			$$
 			\begin{aligned}
-			A^{''}(t) &= - \frac{-mgr \sin A(t) A'(t) - \phi |A'(t)|}{\frac{1}{2}mr^2 A'(t)} \\
-			          &= -\frac{2g \sin A(t)}{r} - \frac{2\phi}{mr^2} \mathrm{sgn} \, A'(t).
+			A^{''}(t) &= - \frac{-mgr \sin A(t) A'(t) - \phi |A'(t)|}{mr^2 A'(t)} \\
+			          &= -\frac{g\sin A(t)}{r} - \frac{\phi}{mr^2} \mathrm{sgn} \, A'(t).
 			\end{aligned}
 			$$
 			<p align="left">If we set $m = 2, r = 1, g = 9.81$ and $\phi = 1$, we get the following plot:
+			<p align="center">
 			<img src="AngleODE.png"></img>
+			</p>
+			<p>
+			The above plot was rendered via the following Python script:
+				<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
+
+
+<span class="n">m</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+
+<span class="k">def</span> <span class="nf">zpp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">g</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">r</span> <span class="o">-</span> <span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)]</span>
+
+
+<span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1001</span><span class="p">)</span>
+<span class="n">angle</span><span class="p">,</span> <span class="n">angular_v</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">zpp</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="s2">"orange"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"A(t)"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">angular_v</span><span class="p">,</span> <span class="s2">"blue"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"A'(t)"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"best"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"t"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>  
+</pre></div>
+<style id="css-style">pre { line-height: 125%; }
+td.linenos .normal { color: #3c4354; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: #3c4354; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #3c4354; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.demo-highlight .hll { background-color: #6e7681 }
+.demo-highlight { background: #1d2331; color: #d4d2c8 }
+.demo-highlight .c { color: #7e8aa1 } /* Comment */
+.demo-highlight .err { color: #f88f7f } /* Error */
+.demo-highlight .esc { color: #d4d2c8 } /* Escape */
+.demo-highlight .g { color: #d4d2c8 } /* Generic */
+.demo-highlight .k { color: #FFAD66 } /* Keyword */
+.demo-highlight .l { color: #D5FF80 } /* Literal */
+.demo-highlight .n { color: #d4d2c8 } /* Name */
+.demo-highlight .o { color: #FFAD66 } /* Operator */
+.demo-highlight .x { color: #d4d2c8 } /* Other */
+.demo-highlight .p { color: #d4d2c8 } /* Punctuation */
+.demo-highlight .ch { color: #f88f7f; font-style: italic } /* Comment.Hashbang */
+.demo-highlight .cm { color: #7e8aa1 } /* Comment.Multiline */
+.demo-highlight .cp { color: #FFAD66; font-weight: bold } /* Comment.Preproc */
+.demo-highlight .cpf { color: #7e8aa1 } /* Comment.PreprocFile */
+.demo-highlight .c1 { color: #7e8aa1 } /* Comment.Single */
+.demo-highlight .cs { color: #7e8aa1; font-style: italic } /* Comment.Special */
+.demo-highlight .gd { color: #f88f7f; background-color: #3d1e20 } /* Generic.Deleted */
+.demo-highlight .ge { color: #d4d2c8; font-style: italic } /* Generic.Emph */
+.demo-highlight .ges { color: #d4d2c8 } /* Generic.EmphStrong */
+.demo-highlight .gr { color: #f88f7f } /* Generic.Error */
+.demo-highlight .gh { color: #d4d2c8 } /* Generic.Heading */
+.demo-highlight .gi { color: #6ad4af; background-color: #19362c } /* Generic.Inserted */
+.demo-highlight .go { color: #7e8aa1 } /* Generic.Output */
+.demo-highlight .gp { color: #d4d2c8 } /* Generic.Prompt */
+.demo-highlight .gs { color: #d4d2c8; font-weight: bold } /* Generic.Strong */
+.demo-highlight .gu { color: #d4d2c8 } /* Generic.Subheading */
+.demo-highlight .gt { color: #f88f7f } /* Generic.Traceback */
+.demo-highlight .kc { color: #FFAD66 } /* Keyword.Constant */
+.demo-highlight .kd { color: #FFAD66 } /* Keyword.Declaration */
+.demo-highlight .kn { color: #FFAD66 } /* Keyword.Namespace */
+.demo-highlight .kp { color: #FFAD66 } /* Keyword.Pseudo */
+.demo-highlight .kr { color: #FFAD66 } /* Keyword.Reserved */
+.demo-highlight .kt { color: #73D0FF } /* Keyword.Type */
+.demo-highlight .ld { color: #D5FF80 } /* Literal.Date */
+.demo-highlight .m { color: #DFBFFF } /* Literal.Number */
+.demo-highlight .s { color: #D5FF80 } /* Literal.String */
+.demo-highlight .na { color: #FFD173 } /* Name.Attribute */
+.demo-highlight .nb { color: #FFD173 } /* Name.Builtin */
+.demo-highlight .nc { color: #73D0FF } /* Name.Class */
+.demo-highlight .no { color: #FFD173 } /* Name.Constant */
+.demo-highlight .nd { color: #7e8aa1; font-weight: bold; font-style: italic } /* Name.Decorator */
+.demo-highlight .ni { color: #95E6CB } /* Name.Entity */
+.demo-highlight .ne { color: #73D0FF } /* Name.Exception */
+.demo-highlight .nf { color: #FFD173 } /* Name.Function */
+.demo-highlight .nl { color: #d4d2c8 } /* Name.Label */
+.demo-highlight .nn { color: #d4d2c8 } /* Name.Namespace */
+.demo-highlight .nx { color: #d4d2c8 } /* Name.Other */
+.demo-highlight .py { color: #FFD173 } /* Name.Property */
+.demo-highlight .nt { color: #5CCFE6 } /* Name.Tag */
+.demo-highlight .nv { color: #d4d2c8 } /* Name.Variable */
+.demo-highlight .ow { color: #FFAD66 } /* Operator.Word */
+.demo-highlight .pm { color: #d4d2c8 } /* Punctuation.Marker */
+.demo-highlight .w { color: #d4d2c8 } /* Text.Whitespace */
+.demo-highlight .mb { color: #DFBFFF } /* Literal.Number.Bin */
+.demo-highlight .mf { color: #DFBFFF } /* Literal.Number.Float */
+.demo-highlight .mh { color: #DFBFFF } /* Literal.Number.Hex */
+.demo-highlight .mi { color: #DFBFFF } /* Literal.Number.Integer */
+.demo-highlight .mo { color: #DFBFFF } /* Literal.Number.Oct */
+.demo-highlight .sa { color: #F29E74 } /* Literal.String.Affix */
+.demo-highlight .sb { color: #D5FF80 } /* Literal.String.Backtick */
+.demo-highlight .sc { color: #D5FF80 } /* Literal.String.Char */
+.demo-highlight .dl { color: #D5FF80 } /* Literal.String.Delimiter */
+.demo-highlight .sd { color: #7e8aa1 } /* Literal.String.Doc */
+.demo-highlight .s2 { color: #D5FF80 } /* Literal.String.Double */
+.demo-highlight .se { color: #95E6CB } /* Literal.String.Escape */
+.demo-highlight .sh { color: #D5FF80 } /* Literal.String.Heredoc */
+.demo-highlight .si { color: #95E6CB } /* Literal.String.Interpol */
+.demo-highlight .sx { color: #95E6CB } /* Literal.String.Other */
+.demo-highlight .sr { color: #95E6CB } /* Literal.String.Regex */
+.demo-highlight .s1 { color: #D5FF80 } /* Literal.String.Single */
+.demo-highlight .ss { color: #DFBFFF } /* Literal.String.Symbol */
+.demo-highlight .bp { color: #5CCFE6 } /* Name.Builtin.Pseudo */
+.demo-highlight .fm { color: #FFD173 } /* Name.Function.Magic */
+.demo-highlight .vc { color: #d4d2c8 } /* Name.Variable.Class */
+.demo-highlight .vg { color: #d4d2c8 } /* Name.Variable.Global */
+.demo-highlight .vi { color: #d4d2c8 } /* Name.Variable.Instance */
+.demo-highlight .vm { color: #d4d2c8 } /* Name.Variable.Magic */
+.demo-highlight .il { color: #DFBFFF } /* Literal.Number.Integer.Long */</style>
 		</article>
 		
 		<!--
