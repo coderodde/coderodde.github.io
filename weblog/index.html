@@ -343,7 +343,7 @@
                 <a href="#most-cost-effective-loan-problem.8.references"><h4 id="most-cost-effective-loan-problem.8.references">8 References</h4></a>
                 <b>[1]</b> <a id="ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
-			
+            
             <a href="#biddfs"><h2 id="biddfs">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h2></a>
             <article>
                 <p>
@@ -564,8 +564,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
                 \]
                 </p>
             </article>
-			
-			
+            
+            
             <a href="#rotating_parabola" id="rotating_parabola"><h2>Rotating a parabola</h2></a>
             <article>
                 <p>
@@ -664,8 +664,8 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
 
         <a href="#gtif" id="gtif"><h2>Generating trigonometric identities from $f_q(x) = \sin^qx$</h2></a>
         <article>   
-	<p>
-	In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \in \mathbb{R} \setminus
+    <p>
+    In this post, we will take a look, what identities may be generated from a simple equation $f_q(x) = \sin^q x$, where $q \in \mathbb{R} \setminus
     \{ 0 \}$. The idea is to, first, define the inverse function $f_q^{-1}$ and derivate it via direct derivation and via using the known identity
 $$
     \frac{d}{dx} f_q^{-1}(x) \overset{(1)}{=} \frac{1}{f'_q(f_q^{-1}(x))},
@@ -681,7 +681,7 @@ after which we compare the two results and cancel the common factors, possibly, 
                  x &= \arcsin (y^{1/q}) \\
             \end{aligned}
         \]
-	Next, for convenience, we exchange the variables in the most recent identity:
+    Next, for convenience, we exchange the variables in the most recent identity:
         \[
             f_q^{-1}(x) = \arcsin (x^{1/q}).
         \]
@@ -832,17 +832,17 @@ after which we compare the two results and cancel the common factors, possibly, 
 
                 When $b \rightarrow \infty$, $\vec{F} \rightarrow (0, -2m \rho / d).$ Clearly, $\vec{F} \rightarrow (0, -\infty)$ as $d \rightarrow 0+$, and $\vec{F} \rightarrow (0, \infty)$ as $d \rightarrow 0-$.
         </article>
-		
-	<a href="#rotenergy" id="rotenergy"><h2>Calculating rotational energy of a disk via integration</h2></a>
-	<article>
-		<p>
-			Let the disk have radius $R > 0$, mass $m > 0$, angular velocity of rotation $\omega > 0$, and the constant density $\rho = m / (\pi R^2)$. Now, consider the area element $\mathrm{d}A = r \, \mathrm{d}r \, \mathrm{d}\alpha$. The mass of that area element is given by 
-			$$\mathrm{d}m = \rho \, \mathrm{d}A = \frac{mr \, \mathrm{d}r \, \mathrm{d}\alpha}{\pi R^2}.$$ 
-			Next, the energy of that area is given by
-			$$\mathrm{d}E = \frac{1}{2} \mathrm{d}mv^2 = \frac{1}{2} \mathrm{d}m(r\omega)^2 = \frac{mr^3 \omega^2  \, \mathrm{d}r \, \mathrm{d}\alpha}{2\pi R^2}.$$
+        
+    <a href="#rotenergy" id="rotenergy"><h2>Calculating rotational energy of a disk via integration</h2></a>
+    <article>
+        <p>
+            Let the disk have radius $R > 0$, mass $m > 0$, angular velocity of rotation $\omega > 0$, and the constant density $\rho = m / (\pi R^2)$. Now, consider the area element $\mathrm{d}A = r \, \mathrm{d}r \, \mathrm{d}\alpha$. The mass of that area element is given by 
+            $$\mathrm{d}m = \rho \, \mathrm{d}A = \frac{mr \, \mathrm{d}r \, \mathrm{d}\alpha}{\pi R^2}.$$ 
+            Next, the energy of that area is given by
+            $$\mathrm{d}E = \frac{1}{2} \mathrm{d}mv^2 = \frac{1}{2} \mathrm{d}m(r\omega)^2 = \frac{mr^3 \omega^2  \, \mathrm{d}r \, \mathrm{d}\alpha}{2\pi R^2}.$$
 
-			Finally, the rotational energy is
-			\begin{aligned}
+            Finally, the rotational energy is
+            \begin{aligned}
 E_{rotational} &= \int_0^{2\pi} \int_0^R \mathrm{d}E \\
                &= \int_0^{2\pi} \int_0^R \frac{mr^3 \omega^2 }{2\pi R^2} \, \mathrm{d}r \, \mathrm{d}\alpha\\
                &= \frac{m\omega^2}{2\pi R^2} \int_0^{2\pi} \int_0^R r^3 \, \mathrm{d}r \, \mathrm{d}\alpha \\
@@ -850,30 +850,30 @@ E_{rotational} &= \int_0^{2\pi} \int_0^R \mathrm{d}E \\
                &= \frac{m\omega^2R^2}{8\pi} \int_0^{2\pi}\mathrm{d}\alpha \\
                &= \frac{m\omega^2R^2}{8\pi} \Bigg[\alpha\Bigg]_{\alpha = 0}^{\alpha = 2\pi} \\
                &= \frac{1}{4}m\omega^2R^2 \\
-			   &= \frac{1}{2}I\omega^2.
-			\end{aligned}
-		</article>
-		
-		<a href="#riemann_sums" id="riemann_sums"><h2>Riemann sums for proving an integral identity</h2></a>
-		<article>
-			<p> 
-			In this post, we wish to show that $$\int_a^b \int_c^d f(x)g(y) \, \mathrm{d}y \, \mathrm{d}x = \Bigg( \int_a^b f(x) \, \mathrm{d}x \Bigg) \Bigg( \int_c^d g(y) \, \mathrm{d}y \Bigg).$$ 
-			To this end, it follows straight from the linearity of integrals. However, if we are not convinced, we can prove it via Riemann sums:
-			\begin{aligned}
-				\int_a^b \int_c^d f(x)g(y) \, \mathrm{d}y \, \mathrm{d}x &= \lim_{\Delta x \to 0+} \lim_{\Delta y \to 0+} \sum_{i = 0}^{\Big\lceil \frac{b - a}{\Delta x} \Big\rceil} \sum_{j = 0}^{\Big\lceil \frac{d - c}{\Delta y} \Big\rceil} f(a + i \Delta x) g(c + j \Delta y) \Delta x \Delta y \\
-					                                                     &= \Bigg( \lim_{\Delta x \to 0+} \sum_{i = 0}^{\Big\lceil \frac{b - a}{\Delta x} \Big\rceil}  f(a + i \Delta x) \Delta x \Bigg) \Bigg( \lim_{\Delta y \to 0+} \sum_{j = 0}^{\Big\lceil \frac{d - c}{\Delta y} \Big\rceil} g(c + j \Delta y) \Delta y \Bigg) \\
-																		 &= \Bigg( \int_a^b f(x) \, \mathrm{d}x \Bigg) \Bigg( \int_c^d g(y) \, \mathrm{d}y \Bigg),
-			\end{aligned}
-			which concludes the proof.
-		</article>
-		
-		<a href="#swing_duration" id="swing_duration"><h2>Duration of a swing</h2></a>
-		<article>
-			<p>
-			In this post, we will calculate the swing duration of an object fastened to a pole above it. We start from the following figure:
-			<p style="text-align: center;"><img src="SwingingObject.png" style="overflow: hidden;"/></p>
-			<p style="text-align: justify;">
-			
+               &= \frac{1}{2}I\omega^2.
+            \end{aligned}
+        </article>
+        
+        <a href="#riemann_sums" id="riemann_sums"><h2>Riemann sums for proving an integral identity</h2></a>
+        <article>
+            <p> 
+            In this post, we wish to show that $$\int_a^b \int_c^d f(x)g(y) \, \mathrm{d}y \, \mathrm{d}x = \Bigg( \int_a^b f(x) \, \mathrm{d}x \Bigg) \Bigg( \int_c^d g(y) \, \mathrm{d}y \Bigg).$$ 
+            To this end, it follows straight from the linearity of integrals. However, if we are not convinced, we can prove it via Riemann sums:
+            \begin{aligned}
+                \int_a^b \int_c^d f(x)g(y) \, \mathrm{d}y \, \mathrm{d}x &= \lim_{\Delta x \to 0+} \lim_{\Delta y \to 0+} \sum_{i = 0}^{\Big\lceil \frac{b - a}{\Delta x} \Big\rceil} \sum_{j = 0}^{\Big\lceil \frac{d - c}{\Delta y} \Big\rceil} f(a + i \Delta x) g(c + j \Delta y) \Delta x \Delta y \\
+                                                                         &= \Bigg( \lim_{\Delta x \to 0+} \sum_{i = 0}^{\Big\lceil \frac{b - a}{\Delta x} \Big\rceil}  f(a + i \Delta x) \Delta x \Bigg) \Bigg( \lim_{\Delta y \to 0+} \sum_{j = 0}^{\Big\lceil \frac{d - c}{\Delta y} \Big\rceil} g(c + j \Delta y) \Delta y \Bigg) \\
+                                                                         &= \Bigg( \int_a^b f(x) \, \mathrm{d}x \Bigg) \Bigg( \int_c^d g(y) \, \mathrm{d}y \Bigg),
+            \end{aligned}
+            which concludes the proof.
+        </article>
+        
+        <a href="#swing_duration" id="swing_duration"><h2>Duration of a swing</h2></a>
+        <article>
+            <p>
+            In this post, we will calculate the swing duration of an object fastened to a pole above it. We start from the following figure:
+            <p style="text-align: center;"><img src="SwingingObject.png" style="overflow: hidden;"/></p>
+            <p style="text-align: justify;">
+            
 Let $\theta_{\max}$ be the maximum angle. Let the radius be given: $r > 0$. 
 
 Now we know that the total energy equals the maximum potential energy, which is attained when the angle $\theta$ is either $-\theta_{\max}$ or $\theta_{\max}$. Next, the potential energy at the angle of $\theta \in (-\theta_\max, \theta_\max)$ is
@@ -926,59 +926,59 @@ T &= \int_{-a}^a \frac{\sqrt{r}\mathrm{d}\theta}{\sqrt{2g(\cos \theta - \cos \th
 $$
 where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following WolframAlpha search results:
 <ul>
-	<li>(1) <a href="https://www.wolframalpha.com/input?i=int+1%2Fsqrt%28cos+x+-+cos+a%29">Equation 1,</a></li>
-	<li>(2) <a href="https://www.wolframalpha.com/input?i=2+*+EllipticF%5Bx%2F2%2C+csc%5E2%28x%2F2%29%5D+%2F+sqrt%281+-+cos+x%29+-+2+*+EllipticF%5B-x%2F2%2C+csc%5E2%28x%2F2%29%5D+%2F+sqrt%281+-+cos+x%29">Equation 2.</a></li>
+    <li>(1) <a href="https://www.wolframalpha.com/input?i=int+1%2Fsqrt%28cos+x+-+cos+a%29">Equation 1,</a></li>
+    <li>(2) <a href="https://www.wolframalpha.com/input?i=2+*+EllipticF%5Bx%2F2%2C+csc%5E2%28x%2F2%29%5D+%2F+sqrt%281+-+cos+x%29+-+2+*+EllipticF%5B-x%2F2%2C+csc%5E2%28x%2F2%29%5D+%2F+sqrt%281+-+cos+x%29">Equation 2.</a></li>
 </ul>
-			</p>
-		</article>
-		
-		<a href="#angle_function" id="angle_function"><h2>A swinging oscillator system</h2></a>
-		<article>
-		    <p>
-			Suppose we are given a rod of length $r > 0$ and we attach to one of the ends an object of mass $m > 0$. We attach the opposite end of the rod to a static axis of rotation. Finally, we are given a friction coefficient $\phi$: for an angle $\theta$, the lost energy is $\phi \theta$. Then, we lift a bit the object around its axis such that the angle between the vertical line and the object becomes $\theta_{init}$, and we let it go.
-			<p>
-			
-			Now, the initial total energy is
-			$$E_{total} = mgr(1 - \cos \theta_{init})$$.
-			The idea is that while the object swings/oscillates, the sum of potential and kinetic energies decrease. What we want to calculate, is the function $A(t)$ returning the angle of the object as the function of time $t$.
-			<p>
-			We must have:
-			<ul>
-				<li>$A(0) = \theta_{init},$</li>
-				<li>$\lim_{t \to \infty} A(t) = 0.$</li>
-			</ul>
-			Finally, we came up with this integral/differential equation:
-			$$
-			\begin{aligned}
-				E_{total} &= E_p(t) + E_k(t) + W(t) \\\\
-						  &= mgr (1 - \cos A(t)) + \frac{1}{2} mr^2\Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x. \\
-			\end{aligned}
-			$$
-			<p>
-			Next, we attempt to solve $A(t)$ numerically. In order to accomplish that task, we need to derivate the above expression once:
-			$$
-			\begin{aligned}
-				0 &= \frac{\mathrm{d}}{\mathrm{d}t} \Bigg[ mgr - mgr\cos A(t) + \frac{1}{2} mr^2 \Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x \Bigg] \\
-				  &= mgr \sin A(t) A'(t) + mr^2 A'(t) A^{''}(t) + \phi |A'(t)|.
-			\end{aligned}
-			$$
-			Next, let us rewrite the above differential equation:
-			$$
-			mr^2 A^{''}(t) A'(t) = - mgr \sin A(t) A'(t) - \phi |A'(t)|
-			$$	
-			$$
-			\begin{aligned}
-			A^{''}(t) &= - \frac{-mgr \sin A(t) A'(t) - \phi |A'(t)|}{mr^2 A'(t)} \\
-			          &= -\frac{g\sin A(t)}{r} - \frac{\phi}{mr^2} \mathrm{sgn} \, A'(t).
-			\end{aligned}
-			$$
-			<p align="left">If we set $m = 2, r = 1, g = 9.81$ and $\phi = 1$, we get the following plot:
-			<p align="center">
-			<img src="AngleODE.png"></img>
-			</p>
-			<p>
-			The above plot was rendered via the following Python script:
-				
+            </p>
+        </article>
+        
+        <a href="#angle_function" id="angle_function"><h2>A swinging oscillator system</h2></a>
+        <article>
+            <p>
+            Suppose we are given a rod of length $r > 0$ and we attach to one of the ends an object of mass $m > 0$. We attach the opposite end of the rod to a static axis of rotation. Finally, we are given a friction coefficient $\phi$: for an angle $\theta$, the lost energy is $\phi \theta$. Then, we lift a bit the object around its axis such that the angle between the vertical line and the object becomes $\theta_{init}$, and we let it go.
+            <p>
+            
+            Now, the initial total energy is
+            $$E_{total} = mgr(1 - \cos \theta_{init})$$.
+            The idea is that while the object swings/oscillates, the sum of potential and kinetic energies decrease. What we want to calculate, is the function $A(t)$ returning the angle of the object as the function of time $t$.
+            <p>
+            We must have:
+            <ul>
+                <li>$A(0) = \theta_{init},$</li>
+                <li>$\lim_{t \to \infty} A(t) = 0.$</li>
+            </ul>
+            Finally, we came up with this integral/differential equation:
+            $$
+            \begin{aligned}
+                E_{total} &= E_p(t) + E_k(t) + W(t) \\\\
+                          &= mgr (1 - \cos A(t)) + \frac{1}{2} mr^2\Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x. \\
+            \end{aligned}
+            $$
+            <p>
+            Next, we attempt to solve $A(t)$ numerically. In order to accomplish that task, we need to derivate the above expression once:
+            $$
+            \begin{aligned}
+                0 &= \frac{\mathrm{d}}{\mathrm{d}t} \Bigg[ mgr - mgr\cos A(t) + \frac{1}{2} mr^2 \Bigg( \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg)^2 + \phi \int_0^t \Bigg| \frac{\mathrm{d}A(x)}{\mathrm{d}x} \Bigg| \; \mathrm{d}x \Bigg] \\
+                  &= mgr \sin A(t) \frac{\mathrm{d}A(t)}{\mathrm{d}t} + mr^2 \frac{\mathrm{d}A(t)}{\mathrm{d}t} \frac{\mathrm{d}^2 A(t)}{\mathrm{d}t^2} + \phi \Bigg| \frac{\mathrm{d}A(t)}{\mathrm{d}t} \Bigg|.
+            \end{aligned}
+            $$
+            Next, let us rewrite the above differential equation:
+            $$
+            mr^2 A^{''}(t) A'(t) = - mgr \sin A(t) A'(t) - \phi |A'(t)|
+            $$  
+            $$
+            \begin{aligned}
+            A^{''}(t) &= - \frac{-mgr \sin A(t) A'(t) - \phi |A'(t)|}{mr^2 A'(t)} \\
+                      &= -\frac{g\sin A(t)}{r} - \frac{\phi}{mr^2} \mathrm{sgn} \, A'(t).
+            \end{aligned}
+            $$
+            <p align="left">If we set $m = 2, r = 1, g = 9.81$ and $\phi = 1$, we get the following plot:
+            <p align="center">
+            <img src="AngleODE.png"></img>
+            </p>
+            <p>
+            The above plot was rendered via the following Python script:
+                
 <div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
@@ -1093,17 +1093,21 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
 .demo-highlight .vi { color: #d4d2c8 } /* Name.Variable.Instance */
 .demo-highlight .vm { color: #d4d2c8 } /* Name.Variable.Magic */
 .demo-highlight .il { color: #DFBFFF } /* Literal.Number.Integer.Long */</style>
-		</article>
-		
-		<!--
+        </article>
+        
+        <!--
         <p id="counter_paragraph">
             <span id="view_count_span"></span>
             <script src="viewCounter.js"></script>
             <script type="text/javascript">processViewCounter();</script>
         </p>-->
-		
-		<div id="sfc5zf72w63g8137x9yqx4xgbtcjzsrya8f"></div><script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=5zf72w63g8137x9yqx4xgbtcjzsrya8f&down=async" async></script><noscript><a href="https://www.freecounterstat.com" title="website click counter"><img src="https://counter6.optistats.ovh/private/freecounterstat.php?c=5zf72w63g8137x9yqx4xgbtcjzsrya8f" border="0" title="website click counter" alt="website click counter"></a></noscript>
-        </div>
+        
+        <div id="sfc5zf72w63g8137x9yqx4xgbtcjzsrya8f"></div>
+        <script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=5zf72w63g8137x9yqx4xgbtcjzsrya8f&down=async" async></script>
+         <noscript>
+            <a href="https://www.freecounterstat.com" title="website click counter">
+            <img src="https://counter6.optistats.ovh/private/freecounterstat.php?c=5zf72w63g8137x9yqx4xgbtcjzsrya8f" border="0" title="website click counter" alt="website click counter"></a>
+        </noscript>
     </body>
 </html>
     
