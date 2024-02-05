@@ -542,30 +542,6 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
             
             </article>
             
-            <a href="#on_radial_area" id="on_radial_area"><h2 id="on_radial_area">Computing radial sets with overlapping areas</h2></a>
-            <article>
-                <p align="center">May 20, 2019</p>
-                
-                <p  >
-                    In this post, we shall compute the radial sets without overlapping areas in polar coordinates.
-                    A function $r = f(\theta)$ is said to be <i>monotonically reducing</i> on the interval $I = [a, b]$, if
-                    we have $f(\theta) \geq f(\theta + 2\pi)$ for any $\theta \in [a, b - 2\pi]$. Now, the radial set $A_f(a, b) = \{ (r \cos \theta, r \sin \theta) \colon r \in [0, f(\theta)], \theta \in [a, b] \}$ is calculated as
-                    \[
-                        A = \frac{1}{2} \int_a^b f^2(\theta) \, d\theta,
-                    \]
-                    if $b \leq a + 2\pi$. In case $b > a + 2\pi$, some of the area will overlap. We can, however, deal with that issue:
-                    \begin{equation}
-                    |A_f(a,b)| = \frac{1}{2} \Bigg[ \int_a^b f^2(\theta)\,d\theta - \int_{a + 2\pi}^b f^2(\theta)\, d\theta \Bigg].
-                    \end{equation}
-                </p>
-                <p>Now, suppose $f(\theta) \leq f(\theta + 2\pi)$. We must have
-                \[
-                |A_f(a, b)| = \frac{1}{2} \Bigg[ \int_a^b f^2(\theta) \,d\theta - \int_a^{b - 2\pi} f^2(\theta) \, d\theta \Bigg].
-                \]
-                </p>
-            </article>
-            
-            
             <a href="#rotating_parabola" id="rotating_parabola"><h2>Rotating a parabola</h2></a>
             <article>
                 <p>
@@ -630,37 +606,6 @@ BreadthFirstSearch in 472 milliseconds. Path length: 5
                 \end{align}
                 </p>
             </article>
-        
-        <a href="#rotating_parabola" id="rotating_parabola"><h2>Deriving the polynomial derivatives</h2></a>
-        <article>
-            <p>Let $f(x) = x^n$, where $n$ is a non-negative integer Now we have.</p>
-            <p>
-\begin{aligned}
-\frac{\mathrm{d}}{\mathrm{d}x}f(x)
-    &= \lim_{h \to 0} \frac{f(x + h) - f(x)}{h} \\
-    &= \lim_{h \to 0} \frac{(x + h)^n - x^n}{h}\\
-    &= \lim_{h \to 0} \frac{\sum_{k = 0}^n \binom{n}{k} x^{n - k}h^k - x^n}{h} \\
-    &= \lim_{h \to 0} \frac{x^n + nx^{n - 1}h + \sum_{k = 2}^n \binom{n}{k} x^{n - k}h^k - x^n}{h} \\
-    &= \lim_{h \to 0} \big[ nx^{n - 1} \big] + \lim_{h \to 0}\Bigg[ \frac{h^2 \sum_{k=2}^n \binom{n}{k} x^{n - k}h^{k - 2} }{h} \Bigg] \\
-    &= nx^{n - 1} + \lim_{h \to 0} \Bigg[ h \sum_{k = 2}^n \binom{n}{k}x^{n - k}h^{k - 2} \Bigg] \\
-    &= nx^{n - 1}
-    \end{aligned}
-            </p>
-<p>Next, keeping $n$ in the set of positive integers, suppose $f(x) = x^{-n}$. Now we have</p>
-<p>
-\begin{aligned}
-\frac{\mathrm{d}}{\mathrm{d}x}f(x) &= \lim_{h \to 0} \frac{\frac{1}{(x + h)^n} - \frac{1}{x^n}} 
-{h} \\
-    &= \lim_{h \to 0} \frac{1}{h} \frac{x^n - (x + h)^n}{x^n (x + h)^n } \\
-    &= \lim_{h \to 0} \frac{1}{h} \frac{x^n - \sum_{k = 0}^n \binom{n}{k} x^{n - k}h^k}{x^n (x + h)^n} \\
-    &= \lim_{h \to 0} \frac{x^n - x^n - nx^{n - 1}h - \sum_{k = 2}^n \binom{n}{k} x^{n - k}h^k}{hx^n(x + h)^n} \\
-    &= \lim_{h \to 0} \Bigg[ \frac{-nx^{n - 1}h}{hx^n (x + h)^n} - \frac{h^2\sum_{k = 2}^n \binom{n}{k} x^{n - k}h^{k - 2}}{hx^n (x + h)^n} \Bigg] \\
-    &= \lim_{h \to 0} \frac{-nx^{n - 1}}{x^n (x + h)^n} - \lim_{h \to 0} h \frac{\sum_{k = 2}^n \binom{n}{k} x^{n - k}h^{k - 2}}{x^n(x + h)^n} \\
-    &= \frac{\lim_{h \to 0} -nx^{n - 1}}{\lim_{h \to 0} x^n (x + h)^n} \\
-    &= \frac{-nx^{n - 1}}{ x^{2n} } \\
-    &= -nx^{-n - 1}.
-\end{aligned}</p>
-        </article>
 
         <a href="#gtif" id="gtif"><h2>Generating trigonometric identities from $f_q(x) = \sin^qx$</h2></a>
         <article>   
