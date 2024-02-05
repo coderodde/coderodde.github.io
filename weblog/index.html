@@ -972,18 +972,23 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
                       &= -\frac{g\sin A(t)}{r} - \frac{\phi}{mr^2} \mathrm{sgn} \, A'(t).
             \end{aligned}
             $$
-            <p align="left">If we set $m = 2, r = 1, g = 9.81$ and $\phi = 1$, we get the following plot:
+			At this point, we need to notice that $\theta_{init}$ is lost due to the differentiation. We can however attempt a following hack: set instead of $A(t)$ 
+			$$
+			\tilde{A}(t) = \frac{\theta_{init}A(t)}{A(0)}.
+			$$
+			
+            <p align="left">If we set $\theta = 1, m = 2, r = 1, g = 9.81$ and $\phi = 1$, we get the following plot:
             <p align="center">
             <img src="AngleODE.png"></img>
             </p>
             <p>
-            The above plot was rendered via the following Python script:
-                
-<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+            
+			The above plot was rendered via the following Python script:<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
 
 
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">m</span> <span class="o">=</span> <span class="mf">2.0</span>
 <span class="n">r</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>
@@ -999,10 +1004,16 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
 
 <span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1001</span><span class="p">)</span>
+
+<span class="c1"># Solve the differential equation:</span>
 <span class="n">angle</span><span class="p">,</span> <span class="n">angular_v</span> <span class="o">=</span> <span class="n">odeint</span><span class="p">(</span><span class="n">zpp</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="s2">"orange"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"A(t)"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">angular_v</span><span class="p">,</span> <span class="s2">"blue"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"A'(t)"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Normalize:</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">angle</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="n">angle</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">angular_v</span> <span class="o">=</span> <span class="n">angular_v</span> <span class="o">*</span> <span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="n">angle</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="s2">"orange"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Ã(t)"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">angular_v</span><span class="p">,</span> <span class="s2">"red"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Ã'(t)"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"best"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"t"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
@@ -1092,7 +1103,9 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
 .demo-highlight .vg { color: #d4d2c8 } /* Name.Variable.Global */
 .demo-highlight .vi { color: #d4d2c8 } /* Name.Variable.Instance */
 .demo-highlight .vm { color: #d4d2c8 } /* Name.Variable.Magic */
-.demo-highlight .il { color: #DFBFFF } /* Literal.Number.Integer.Long */</style>
+.demo-highlight .il { color: #DFBFFF } /* Literal.Number.Integer.Long */
+</style>
+</style>
         </article>
         
         <div id="sfc5zf72w63g8137x9yqx4xgbtcjzsrya8f"></div>
