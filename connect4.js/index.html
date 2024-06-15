@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>rodde's Connect Four</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' type='text/css' href='css/connect4.css' />
+        <script src='js/connect4ai.js'></script>
+        <script src="js/connect4canvas.js"></script>
+    </head>
+    <body>
+        <canvas id='canvas'></canvas>
+        
+        <script>
+            function getViewportWidth() {
+                return document.documentElement.clientWidth;
+            };
+            
+            function getViewportHeight() {
+                return document.documentElement.clientHeight;
+            }
+            
+            const canvasObject = 
+                    new ConnectFourCanvas(
+                        document.getElementById('canvas'),
+                        getViewportWidth(), 
+                        getViewportHeight() - 20);
+                        
+            const board = new ConnectFourBoard();
+                        
+            canvasObject.setBoard(board);
+            canvasObject.render();
+            
+            window.onresize = (event) => {
+                const windowWidth  = window.innerWidth - 30;
+                const windowHeight = window.innerHeight;
+                
+                canvasObject.setSize(windowWidth, windowHeight);
+                canvasObject.render();
+            };
+        </script>
+    </body>
+</html>

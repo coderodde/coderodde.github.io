@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AI vs. AI playing Connect 4</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' type="text/css" href='css/connect4.css' />
+    </head>
+    <body>
+        <div id='output-text-div'></div>
+        <script src='js/connect4ai.js'></script>
+        <script>
+
+            let text = "";
+            const output = document.getElementById('output-text-div');
+            const heuristicFunction = new ConnectFourHeuristicFunction();
+            const engine = new ConnectFourSearchEngine(heuristicFunction);
+            const depth = 8;
+
+            let state = new ConnectFourBoard();
+            text += state.toString() + "<br/>";
+
+            function millis() {
+                return new Date().valueOf();
+            }
+
+            let totalDurationX = 0;
+            let totalDurationO = 0;
+
+            while (true) {
+                text += "X's turn:<br/>";
+
+                let ta = millis();
+                state = engine.search(state, depth, X);
+                let tb = millis();
+
+                totalDurationX += tb - ta;
+
+                text += state.toString();
+                text += "<br/>";
+                text += "X AI duration: " + (tb - ta) + " milliseconds.<br/>";
+                output.innerHTML = text;
+                
+                if (state.isTie()) {
+                    text += "RESULT: It's a tie.<br/>";
+                    break;
+                }
+
+                if (state.isWinningFor(X)) {
+                    text += "RESULT: X won.<br/>";
+                    break;
+                }
+
+                text += "O's turn:<br/>";
+                output.innerHTML = text;
+
+                ta = millis();
+                state = engine.search(state, depth, O);
+                tb = millis();
+                output.innerHTML = text;
+
+                totalDurationO += tb - ta;
+
+                text += state.toString();
+                text += "<br/>";
+                text += "O AI duration: " + (tb - ta) + " milliseconds.<br/>";
+
+                if (state.isTie()) {
+                    text += "RESULT: It's a tie.<br/>";
+                    break;
+                }
+
+                if (state.isWinningFor(O)) {
+                    text += "RESULT: O won.<br/>";
+                    break;
+                }
+                
+                output.innerHTML = text;
+            }
+
+            text += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
+            text += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
+            
+            output.innerHTML = text;
+        </script>
+    </body>
+</html>
