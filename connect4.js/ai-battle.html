@@ -11,77 +11,89 @@
         <script src='js/connect4ai.js'></script>
         <script>
 
-            let text = "";
+            function flipTurn(playerTurn) {
+                switch (playerTurn) {
+                    case X:
+                        return O;
+                        
+                    case O:
+                        return X;
+                        
+                    default:
+                        throw "Should not get here.";
+                }
+            }
+
             const output = document.getElementById('output-text-div');
             const heuristicFunction = new ConnectFourHeuristicFunction();
             const engine = new ConnectFourSearchEngine(heuristicFunction);
             const depth = 8;
 
             let state = new ConnectFourBoard();
-            text += state.toString() + "<br/>";
+            output.innerHTML += state.toString() + "<br/>";
 
             function millis() {
                 return new Date().valueOf();
             }
-
+            
             let totalDurationX = 0;
             let totalDurationO = 0;
-
-            while (true) {
-                text += "X's turn:<br/>";
-
-                let ta = millis();
-                state = engine.search(state, depth, X);
-                let tb = millis();
-
-                totalDurationX += tb - ta;
-
-                text += state.toString();
-                text += "<br/>";
-                text += "X AI duration: " + (tb - ta) + " milliseconds.<br/>";
-                output.innerHTML = text;
-                
-                if (state.isTie()) {
-                    text += "RESULT: It's a tie.<br/>";
-                    break;
-                }
-
-                if (state.isWinningFor(X)) {
-                    text += "RESULT: X won.<br/>";
-                    break;
-                }
-
-                text += "O's turn:<br/>";
-                output.innerHTML = text;
-
-                ta = millis();
-                state = engine.search(state, depth, O);
-                tb = millis();
-                output.innerHTML = text;
-
-                totalDurationO += tb - ta;
-
-                text += state.toString();
-                text += "<br/>";
-                text += "O AI duration: " + (tb - ta) + " milliseconds.<br/>";
-
-                if (state.isTie()) {
-                    text += "RESULT: It's a tie.<br/>";
-                    break;
-                }
-
-                if (state.isWinningFor(O)) {
-                    text += "RESULT: O won.<br/>";
-                    break;
-                }
-                
-                output.innerHTML = text;
-            }
-
-            text += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
-            text += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
             
-            output.innerHTML = text;
+            let turn = X;
+            
+            function gameLoop() {
+                setTimeout(() => {
+                    let ta = millis();
+                    state = engine.search(state, depth, turn);
+                    let tb = millis();
+                    
+                    if (turn === X) {
+                        totalDurationX += tb - ta;
+                    } else {
+                        totalDurationO += tb - ta;
+                    }
+                    
+                    output.innerHTML += state.toString();
+                    output.innerHTML += "<br/>";
+                    output.innerHTML += turn === X ? 
+                                        "X AI duration: " + (tb - ta) + " milliseconds.<br/>" :
+                                        "O AI duration: " + (tb - ta) + " milliseconds.<br/>";
+                                
+                    if (state.isTie()) {
+                        output.innerHTML += "RESULT: It's a tie.<br/>";
+                        return;
+                    }
+                    
+                    if (turn === X) {
+                        if (state.isWinningFor(X)) {
+                            output.innerHTML += "RESULT: X won.<br/>";
+                            output.innerHTML += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
+                            output.innerHTML += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
+                            window.scrollTo(0, document.body.scrollHeight);
+                            return;
+                        }
+                    } else {
+                        if (state.isWinningFor(O)) {
+                            output.innerHTML += "RESULT: O won.<br/>";
+                            output.innerHTML += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
+                            output.innerHTML += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
+                            window.scrollTo(0, document.body.scrollHeight);
+                            return;
+                        }
+                    }
+                    
+                    turn = flipTurn(turn);
+                    
+                    if (!state.isTerminal()) {
+                        // Run the next frame:
+                        window.scrollTo(0, document.body.scrollHeight);
+                        requestAnimationFrame(gameLoop);
+                    } else {
+                    }
+                }, 0);
+            }
+            
+            gameLoop();
         </script>
     </body>
 </html>
