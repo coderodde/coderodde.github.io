@@ -7,383 +7,6 @@ const X = 1;
 const EMPTY = -1;
 const BOARD_FILL_STYLE = '#3879e0';
 
-class ConnectFourBoard {
-    static ROWS = 6;
-    static COLUMNS = 7;
-    static VICTORY_LENGTH = 4;
-    
-    #boardData;
-        
-    #getCellChar(cellCharacter) {
-        switch (cellCharacter) {
-            case X:
-                return "X";
-                
-            case O:
-                return "O";
-                
-            case EMPTY:
-                return " ";
-                
-            default:
-                throw "Should not get here.";
-        }
-    }
-    
-    constructor(other) {
-        if (arguments.length === 1) {
-            this.#boardData = [...other.#boardData];
-        } else {
-            this.#boardData = Array(ConnectFourBoard.ROWS *
-                                    ConnectFourBoard.COLUMNS);
-                            
-            for (let i = 0, end = this.#boardData.length; i < end; i++) {
-                this.#boardData[i] = EMPTY;
-            }
-        }
-    }
-    
-    get(x, y) {
-        return this.#boardData[y * ConnectFourBoard.COLUMNS + x];
-    }
-    
-    set(x, y, playerType) {
-        this.#boardData[y * ConnectFourBoard.COLUMNS + x] = playerType;
-    }
-    
-    toString() {
-        let str = "";
-        
-        for (let y = 0; y < ConnectFourBoard.ROWS; y++) {
-            for (let x = 0; x < ConnectFourBoard.COLUMNS; x++) {
-                str += "|";
-                str += this.#getCellChar(this.get(x, y));
-            }
-            
-            str += "|<br/>";
-        }
-        
-        str += "+-+-+-+-+-+-+-+<br/>";
-        str += " 1 2 3 4 5 6 7";
-        
-        return str;
-    }
-    
-    isTie() {
-        for (let x = 0; x < COLUMNS; x++) {
-            if (this.get(x, 0) === EMPTY) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    makePly(x, playerType) {
-        for (let y = ROWS - 1; y >= 0; y--) {
-            if (this.get(x, y) === EMPTY) {
-                this.set(x, y, playerType);
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    unmakePly(x) {
-        for (let y = 0; y < ROWS; y++) {
-            if (this.get(x, y) !== EMPTY) {
-                this.set(x, y, EMPTY);
-                return;
-            }
-        }
-    }
-    
-    isTerminal() {
-        return this.isWinningFor(O) ||
-               this.isWinningFor(X) ||
-               this.isTie();
-    }
-    
-    getWinningPattern() {
-        if (!this.isWinningFor(X) &&
-            !this.isWinningFor(O)) {
-            return null;
-        }
-        
-        let winningPattern = null;
-        
-        for (let length = ROWS; length >= ConnectFourBoard.VICTORY_LENGTH; length--) {
-        
-            // Try load the vertical winning pattern:
-            winningPattern = 
-                    tryLoadVerticalWinningPattern(X, length);
-
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-        
-            winningPattern = 
-                    tryLoadVerticalWinningPattern(O, length);
-
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-            
-            // Try to load the ascending winning pattern:
-            winningPattern =
-                tryLoadAscendingWinningPattern(X, length);
-        
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-            
-            winningPattern =
-                tryLoadAscendingWinningPattern(O, length);
-        
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-
-            // Try to load the descending winning pattern:
-            winningPattern = 
-                    tryLoadDescendingWinningPattern(X, length);
-
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-
-            winningPattern = 
-                    tryLoadDescendingWinningPattern(O, length);
-            
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-        }
-
-        for (let length = COLUMNS; length >= ConnectFourBoard.VICTORY_LENGTH; length--) {
-            
-            winningPattern = 
-                    tryLoadHorizontalWinningPattern(X, length);
-            
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-            
-            winningPattern = 
-                    tryLoadHorizontalWinningPattern(O, length);
-            
-            if (winningPattern !== null) {
-                return winningPattern;
-            }
-        }
-        
-        throw "Should not get here.";
-    }
-    
-    hasHorizontalStreak(playerType, length) {
-        const lastX = COLUMNS - length;
-        
-        for (let y = ROWS - 1; y >= 0; y--) {
-            horizontalCheck:
-            
-            for (let x = 0; x <= lastX; x++) {
-                
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x + i, y) !== playerType) {
-                        continue horizontalCheck;
-                    }
-                }
-                
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    hasVerticalStreak(playerType, length) {
-        const lastY = ROWS - length;
-        
-        for (let x = 0; x < COLUMNS; x++) {
-            verticalCheck:
-            
-            for (let y = 0; y <= lastY; y++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x, y + i) !== playerType) {
-                        continue verticalCheck;
-                    }
-                }
-                
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    hasAscendingDiagonalStreak(playerType, length) {
-        
-        const lastX = COLUMNS - length;
-        const lastY = length - 1;
-        
-        for (let y = ROWS - 1; y >= lastY; y--) {
-            diagonalCheck:
-            
-            for (let x = 0; x <= lastX; x++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x + i, y - i) !== playerType) {
-                        continue diagonalCheck;
-                    }
-                }
-                
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    hasDescendingDiagonalStreak(playerType, length) {
-        
-        const firstX = length - 1;
-        const lastY  = length - 1;
-        
-        for (let y = ROWS - 1; y >= lastY; y--) {
-            diagonalCheck:
-                    
-            for (let x = firstX; x < COLUMNS; x++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x - i, y - i) !== playerType) {
-                        continue diagonalCheck;
-                    }
-                }
-                
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    isWinningFor(playerType) {
-        return this.hasAscendingDiagonalStreak  (playerType, ConnectFourBoard.VICTORY_LENGTH) ||
-               this.hasDescendingDiagonalStreak (playerType, ConnectFourBoard.VICTORY_LENGTH) ||
-               this.hasHorizontalStreak         (playerType, ConnectFourBoard.VICTORY_LENGTH) ||
-               this.hasVerticalStreak           (playerType, ConnectFourBoard.VICTORY_LENGTH);
-    }
-    
-    tryLoadAscendingWinningPattern(playerType, length) {
-        
-        const lastX = COLUMNS - length;
-        const lastY = length - 1;
-        const winningPattern = [];
-        
-        for (let y = ROWS - 1; y >= lastY; y--) {
-            diagonalCheck:
-                    
-            for (let x = 0; x <= lastX; x++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x + i, y - i) === playerType) {
-                        winningPattern.push({x: x + i, y: y - i});
-                        
-                        if (winningPattern.length === length) {
-                            return winningPattern;
-                        }
-                    } else {
-                        winningPattern = [];
-                        continue diagonalCheck;
-                    }
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    tryLoadDescendingWinningPattern(playerType, length) {
-        
-        const firstX = length - 1;
-        const lastY = ROWS - length;
-        const winningPattern = [];
-        
-        for (let y = ROWS - 1; y > lastY; y--) {
-            diagonalCheck:
-                    
-            for (let x = firstX; x < COLUMNS; x++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x - i, y - i) === playerType) {
-                        winningPattern.push({x: x - i, y: y - i});
-                        
-                        if (winningPattern.length === length) {
-                            return winningPattern;
-                        }
-                    } else {
-                        winningPattern = [];
-                        continue diagonalCheck;
-                    }
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    tryLoadHorizontalWinningPattern(playerType, length) {
-        
-        const lastX = COLUMNS - length;
-        const winningPattern = [];
-        
-        for (let y = ROWS - 1; y >= 0; y--) {
-            horizontalCheck:
-                    
-            for (let x = 0; x <= lastX; x++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x + i, y) === playerType) {
-                        winningPattern.push({x: x + i, y: y});
-                        
-                        if (winningPattern.length === length) {
-                            return winningPattern;
-                        }
-                    } else {
-                        winningPattern = [];
-                        continue horizontalCheck;
-                    }
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    tryLoadVerticalWinningPattern(playerType, length) {
-        
-        const lastY = ROWS - length;
-        const winningPattern = [];
-        
-        for (let x = 0; x < COLUMNS; x++) {
-            verticalCheck:
-                    
-            for (let y = 0; y <= lastY; y++) {
-                for (let i = 0; i < length; i++) {
-                    if (this.get(x, y + i) === playerType) {
-                        winningPattern.push({x: x, y: y + i});
-                
-                        if (winningPattern.length === length) {
-                            return winningPattern;
-                        }
-                    } else {
-                        winningPattern = [];
-                        continue verticalCheck;
-                    }
-                }
-            }
-        }
-        
-        return null;
-    }
-};
-
 class ConnectFourHeuristicFunction {
     static #TWO_BLOCKS_SCORE = 1.0;
     static #THREE_BLOCKS_SCORE = 10.0;
@@ -584,7 +207,440 @@ class ConnectFourHeuristicFunction {
     }
 }
 
-class ConnectFourSearchEngine {
+class ConnectFourBoard {
+    static ROWS = 6;
+    static COLUMNS = 7;
+    static VICTORY_LENGTH = 4;
+    
+    #boardData;
+        
+    #getCellChar(cellCharacter) {
+        switch (cellCharacter) {
+            case X:
+                return "<span style='color: blue;'>X</span>";
+                
+            case O:
+                return "<span style='color: red;'>O</span>";
+                
+            case EMPTY:
+                return " ";
+                
+            default:
+                throw "Should not get here.";
+        }
+    }
+        
+    #getWinningCellChar(cellCharacter) {
+        switch (cellCharacter) {
+            case X:
+                return "<span style='color: white; background-color: black; font-weight: bold;'>X</span>";
+                
+            case O:
+                return "<span style='color: white; background-color: black; font-weight: bold;'>O</span>";
+                
+            case EMPTY:
+                return " ";
+                
+            default:
+                throw "Should not get here.";
+        }
+    }
+    
+    constructor(other) {
+        if (arguments.length === 1) {
+            this.#boardData = [...other.#boardData];
+        } else {
+            this.#boardData = Array(ConnectFourBoard.ROWS *
+                                    ConnectFourBoard.COLUMNS);
+                            
+            for (let i = 0, end = this.#boardData.length; i < end; i++) {
+                this.#boardData[i] = EMPTY;
+            }
+        }
+    }
+    
+    expand() {
+        const children = new Array(ConnectFourBoard.COLUMNS);
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            if (makePly(x)) {
+                const child = new ConnectFourBoard(this);
+                children.push(child);
+                unmakePly(x);
+            }
+        }
+        
+        return children;
+    }
+    
+    get(x, y) {
+        return this.#boardData[y * ConnectFourBoard.COLUMNS + x];
+    }
+    
+    set(x, y, playerType) {
+        this.#boardData[y * ConnectFourBoard.COLUMNS + x] = playerType;
+    }
+    
+    toString() {
+        let str = "";
+        const winningPattern = this.getWinningPattern();
+        
+        function isInWinningPattern(winningPattern, x, y) {
+            if (winningPattern === null) {
+                return false;
+            }
+            
+            for (const p of winningPattern) {
+                if (p.x === x && p.y === y) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        for (let y = 0; y < ConnectFourBoard.ROWS; y++) {
+            for (let x = 0; x < ConnectFourBoard.COLUMNS; x++) {
+                str += "|";
+                
+                const belongsToWinningPattern = 
+                        isInWinningPattern(winningPattern, x, y);
+                
+                if (belongsToWinningPattern === false) {
+                    str += this.#getCellChar(this.get(x, y));
+
+                } else {
+                    str += this.#getWinningCellChar(this.get(x, y));
+                }
+            }
+            
+            str += "|<br/>";
+        }
+        
+        str += "+-+-+-+-+-+-+-+<br/>";
+        str += " 1 2 3 4 5 6 7";
+        
+        return str;
+    }
+    
+    isTie() {
+        for (let x = 0; x < COLUMNS; x++) {
+            if (this.get(x, 0) === EMPTY) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    makePly(x, playerType) {
+        for (let y = ROWS - 1; y >= 0; y--) {
+            if (this.get(x, y) === EMPTY) {
+                this.set(x, y, playerType);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    unmakePly(x) {
+        for (let y = 0; y < ROWS; y++) {
+            if (this.get(x, y) !== EMPTY) {
+                this.set(x, y, EMPTY);
+                return;
+            }
+        }
+    }
+    
+    isTerminal() {
+        return this.isWinningFor(O) ||
+               this.isWinningFor(X) ||
+               this.isTie();
+    }
+    
+    getWinningPattern() {
+        if (!this.isWinningFor(X) &&
+            !this.isWinningFor(O)) {
+            return null;
+        }
+        
+        let winningPattern = null;
+        
+        for (let length = ROWS; 
+                 length >= ConnectFourBoard.VICTORY_LENGTH; 
+                 length--) {
+        
+            // Try load the vertical winning pattern:
+            winningPattern = 
+                    this.tryLoadVerticalWinningPattern(X, length);
+
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+        
+            winningPattern = 
+                    this.tryLoadVerticalWinningPattern(O, length);
+
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+            
+            // Try to load the ascending winning pattern:
+            winningPattern =
+                this.tryLoadAscendingWinningPattern(X, length);
+        
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+            
+            winningPattern =
+                this.tryLoadAscendingWinningPattern(O, length);
+        
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+
+            // Try to load the descending winning pattern:
+            winningPattern = 
+                    this.tryLoadDescendingWinningPattern(X, length);
+
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+
+            winningPattern = 
+                    this.tryLoadDescendingWinningPattern(O, length);
+            
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+        }
+
+        for (let length = COLUMNS; length >= ConnectFourBoard.VICTORY_LENGTH; length--) {
+            
+            winningPattern = 
+                    this.tryLoadHorizontalWinningPattern(X, length);
+            
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+            
+            winningPattern = 
+                    this.tryLoadHorizontalWinningPattern(O, length);
+            
+            if (winningPattern !== null) {
+                return winningPattern;
+            }
+        }
+        
+        throw "Should not get here.";
+    }
+    
+    hasHorizontalStreak(playerType, length) {
+        const lastX = COLUMNS - length;
+        
+        for (let y = ROWS - 1; y >= 0; y--) {
+            horizontalCheck:
+            
+            for (let x = 0; x <= lastX; x++) {
+                
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x + i, y) !== playerType) {
+                        continue horizontalCheck;
+                    }
+                }
+                
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    hasVerticalStreak(playerType, length) {
+        const lastY = ROWS - length;
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            verticalCheck:
+            
+            for (let y = 0; y <= lastY; y++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x, y + i) !== playerType) {
+                        continue verticalCheck;
+                    }
+                }
+                
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    hasAscendingDiagonalStreak(playerType, length) {
+        
+        const lastX = COLUMNS - length;
+        const lastY = length - 1;
+        
+        for (let y = ROWS - 1; y >= lastY; y--) {
+            diagonalCheck:
+            
+            for (let x = 0; x <= lastX; x++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x + i, y - i) !== playerType) {
+                        continue diagonalCheck;
+                    }
+                }
+                
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    hasDescendingDiagonalStreak(playerType, length) {
+        
+        const firstX = length - 1;
+        const lastY  = length - 1;
+        
+        for (let y = ROWS - 1; y >= lastY; y--) {
+            diagonalCheck:
+                    
+            for (let x = firstX; x < COLUMNS; x++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x - i, y - i) !== playerType) {
+                        continue diagonalCheck;
+                    }
+                }
+                
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    isWinningFor(playerType) {
+        return this.hasAscendingDiagonalStreak  (playerType, ConnectFourBoard.VICTORY_LENGTH) ||
+               this.hasDescendingDiagonalStreak (playerType, ConnectFourBoard.VICTORY_LENGTH) ||
+               this.hasHorizontalStreak         (playerType, ConnectFourBoard.VICTORY_LENGTH) ||
+               this.hasVerticalStreak           (playerType, ConnectFourBoard.VICTORY_LENGTH);
+    }
+    
+    tryLoadAscendingWinningPattern(playerType, length) {
+        
+        const lastX = COLUMNS - length;
+        const lastY = length - 1;
+        let winningPattern = [];
+        
+        for (let y = ROWS - 1; y >= lastY; y--) {
+            diagonalCheck:
+                    
+            for (let x = 0; x <= lastX; x++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x + i, y - i) === playerType) {
+                        winningPattern.push({x: x + i, y: y - i});
+                        
+                        if (winningPattern.length === length) {
+                            return winningPattern;
+                        }
+                    } else {
+                        winningPattern = [];
+                        continue diagonalCheck;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    tryLoadDescendingWinningPattern(playerType, length) {
+        
+        const firstX = length - 1;
+        const lastY = ROWS - length;
+        let winningPattern = [];
+        
+        for (let y = ROWS - 1; y > lastY; y--) {
+            diagonalCheck:
+                    
+            for (let x = firstX; x < COLUMNS; x++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x - i, y - i) === playerType) {
+                        winningPattern.push({x: x - i, y: y - i});
+                        
+                        if (winningPattern.length === length) {
+                            return winningPattern;
+                        }
+                    } else {
+                        winningPattern = [];
+                        continue diagonalCheck;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    tryLoadHorizontalWinningPattern(playerType, length) {
+        
+        const lastX = COLUMNS - length;
+        let winningPattern = [];
+        
+        for (let y = ROWS - 1; y >= 0; y--) {
+            horizontalCheck:
+                    
+            for (let x = 0; x <= lastX; x++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x + i, y) === playerType) {
+                        winningPattern.push({x: x + i, y: y});
+                        
+                        if (winningPattern.length === length) {
+                            return winningPattern;
+                        }
+                    } else {
+                        winningPattern = [];
+                        continue horizontalCheck;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    tryLoadVerticalWinningPattern(playerType, length) {
+        
+        const lastY = ROWS - length;
+        let winningPattern = [];
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            verticalCheck:
+                    
+            for (let y = 0; y <= lastY; y++) {
+                for (let i = 0; i < length; i++) {
+                    if (this.get(x, y + i) === playerType) {
+                        winningPattern.push({x: x, y: y + i});
+                
+                        if (winningPattern.length === length) {
+                            return winningPattern;
+                        }
+                    } else {
+                        winningPattern = [];
+                        continue verticalCheck;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+};
+
+class ConnectFourAlphaBetaPruningSearchEngine {
     #bestMoveState;
     #heuristicFunction;
     
@@ -725,5 +781,113 @@ class ConnectFourSearchEngine {
             
             return value;
         }          
+    }
+}
+
+class ConnectFourNegamaxSearchEngine {
+    #heuristicFunction;
+    
+    constructor(heuristicFunction) {
+        this.#heuristicFunction = heuristicFunction;
+    }
+    
+    search(root, depth, playerType = O) {
+        if (playerType === O) {
+            return this.#negamaxRoot(root,
+                                     depth,
+                                     Number.NEGATIVE_INFINITY,
+                                     Number.POSITIVE_INFINITY,
+                                     +1);
+        } else {
+            return this.#negamaxRoot(root,
+                                     depth,
+                                     Number.NEGATIVE_INFINITY,
+                                     Number.POSITIVE_INFINITY,
+                                     -1);
+        }
+    }
+    
+    #negamaxRoot(root,
+                 depth,
+                 alpha,
+                 beta,
+                 color) {
+        
+        let value = Number.NEGATIVE_INFINITY;
+        let bestMoveState = null;
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            if (!root.makePly(x, color === 1 ? O : X)) {
+                continue;
+            }
+            
+            const score = 
+                    -this.#negamax(root,
+                                   depth - 1,
+                                   -beta,
+                                   -alpha,
+                                   -color);
+            
+            
+            if (color === +1) {
+                if (value < score) {
+                    value = score;
+                    bestMoveState = new ConnectFourBoard(root);
+                }
+            } else {
+                if (value > score) {
+                    value = score;
+                    bestMoveState = new ConnectFourBoard(root);
+                }
+            }
+            
+            root.unmakePly(x);
+            
+            alpha = Math.max(alpha, value);
+            
+            if (alpha >= beta) {
+                break;
+            }
+        }
+        
+        return bestMoveState;
+    }
+    
+    #negamax(root, 
+             depth,
+             alpha,
+             beta,
+             color) {
+        
+        if (depth === 0 || root.isTerminal()) {
+            return color * this.#heuristicFunction.evaluate(root, depth);
+        }
+        
+        let value = Number.NEGATIVE_INFINITY;
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            if (!root.makePly(x, color === 1 ? O : X)) {
+                
+                continue;
+            }
+            
+            value = Math.max(
+                        value,
+                        -this.#negamax(root, 
+                                       depth - 1, 
+                                       -beta, 
+                                       -alpha, 
+                                       -color));
+            
+            root.unmakePly(x);
+            
+            alpha = Math.max(alpha, value);
+            
+            if (alpha >= beta) {
+                break;
+            }
+        }
+        
+        return value;
     }
 }
