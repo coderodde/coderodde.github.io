@@ -43,6 +43,20 @@ class ConnectFourBoard {
         }
     }
     
+    expand() {
+        const children = new Array(ConnectFourBoard.COLUMNS);
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            if (makePly(x)) {
+                const child = new ConnectFourBoard(this);
+                children.push(child);
+                unmakePly(x);
+            }
+        }
+        
+        return children;
+    }
+    
     get(x, y) {
         return this.#boardData[y * ConnectFourBoard.COLUMNS + x];
     }
@@ -584,7 +598,7 @@ class ConnectFourHeuristicFunction {
     }
 }
 
-class ConnectFourSearchEngine {
+class ConnectFourAlphaBetaPruningSearchEngine {
     #bestMoveState;
     #heuristicFunction;
     
@@ -725,5 +739,113 @@ class ConnectFourSearchEngine {
             
             return value;
         }          
+    }
+}
+
+class ConnectFourNegamaxSearchEngine {
+    #heuristicFunction;
+    
+    constructor(heuristicFunction) {
+        this.#heuristicFunction = heuristicFunction;
+    }
+    
+    search(root, depth, playerType = O) {
+        if (playerType === O) {
+            return this.#negamaxRoot(root,
+                                     depth,
+                                     Number.NEGATIVE_INFINITY,
+                                     Number.POSITIVE_INFINITY,
+                                     +1);
+        } else {
+            return this.#negamaxRoot(root,
+                                     depth,
+                                     Number.NEGATIVE_INFINITY,
+                                     Number.POSITIVE_INFINITY,
+                                     -1);
+        }
+    }
+    
+    #negamaxRoot(root,
+                 depth,
+                 alpha,
+                 beta,
+                 color) {
+        
+        let value = Number.NEGATIVE_INFINITY;
+        let bestMoveState = null;
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            if (!root.makePly(x, color === 1 ? O : X)) {
+                continue;
+            }
+            
+            const score = 
+                    -this.#negamax(root,
+                                   depth - 1,
+                                   -beta,
+                                   -alpha,
+                                   -color);
+            
+            
+            if (color === +1) {
+                if (value < score) {
+                    value = score;
+                    bestMoveState = new ConnectFourBoard(root);
+                }
+            } else {
+                if (value > score) {
+                    value = score;
+                    bestMoveState = new ConnectFourBoard(root);
+                }
+            }
+            
+            root.unmakePly(x);
+            
+            alpha = Math.max(alpha, value);
+            
+            if (alpha >= beta) {
+                break;
+            }
+        }
+        
+        return bestMoveState;
+    }
+    
+    #negamax(root, 
+             depth,
+             alpha,
+             beta,
+             color) {
+        
+        if (depth === 0 || root.isTerminal()) {
+            return color * this.#heuristicFunction.evaluate(root, depth);
+        }
+        
+        let value = Number.NEGATIVE_INFINITY;
+        
+        for (let x = 0; x < COLUMNS; x++) {
+            if (!root.makePly(x, color === 1 ? O : X)) {
+                
+                continue;
+            }
+            
+            value = Math.max(
+                        value,
+                        -this.#negamax(root, 
+                                       depth - 1, 
+                                       -beta, 
+                                       -alpha, 
+                                       -color));
+            
+            root.unmakePly(x);
+            
+            alpha = Math.max(alpha, value);
+            
+            if (alpha >= beta) {
+                break;
+            }
+        }
+        
+        return value;
     }
 }

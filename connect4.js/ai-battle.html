@@ -26,9 +26,14 @@
 
             const output = document.getElementById('output-text-div');
             const heuristicFunction = new ConnectFourHeuristicFunction();
-            const engine = new ConnectFourSearchEngine(heuristicFunction);
-            const depth = 8;
+            const engineX = new ConnectFourAlphaBetaPruningSearchEngine(
+                                    heuristicFunction);
+                            
+            const engineO = new ConnectFourNegamaxSearchEngine(
+                                    heuristicFunction);
+            const depth = 9;
 
+            let engine = engineX;
             let state = new ConnectFourBoard();
             output.innerHTML += state.toString() + "<br/>";
 
@@ -40,6 +45,18 @@
             let totalDurationO = 0;
             
             let turn = X;
+            
+            function getEngineName(engine) {
+                if (engine === engineX) {
+                    return "Alpha-beta pruning engine (X)";
+                }
+                
+                if (engine === engineO) {
+                    return "Negamax engine (O)";
+                }
+                
+                throw "Should not get here.";
+            }
             
             function gameLoop() {
                 setTimeout(() => {
@@ -55,9 +72,17 @@
                     
                     output.innerHTML += state.toString();
                     output.innerHTML += "<br/>";
-                    output.innerHTML += turn === X ? 
-                                        "X AI duration: " + (tb - ta) + " milliseconds.<br/>" :
-                                        "O AI duration: " + (tb - ta) + " milliseconds.<br/>";
+                    output.innerHTML += 
+                            turn === X ? 
+                                getEngineName(engine)
+                                        + " duration: " 
+                                        + (tb - ta) 
+                                        + " milliseconds.<br/>"
+                                :
+                                getEngineName(engine) 
+                                        + " duration: " 
+                                        + (tb - ta) 
+                                        + " milliseconds.<br/>";
                                 
                     if (state.isTie()) {
                         output.innerHTML += "RESULT: It's a tie.<br/>";
@@ -82,7 +107,20 @@
                         }
                     }
                     
+                    function flipEngine(engine) {
+                        if (engine === engineX) {
+                            return engineO;
+                        }
+                        
+                        if (engine === engineO) {
+                            return engineX;
+                        }
+                        
+                        throw "Should not get here.";
+                    }
+                    
                     turn = flipTurn(turn);
+                    engine = flipEngine(engine);
                     
                     if (!state.isTerminal()) {
                         // Run the next frame:
