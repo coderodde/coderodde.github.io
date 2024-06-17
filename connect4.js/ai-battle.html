@@ -32,6 +32,24 @@
             const engineO = new ConnectFourNegamaxSearchEngine(
                                     heuristicFunction);
             const depth = 9;
+            
+            let turnNumber = 1;
+            
+            function getTurnNumberString() {
+                if (turnNumber % 10 === 1) {
+                    return turnNumber + "st";
+                }
+                
+                if (turnNumber % 10 === 2) {
+                    return turnNumber + "nd";
+                }
+                
+                if (turnNumber % 10 === 3) {
+                    return turnNumber + "rd";
+                }
+                
+                return turnNumber + "th";
+            }
 
             let engine = engineX;
             let state = new ConnectFourBoard();
@@ -75,14 +93,20 @@
                     output.innerHTML += 
                             turn === X ? 
                                 getEngineName(engine)
-                                        + " duration: " 
+                                        + " made the "
+                                        + getTurnNumberString()
+                                        + " turn, duration: " 
                                         + (tb - ta) 
                                         + " milliseconds.<br/>"
                                 :
                                 getEngineName(engine) 
-                                        + " duration: " 
+                                        + " made the "
+                                        + getTurnNumberString()
+                                        + " turn, duration: " 
                                         + (tb - ta) 
                                         + " milliseconds.<br/>";
+                                
+                    turnNumber++;
                                 
                     if (state.isTie()) {
                         output.innerHTML += "RESULT: It's a tie.<br/>";
