@@ -6,6 +6,7 @@ const O = 0;
 const X = 1;
 const EMPTY = -1;
 const BOARD_FILL_STYLE = '#3879e0';
+const PLIES = [ 3, 2, 4, 1, 5, 0, 6 ];
 
 class ConnectFourHeuristicFunction {
     static #TWO_BLOCKS_SCORE = 1.0;
@@ -262,7 +263,7 @@ class ConnectFourBoard {
     expand() {
         const children = new Array(ConnectFourBoard.COLUMNS);
         
-        for (let x = 0; x < COLUMNS; x++) {
+        for (const x of PLIES) {
             if (makePly(x)) {
                 const child = new ConnectFourBoard(this);
                 children.push(child);
@@ -667,7 +668,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
             let value = Number.NEGATIVE_INFINITY;
             let tentativeValue = Number.NEGATIVE_INFINITY;
             
-            for (let x = 0; x < ConnectFourBoard.COLUMNS; x++) {
+            for (const x of PLIES) {
                 if (!root.makePly(x, O)) {
                     continue;
                 }
@@ -695,7 +696,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
             let value = Number.POSITIVE_INFINITY;
             let tentativeValue = Number.POSITIVE_INFINITY;
             
-            for (let x = 0; x < ConnectFourBoard.COLUMNS; x++) {
+            for (const x of PLIES) {
                 if (!root.makePly(x, X)) {
                     continue;
                 }
@@ -733,7 +734,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
         if (playerType === O) {
             let value = Number.NEGATIVE_INFINITY;
             
-            for (let x = 0; x < ConnectFourBoard.COLUMNS; x++) {
+            for (const x of PLIES) {
                 if (!state.makePly(x, O)) {
                     continue;
                 }
@@ -758,7 +759,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
         } else {
             let value = Number.POSITIVE_INFINITY;
             
-            for (let x = 0; x < ConnectFourBoard.COLUMNS; x++) {
+            for (const x of PLIES) {
                 if (!state.makePly(x, X)) {
                     continue;
                 }
@@ -816,7 +817,7 @@ class ConnectFourNegamaxSearchEngine {
         let value = Number.NEGATIVE_INFINITY;
         let bestMoveState = null;
         
-        for (let x = 0; x < COLUMNS; x++) {
+        for (const x of PLIES) {
             if (!root.makePly(x, color === 1 ? O : X)) {
                 continue;
             }
@@ -865,7 +866,7 @@ class ConnectFourNegamaxSearchEngine {
         
         let value = Number.NEGATIVE_INFINITY;
         
-        for (let x = 0; x < COLUMNS; x++) {
+        for (const x of PLIES) {
             if (!root.makePly(x, color === 1 ? O : X)) {
                 
                 continue;
@@ -889,5 +890,133 @@ class ConnectFourNegamaxSearchEngine {
         }
         
         return value;
+    }
+}
+
+
+class ConnectFourPrincipalVariationSearchEngine {
+    #heuristicFunction;
+    
+    constructor(heuristicFunction) {
+        this.#heuristicFunction = heuristicFunction;
+    }
+    
+    search(root, depth, playerType = O) {
+        if (playerType === O) {
+            return this.#pvsRoot(root,
+                                 depth,
+                                 Number.NEGATIVE_INFINITY,
+                                 Number.POSITIVE_INFINITY,
+                                 +1);
+        } else {
+            return this.#pvsRoot(root,
+                                 depth,
+                                 Number.NEGATIVE_INFINITY,
+                                 Number.POSITIVE_INFINITY,
+                                 -1);
+        }
+    }
+    
+    #pvsRoot(root,
+             depth,
+             alpha,
+             beta,
+             color) {
+                 
+        let value = Number.NEGATIVE_INFINITY;
+        let bestMoveState = null;
+        
+        for (const x of PLIES) {
+            if (!root.makePly(x, color === 1 ? O : X)) {
+                continue;
+            }
+            
+            const score = -this.#pvs(root,
+                                     depth - 1,
+                                     -beta,
+                                     -alpha,
+                                     -color);
+                               
+            if (color === +1) {
+                if (value < score) {
+                    value = score;
+                    bestMoveState = new ConnectFourBoard(root);
+                }
+            } else {
+                if (value > score) {
+                    value = score;
+                    bestMoveState = new ConnectFourBoard(root);
+                }
+            }
+            
+            root.unmakePly(x);
+            
+            alpha = Math.max(alpha, value);
+            
+            if (alpha >= beta) {
+                break;
+            }
+        }
+        
+        return bestMoveState;
+    }
+    
+    #pvs(root,
+         depth,
+         alpha,
+         beta,
+         color) {
+    
+        if (depth === 0 || root.isTerminal()) {
+            return color * this.#heuristicFunction.evaluate(root, depth);
+        }
+        
+        let isFirstState = true;
+        
+        for (const x of PLIES) {
+            if (!root.makePly(
+                    x, 
+                    color === 1 ? O : X)) {
+
+                continue;
+            }
+            
+            let score;
+
+            if (isFirstState) {
+                isFirstState = false;
+                
+                score = -this.#pvs(root, 
+                                   depth - 1, 
+                                   -beta, 
+                                   -alpha, 
+                                   -color);
+                            
+            } else {
+                score = -this.#pvs(root, 
+                                   depth -1, 
+                                   -alpha - 1, 
+                                   -alpha, 
+                                   -color);
+                             
+                if (alpha < score && score < beta) {
+                    score = -this.#pvs(root, 
+                                       depth - 1,
+                                       -beta,
+                                       -alpha, 
+                                       -color);
+                }
+            }
+            
+            root.unmakePly(x);
+            
+            alpha = Math.max(alpha, score);
+            
+            if (alpha >= beta) {
+                break;
+            }
+        }
+        
+        return alpha;
     }
 }
