@@ -77,38 +77,75 @@
                 </tr>
             </table>
             </div>
-            
-            <div class="paramDivs">
-                <button onclick="runMatch();">RUN MATCH!</button>
-            </div>
         </form>
+
+        <div class="paramDivs">
+            <button type="button" onclick="runMatch();">RUN MATCH!</button>
+        </div>
         
-        <!--<div id="runButton"><button onclick="runMatch();">RUN MATCH!</button></div>-->
+        <div class="paramDivs">
+            <button type="button" onclick="clearOutput();">Clear output</button>
+        </div>
         
         <pre id='output-text-div'></pre>
+        
+        <div class="paramDivs">
+            <button type="button" onclick="haltMatch();">Halt match</button>
+        </div>
+        
+        <div class="paramDivs">
+            <button type="button" onclick="clearOutput();">Clear output</button>
+        </div>
+        
         <script src='js/connect4ai.js'></script>
+        <script src="js/MatchRunner.js"></script>
+        
         <script>
             
-            const heuristicFunction            = new ConnectFourHeuristicFunction();
-            const alphaBetaPruningSearchEngine = new ConnectFourAlphaBetaPruningSearchEngine(heuristicFunction);
-            const negamaxSearchEngine          = new ConnectFourNegamaxSearchEngine(heuristicFunction);
-            const pvsSearchEngine              = new ConnectFourPrincipalVariationSearchEngine(heuristicFunction);
+            function clearOutput() {
+                document.getElementById("output-text-div").innerHTML = "";
+            }
             
-            let xEngine;
-            let oEngine;
-            let xDepth;
-            let yDepth;
+            let matchRunner;
+            
+            function haltMatch() {
+                if (matchRunner) {
+                    matchRunner.halt();
+                    alert("halt");
+                }
+                
+                alert("no halt");
+            }
+            
+            function runMatch() {
+                matchRunner = 
+                        new MatchRunner(
+                                getXEngine(),
+                                getOEngine(),
+                                getXEngineDepth(),
+                                getOEngineDepth(),
+                                document.getElementById("output-text-div"));
+                                
+                document.getElementById("output-text-div").innerHTML = "";
+                matchRunner.start();
+            }
+            
+            const heuristicFunction            = new ConnectFourHeuristicFunction();
+            const output = document.getElementById('output-text-div');
             
             function nameToEngine(name) {
                 switch (name) {
                     case "alpha-beta":
-                        return alphaBetaPruningSearchEngine;
+                        return new ConnectFourAlphaBetaPruningSearchEngine(
+                                        heuristicFunction);
                         
                     case "negamax":
-                        return negamaxSearchEngine;
+                        return new ConnectFourNegamaxSearchEngine(
+                                        heuristicFunction);
                         
                     case "pvs":
-                        return pvsSearchEngine;
+                        return new ConnectFourPrincipalVariationSearchEngine(
+                                        heuristicFunction);
                         
                     default:
                         throw "Should not get here.";
@@ -125,196 +162,194 @@
                 return nameToEngine(selection.value);
             }
             
-            function depthNameToInteger(name) {
-                return Number(name);
-            }
-            
-            function getXDepth() {
+            function getXEngineDepth() {
                 const selection = document.getElementById("xEngineDepthId");
                 return Number(selection.value);
             }
             
-            function getODepth() {
+            function getOEngineDepth() {
                 const selection = document.getElementById("oEngineDepthId");
                 return Number(selection.value);
             }
             
-            function runMatch() {
-                xEngine = getXEngine();
-                oEngine = getOEngine();
-                xDepth = getXDepth();
-                oDepth = getODepth();
-                engine = xEngine;
-                depth = xDepth;
-                window.requestAnimationFrame(gameLoop);
-//                gameLoop();
-            }
+//            function runMatch() {
+//                output.innerHTML = "";
+//                
+//                state = new ConnectFourBoard();
+//                alert("state new");
+//                turn = X;
+//                
+//                totalDurationO = 0;
+//                totalDurationX = 0;
+//                
+//                xEngine = getXEngine();
+//                oEngine = getOEngine();
+//                xDepth  = getXDepth();
+//                oDepth  = getODepth();
+//                engine  = xEngine;
+//                depth   = xDepth;
+//                
+//                window.requestAnimationFrame(gameLoop);
+//            }
 
-            function flipTurn(playerTurn) {
-                switch (playerTurn) {
-                    case X:
-                        return O;
-                        
-                    case O:
-                        return X;
-                        
-                    default:
-                        throw "Should not get here.";
-                }
-            }
+//            function flipTurn(playerTurn) {
+//                switch (playerTurn) {
+//                    case X:
+//                        return O;
+//                        
+//                    case O:
+//                        return X;
+//                        
+//                    default:
+//                        throw "Should not get here.";
+//                }
+//            }
             
-            function flipDepth(depth) {
-                if (depth === xDepth) {
-                    return oDepth;
-                }
-                
-                if (depth === oDepth) {
-                    return xDepth;
-                }
-                
-                throw "Should not get here.";
-            }
-
-            const output = document.getElementById('output-text-div');
+//            function flipDepth(depth) {
+//                if (depth === xDepth) {
+//                    return oDepth;
+//                }
+//                
+//                if (depth === oDepth) {
+//                    return xDepth;
+//                }
+//                
+//                throw "Should not get here.";
+//            }
             
-            let turnNumber = 1;
+//            let turnNumber = 1;
+//            
+//            function getTurnNumberString() {
+//                if (turnNumber % 10 === 1) {
+//                    return turnNumber + "st";
+//                }
+//                
+//                if (turnNumber % 10 === 2) {
+//                    return turnNumber + "nd";
+//                }
+//                
+//                if (turnNumber % 10 === 3) {
+//                    return turnNumber + "rd";
+//                }
+//                
+//                return turnNumber + "th";
+//            }
+
+//            output.innerHTML += state.toString() + "<br/>";
+
+//            function millis() {
+//                return new Date().valueOf();
+//            }
             
-            function getTurnNumberString() {
-                if (turnNumber % 10 === 1) {
-                    return turnNumber + "st";
-                }
-                
-                if (turnNumber % 10 === 2) {
-                    return turnNumber + "nd";
-                }
-                
-                if (turnNumber % 10 === 3) {
-                    return turnNumber + "rd";
-                }
-                
-                return turnNumber + "th";
-            }
-
-            let state = new ConnectFourBoard();
-            output.innerHTML += state.toString() + "<br/>";
-
-            function millis() {
-                return new Date().valueOf();
-            }
+//            function getEngineName(engine) {
+//                let str = "";
+//                
+//                switch (engine) {
+//                    case alphaBetaPruningSearchEngine:
+//                        str += "Alpha-beta pruning engine";
+//                        break;
+//                        
+//                    case negamaxSearchEngine:
+//                        str += "Negamax engine";
+//                        break;
+//                        
+//                    case pvsSearchEngine:
+//                        str += "PVS engine";
+//                        break;
+//                        
+//                    default:
+//                        throw "Should not get here.";
+//                }
+//                
+//                if (engine === xEngine) {
+//                    return str + " (X)";
+//                } else if (engine === oEngine) {
+//                    return str + " (O)";
+//                } else {
+//                    throw "Should not get here.";
+//                }
+//            }
             
-            let totalDurationX = 0;
-            let totalDurationO = 0;
-            
-            let turn = X;
-            
-            function getEngineName(engine) {
-                let str = "";
-                
-                switch (engine) {
-                    case alphaBetaPruningSearchEngine:
-                        str += "Alpha-beta pruning engine";
-                        break;
-                        
-                    case negamaxSearchEngine:
-                        str += "Negamax engine";
-                        break;
-                        
-                    case pvsSearchEngine:
-                        str += "PVS engine";
-                        break;
-                        
-                    default:
-                        throw "Should not get here.";
-                }
-                
-                if (engine === xEngine) {
-                    return str + " (X)";
-                } else if (engine === oEngine) {
-                    return str + " (O)";
-                } else {
-                    throw "Should not get here.";
-                }
-            }
-            
-            function gameLoop() {
-                
-                let ta = millis();
-                state = engine.search(state, depth, turn);
-                let tb = millis();
-
-                if (turn === X) {
-                    totalDurationX += tb - ta;
-                } else {
-                    totalDurationO += tb - ta;
-                }
-
-                output.innerHTML += state.toString();
-                output.innerHTML += "<br/>";
-                output.innerHTML += 
-                        turn === X ? 
-                            getEngineName(engine)
-                                    + " made the "
-                                    + getTurnNumberString()
-                                    + " turn, duration: " 
-                                    + (tb - ta) 
-                                    + " milliseconds.<br/>"
-                            :
-                            getEngineName(engine) 
-                                    + " made the "
-                                    + getTurnNumberString()
-                                    + " turn, duration: " 
-                                    + (tb - ta) 
-                                    + " milliseconds.<br/>";
-
-                turnNumber++;
-
-                if (state.isTie()) {
-                    output.innerHTML += "RESULT: It's a tie.<br/>";
-                    return;
-                }
-
-                if (turn === X) {
-                    if (state.isWinningFor(X)) {
-                        output.innerHTML += "RESULT: X won.<br/>";
-                        output.innerHTML += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
-                        output.innerHTML += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
-                        window.scrollTo(0, document.body.scrollHeight);
-                        return;
-                    }
-                } else {
-                    if (state.isWinningFor(O)) {
-                        output.innerHTML += "RESULT: O won.<br/>";
-                        output.innerHTML += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
-                        output.innerHTML += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
-                        window.scrollTo(0, document.body.scrollHeight);
-                        return;
-                    }
-                }
-
-                function flipEngine(engine) {
-                    if (engine === xEngine) {
-                        return oEngine;
-                    }
-
-                    if (engine === oEngine) {
-                        return xEngine;
-                    }
-
-                    throw "Should not get here.";
-                }
-
-                turn   = flipTurn(turn);
-                depth  = flipDepth(depth);
-                engine = flipEngine(engine);
-
-                if (!state.isTerminal()) {
-                    // Run the next frame:
-                    window.scrollTo(0, document.body.scrollHeight);
-                    window.requestAnimationFrame(gameLoop);
-                } else {
-                    return;
-                }
-            }
+//            function gameLoop() {                
+//                let ta = millis();
+//                state = engine.search(state, depth, turn);
+//                let tb = millis();
+//
+//                if (turn === X) {
+//                    totalDurationX += tb - ta;
+//                } else {
+//                    totalDurationO += tb - ta;
+//                }
+//
+//                output.innerHTML += state.toString();
+//                output.innerHTML += "<br/>";
+//                output.innerHTML += 
+//                        turn === X ? 
+//                            getEngineName(engine)
+//                                    + " made the "
+//                                    + getTurnNumberString()
+//                                    + " turn, duration: " 
+//                                    + (tb - ta) 
+//                                    + " milliseconds.<br/>"
+//                            :
+//                            getEngineName(engine) 
+//                                    + " made the "
+//                                    + getTurnNumberString()
+//                                    + " turn, duration: " 
+//                                    + (tb - ta) 
+//                                    + " milliseconds.<br/>";
+//
+//                turnNumber++;
+//
+//                if (state.isTie()) {
+//                    output.innerHTML += "RESULT: It's a tie.<br/>";
+//                    window.scrollTo(0, document.body.scrollHeight);
+//                    return;
+//                }
+//
+//                if (turn === X) {
+//                    if (state.isWinningFor(X)) {
+//                        output.innerHTML += "RESULT: X won.<br/>";
+//                        output.innerHTML += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
+//                        output.innerHTML += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
+//                        window.scrollTo(0, document.body.scrollHeight);
+//                        return;
+//                    }
+//                } else {
+//                    if (state.isWinningFor(O)) {
+//                        output.innerHTML += "RESULT: O won.<br/>";
+//                        output.innerHTML += "X AI total duration: " + totalDurationX + " milliseconds.<br/>";
+//                        output.innerHTML += "O AI total duration: " + totalDurationO + " milliseconds.<br/>";
+//                        window.scrollTo(0, document.body.scrollHeight);
+//                        return;
+//                    }
+//                }
+//
+//                function flipEngine(engine) {
+//                    if (engine === xEngine) {
+//                        return oEngine;
+//                    }
+//
+//                    if (engine === oEngine) {
+//                        return xEngine;
+//                    }
+//
+//                    throw "Should not get here.";
+//                }
+//
+//                turn   = flipTurn(turn);
+//                depth  = flipDepth(depth);
+//                engine = flipEngine(engine);
+//
+//                if (!state.isTerminal()) {
+//                    // Run the next frame:
+//                    window.scrollTo(0, document.body.scrollHeight);
+//                    window.requestAnimationFrame(gameLoop, null);
+//                } else {
+//                    alert("done!");
+//                    return;
+//                }
+//            }
         </script>
     </body>
 </html>

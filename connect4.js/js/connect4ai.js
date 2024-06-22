@@ -649,6 +649,10 @@ class ConnectFourAlphaBetaPruningSearchEngine {
         this.#heuristicFunction = heuristicFunction;
     }
     
+    getName() {
+        return "Alpha-beta pruning";
+    }
+    
     search(root, depth, playerType = O) {
         this.#bestMoveState = null;
         
@@ -792,6 +796,10 @@ class ConnectFourNegamaxSearchEngine {
         this.#heuristicFunction = heuristicFunction;
     }
     
+    getName() {
+        return "Negamax";
+    }
+    
     search(root, depth, playerType = O) {
         if (playerType === O) {
             return this.#negamaxRoot(root,
@@ -893,12 +901,15 @@ class ConnectFourNegamaxSearchEngine {
     }
 }
 
-
 class ConnectFourPrincipalVariationSearchEngine {
     #heuristicFunction;
     
     constructor(heuristicFunction) {
         this.#heuristicFunction = heuristicFunction;
+    }
+    
+    getName() {
+        return "Principal variation search";
     }
     
     search(root, depth, playerType = O) {
