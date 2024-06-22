@@ -682,7 +682,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
                                          root,
                                          depth - 1,
                                          alpha,
-                                         Number.POSITIVE_INFINITY,
+                                         Number.MAX_SAFE_INTEGER,
                                          X));
                 
                 if (tentativeValue < value) {
@@ -709,7 +709,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
                                  this.#alphaBetaPruningImpl(
                                          root,
                                          depth - 1,
-                                         Number.NEGATIVE_INFINITY,
+                                         Number.MIN_SAFE_INTEGER,
                                          beta,
                                          O));
 
@@ -761,7 +761,7 @@ class ConnectFourAlphaBetaPruningSearchEngine {
             
             return value;
         } else {
-            let value = Number.POSITIVE_INFINITY;
+            let value = Number.MAX_SAFE_INTEGER;
             
             for (const x of PLIES) {
                 if (!state.makePly(x, X)) {
