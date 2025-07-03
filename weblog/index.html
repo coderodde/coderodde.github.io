@@ -349,25 +349,35 @@
                 <p>
                     In this post, I will briefly discuss a rather simple graph search technique <b>[1]</b> that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
+                
                 A directed, unweighted graph $G$ is an ordered pair $(V, A)$, where $V$ is the set of <i>nodes</i>, and $A \subseteq V \times V$ is the set of directed <i>arcs</i>.
+                
                 Given two terminal nodes $s, t \in V$, we wish to find a <i>shortest</i> $s,t$-path, or, in other words, 
-                    a path that connects the node $s$ to the node $t$ using minimum number of arcs.
+                    a path that connects the node $s$ to the node $t$ using minimum number of arcs. (Such a path may not be unique, yet it is fine to choose arbitrary one.)
+                
                 According to common jargon, $s$ is called a source node, and $t$ is called a target node.
                     Also, by $A(G)$ we will denote the arc set of $G$.
-                Also, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, $v$ a <i>child</i> of $u$. 
+                
+                Also, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, and $v$ a <i>child</i> of $u$. 
+                
                 Finally, we reserve the term &quot; search frontier&quot; to depict the set of nodes no further from the main node than 
                     $\Delta \in \mathbb{N} \cup \{ 0 \}$ steps.
                 </p>
                 
                 <p>
                 What comes to the actual algorithm in question, it utilizes iterative deepening in order to reduce memory consumption. 
+                
                 It first checks that the invocation is trivial (the source node is the target node), 
-                    and if so, returns $\langle s \rangle = \langle t \rangle$. 
+                    and if so, returns $\langle s \rangle = \langle t \rangle$. We need to handle that special trivial case, since the actual algorith cannot handle it properly. 
+                    
                 Now, let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ in $k$ hops following the directions of the arcs.
                 Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ in $k$ hops following the opposite directions of the arcs.
+                
                 Formally, the algorithm computes $F_f^k$ and $F_b^k$ for $k = 0, 1, \dots$ until $F_f^k$ intersects $F_b^k$ for some $k$ and returns a &quot;meeting node&quot; $\mu$ for which $\mu \in F_f^k \cap F_b^k$.
+                 
                 After finding such a meeting node, the shortest path is reconstructed by recursively finding the shortest $s, 
                     \mu$-path and appending the node stack of the backward search process. 
+                    
                     Otherwise, if the meeting node is not found, $k$ is incremented, and the search repeats once again. 
                 There is, however, a catch. Suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest $s,t$-path.
                 Now, the search procedure currently under discussion will return with no path, 
@@ -1053,12 +1063,36 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
 </style>
         </article>
         
-        <div id="sfc5zf72w63g8137x9yqx4xgbtcjzsrya8f"></div>
-        <script type="text/javascript" src="https://counter6.optistats.ovh/private/counter.js?c=5zf72w63g8137x9yqx4xgbtcjzsrya8f&down=async" async></script>
-         <noscript>
-            <a href="https://www.freecounterstat.com" title="website click counter">
-            <img src="https://counter6.optistats.ovh/private/freecounterstat.php?c=5zf72w63g8137x9yqx4xgbtcjzsrya8f" border="0" title="website click counter" alt="website click counter"></a>
-        </noscript>
+        <a href="#ndimrot" id="ndimrot"><h2>Calculating the rotation energy of a $n$-dimensional ball</h2></a>
+        <article>
+            <p>
+            $$dV=r^2 \sin\theta dr d\theta d\phi
+ , where r \in [0,R],\theta \in [0,π] and \phi \in [0,2π]
+.$$
+            In this post, we will calculate the rotational energy of an $n$-dimensional (solid) ball. 
+            To begin with,
+            $$
+            \mathrm{d}V = r^2 \; \mathrm{d}r \; \mathrm{d}\alpha^2.
+            $$
+            $$
+            \mathrm{d}m = \rho \; \mathrm{d}V = \frac{mr^2 \; \mathrm{d}r \; \mathrm{d}\alpha^2}{V_3}.
+            $$
+            Next, the energy of that infinitesimal volume is given by
+            $$
+            \mathrm{d}E = \frac{1}{2} \mathrm{d}m \; v^2 = \frac{1}{2} \mathrm{d}m \; (r\omega)^2 = \frac{mr^4\omega^2\; \mathrm{d}r \; \mathrm{d}\alpha^2}{2V_3}.
+            $$
+            Finally, the rotational energy is
+            \begin{aligned}
+            E_{rotational}^n &= \int_0^{2\pi} \int_0^{\pi} \int_0^R \mathrm{d}E \\
+                             &= \int_0^{2\pi} \int_0^{\pi} \int_0^R \frac{mr^4\omega^2 \; \mathrm{d}r \; \mathrm{d}\alpha^2}{2V_3} \\
+                             &= \frac{m\omega^2}{2V_3} \int_0^{2\pi} \int_0^{\pi} \Bigg[ \frac{r^5}{5} \Bigg]_{r = 0}^{r = R} \; \mathrm{d}r \; \mathrm{d}\alpha^2 \\
+                             &= \frac{mR^5\omega^2}{10 V_3} \int_0^{2\pi} \int_0^{\pi} \mathrm{d}\alpha^2 \\
+                             &= \frac{mR^5\omega^2}{10 V_3} \times 2\pi^2 \\
+                             &= \frac{mR^5\omega^2 \pi^2}{5 (4\pi R^3 / 3)} \\
+                             &= \frac{3mR^2\omega^2}{f}
+            \end{aligned}
+            </p>
+        </article>
     </body>
 </html>
     
