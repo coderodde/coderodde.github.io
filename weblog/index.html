@@ -451,8 +451,56 @@
                 </p>
                 
                 <a href="#biddfs_pseudocode" id="biddfs_pseudocode"><h3 id="biddfs_pseudocode">Pseudocode</h3></a>
+                
+                
                 <p>
-                    <alg-algorithm header="Algorithm 1 Build-Path($s, \mu, B, G$)"
+                    <alg-algorithm header="Algorithm 1 Find-Shortesst-Path($G, s, t$)"
+                                   comment="The main search routine"
+                                   algorithm-upper-header-class="upper_header_bar"
+                                   algorithm-lower-header-class="lower_header_bar"
+                                   algorithm-footer-class="footer_bar">
+                        <alg-if condition="$s = t$">
+                            <alg-return>$\langle s \rangle$</alg-return>
+                        </alg-if>
+                        
+                        <alg-step>$\langle F, B, \Delta, V_f, V_{b,1}, V_{b,2}, l_f, l_b \rangle \leftarrow \langle \emptyset, \emptyset, 0 \emptyset, \emptyset, \emptyset, 0, 0 \rangle$</alg-step>
+                       
+                        <alg-forever>
+                            <alg-step>$F \leftarrow \emptyset$</alg-step>
+                            <alg-step>$V_f \leftarrow \emptyset$</alg-step>
+                            <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F, V_f)$</alg-step>
+                            
+                            <alg-if condition="\vert V_f \vert = l_f">
+                                <alg-return>$\Nil$</alg-return>
+                            </alg-if>
+                            
+                            <alg-step>$l_f \leftarrow \vert V_f \vert$</alg-step>
+                            <alg-step>$V_{b,1} \leftarrow \emptyset$</alg-step>
+                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, t, \Delta, F, V_{b,1})$</alg-step>
+                            
+                            <alg-if condition="$\mu \neq \Nil$">
+                                <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
+                            </alg-if>
+                            
+                            <alg-step>$V_{b,2} \leftarrow \emptyset$</alg-step>
+                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, t, \Delta + 1, F, V_{b,2})$</alg-step>
+                            
+                            <alg-if condition="$\mu \neq \Nil$">
+                                <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
+                            </alg-if>
+                            
+                            <alg-if condition="$\vert B_{b,2} \vert = l_b$">
+                              <alg-return>$\NIl$</alg-return>
+                            </alg-if>
+                            
+                            <alg-step>$l_b \leftarrow \vert V_{b,2} \vert$</alg-step>
+                            <alg-step>$\Delta \leftarrow \Delta + 1$</alg-step>
+                        </alg-forever>
+                    </alg-algorithm>
+                </p>
+                
+                <p>
+                    <alg-algorithm header="Algorithm 2 Build-Path($s, \mu, B, G$)"
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
@@ -463,26 +511,39 @@
                 </p>
                 
                 <p>
-                    <alg-algorithm header="Algorithm 2 Depth-Limited-Search-Forward$(G, u, \Delta, F)$"
+                    <alg-algorithm header="Algorithm 3 Depth-Limited-Search-Forward$(G, u, \Delta, F, V_f)$"
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
-                        <alg-if condition="$\Delta = 0$">
-                            <alg-step>$F \leftarrow F \cup \{ u \}$</alg-step>
+                                   
+                        <alg-if condition="$u \in V_f$">
                             <alg-return></alg-return>
                         </alg-if>
+                        
+                        <alg-step>$V_f \leftarrow V_f \cup \{u\}$</alg-step>
+                        
+                        <alg-if condition="$\Delta = 0$">
+                            <alg-step>$F \leftarrow F \cup \{u\}</alg-step>
+                            <alg-return></alg-return>
+                        </alg-if>
+                        
                         <alg-foreach condition="$v \in $ Children$(G, u)$">
-                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F)$</alg-step>
+                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F, V_f)$</alg-step>
                         </alg-foreach>
                     </alg-algorithm>
                 </p>
                 
                 <p>
-                    <alg-algorithm header="Algorithm 3 Depth-Limited-Search-Backward$(G, u, \Delta, B, F)$"
+                    <alg-algorithm header="Algorithm 4 Depth-Limited-Search-Backward$(G, u, \Delta, B, F, V)$"
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
+                        <alg-if condition="$u \in V$">
+                            <alg-return>$\Nil$</alg-return>
+                        </alg-if>
+                                   
                         <alg-step>$\text{prepend } u \text{ to } B$</alg-step>
+                        
                         <alg-if condition="$\Delta = 0$">
                             <alg-if condition="$u \in F$">
                                 <alg-return>$u$</alg-return>
@@ -490,40 +551,16 @@
                             <alg-step>$\text{remove the head node in }B$</alg-step>
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
+                        
                         <alg-foreach condition="$v \in $Parents$(G, u)$">
-                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F)$</alg-step>
+                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F, V)$</alg-step>
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>$\mu$</alg-return>
                             </alg-if>
                         </alg-foreach>
+                        
                         <alg-step>$\text{remove the head node in } B$</alg-step>
                         <alg-return>$\Nil$</alg-return>
-                    </alg-algorithm>
-                </p>
-               
-                
-                <p>
-                    <alg-algorithm header="Algorithm 4 Find-Shortesst-Path($G, s, t$)"
-                                   comment="The main search routine"
-                                   algorithm-upper-header-class="upper_header_bar"
-                                   algorithm-lower-header-class="lower_header_bar"
-                                   algorithm-footer-class="footer_bar">
-                        <alg-if condition="$s = t$">
-                            <alg-return>$\langle s \rangle$</alg-return>
-                        </alg-if>
-                        <alg-step>$\langle F, B, \Delta \rangle \leftarrow \langle \emptyset, \emptyset, 0 \rangle$</alg-step>
-                        <alg-forever>
-                            <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F)$</alg-step>
-                            <alg-foreach condition="$d = \Delta, \Delta + 1$">
-                                <alg-step>$\mu \leftarrow $ Depth-Limited-Search-Backward$(G, t, d, B, F)$</alg-step>
-
-                                <alg-if condition="$\mu \neq \Nil$">
-                                    <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
-                                </alg-if>
-                            </alg-foreach>
-                            <alg-step>$F \leftarrow \emptyset$</alg-step>
-                            <alg-step>$\Delta \leftarrow \Delta + 1$</alg-step>
-                        </alg-forever>
                     </alg-algorithm>
                 </p>
                 
