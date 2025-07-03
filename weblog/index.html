@@ -368,7 +368,7 @@
                 What comes to the actual algorithm in question, it utilizes iterative deepening in order to reduce memory consumption. 
                 
                 It first checks that the invocation is trivial (the source node is the target node), 
-                    and if so, returns $\langle s \rangle = \langle t \rangle$. We need to handle that special trivial case, since the actual algorith cannot handle it properly. 
+                    and if so, returns $\langle s \rangle = \langle t \rangle$. We need to handle that special trivial case since the actual algorithm cannot handle it properly. 
                     
                 Now, let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ in $k$ hops following the directions of the arcs.
                 Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ in $k$ hops following the opposite directions of the arcs.
@@ -383,15 +383,14 @@
                 Suppose we are given a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest $s,t$-path.
         
                 Now, the search procedure currently under discussion will return with no path, 
-                    and that happens because the forward and backward search frontiers, F_f^k and F_b^k, respectively, 
+                    and that happens because the forward and backward search frontiers, $F_f^k$ and $F_b^k$, respectively, 
                     go &quot;through&quot; each other:
                     
                 For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$,
                     and so, the search frontiers are not able to 
                 agree on a meeting node. In order to remedy this, for each turn of the backward search, 
                 we run it twice:
-                    once for detecting shortest paths with the odd number of arcs, and once for detecting shortest paths with the even number of arcs. 
-                    Or, in another words, for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
+                    once for $k$ hops, and if that does not produce a meeting node $\mu$, once for $k + 1$ hops. Or, in another words, for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
                 However, if there is no $s,t$-path ($s$ belongs to a strongly connected component $S$ and $t$ to $T$ such that there is no arc leaving $S$ and entering $T$), the naïve algorithm will either keep trying to make progress without making any, or (at best) 
                 if there is a directed cycle reachable from $s$, it will recur indefinitely untill exhausting the stack.
                 </p>
@@ -436,17 +435,17 @@
                     Before we proceed to pseudocode, we have to review some notational conventions.
                     Given a graph $G$, the set of all children of a node $u \in V(G)$ is written as 
                     ${\rm C{\small HILDREN}}(G, u)$. Also, the set of all parents of a node 
-                    $u$ is written as ${\rm P{\small ARENTS}}(G, u)$. The algorithm 1 reconstructs the 
+                    $u$ is written as ${\rm P{\small ARENTS}}(G, u)$. The algorithm 2 reconstructs the 
                     shortest path by recursively searching the shortest $s,\mu$-path from the source node
                     and to the meeting node $\mu$, appends the $B$-path to the resulting path and returning the
-                    concatenation. The algorithm 2 is the forward search routine that colors all the nodes
+                    concatenation. The algorithm 3 is the forward search routine that colors all the nodes
                     exactly $\Delta$ hops away from the source. Note that it may color the nodes 
                     less than $\Delta$ hops away, since it may &quot;make a turn&quot; and proceed towards
                     closer nodes. It is, however, sufficient for us that the routine does not reach the nodes
                     farther than $\Delta$ steps away. The algorithm 3, like the algorithm 2, makes a 
                     depth-first search backwards, but along opposite direction (from child to parent). When
                     the node $\mu$ for which $\mu \in F_b^k$, the search is over and the shortest path
-                    is reconstructed via algorithm 1. Finally, the algorithm 4 performs the actual search
+                    is reconstructed via algorithm 2. Finally, the algorithm 1 performs the actual search
                     by increasingly going deeper in the graph until the two search frontiers $F_f^k, F_b^k$ (or $F_f^k, F_b^{k+1}$) intersect.
                 </p>
                 
@@ -463,14 +462,15 @@
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
                         
-                        <alg-step>$\langle F, B, \Delta, V_f, V_{b,1}, V_{b,2}, l_f, l_b \rangle \leftarrow \langle \emptyset, \emptyset, 0 \emptyset, \emptyset, \emptyset, 0, 0 \rangle$</alg-step>
+                        <alg-step>$\langle F, B, V_f, V_{b,1}, V_{b,2} \rangle \leftarrow \langle \emptyset, \emptyset, \emptyset, \emptyset, \emptyset \rangle$</alg-step>
+                        <alg-step>$\langle \Delta, l_f, l_b \rangle \leftarrow \langle 0, 0, 0 \rangle$</alg-step>
                        
                         <alg-forever>
                             <alg-step>$F \leftarrow \emptyset$</alg-step>
                             <alg-step>$V_f \leftarrow \emptyset$</alg-step>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F, V_f)$</alg-step>
                             
-                            <alg-if condition="\vert V_f \vert = l_f">
+                            <alg-if condition="$\vert V_f \vert = l_f$">
                                 <alg-return>$\Nil$</alg-return>
                             </alg-if>
                             
@@ -490,7 +490,7 @@
                             </alg-if>
                             
                             <alg-if condition="$\vert B_{b,2} \vert = l_b$">
-                              <alg-return>$\NIl$</alg-return>
+                              <alg-return>"$\Nil$"  </alg-return>
                             </alg-if>
                             
                             <alg-step>$l_b \leftarrow \vert V_{b,2} \vert$</alg-step>
@@ -523,7 +523,7 @@
                         <alg-step>$V_f \leftarrow V_f \cup \{u\}$</alg-step>
                         
                         <alg-if condition="$\Delta = 0$">
-                            <alg-step>$F \leftarrow F \cup \{u\}</alg-step>
+                            <alg-step>$F \leftarrow F \cup \{u\}$</alg-step>
                             <alg-return></alg-return>
                         </alg-if>
                         
