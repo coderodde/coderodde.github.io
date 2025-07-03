@@ -1109,7 +1109,7 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
 </style>
 </style>
         </article>
-        
+        <!--
         <a href="#ndimrot" id="ndimrot"><h2>Calculating the rotation energy of a $n$-dimensional ball</h2></a>
         <article>
             <p>
@@ -1139,7 +1139,30 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
                              &= \frac{3mR^2\omega^2}{f}
             \end{aligned}
             </p>
-        </article>
+        </article>-->
+        
+        <!-- Minor derivation exercise -->
+        <!--
+        <a href="#minord" id="minord"><h2>Minor derivation exercise</h2></a>
+        <article>
+            <p>
+            In this post, we will derivate $\log_{g(x)}f(x)$ and $f(x)^{g(x)}$. We start from the former.
+            </p>    
+            <p>
+            $$
+            \frac{\mathrm{d}}{\mathrm{d}x} \Bigg[ \log_{g(x)}f(x) \Bigg] = \frac{\mathrm{d}}{\mathrm{d}x}  \Bigg[ \frac{\ln f(x)}{\ln g(x)} \Bigg]
+                          = \frac{\frac{f^\prime(x)}{f(x)} \ln g(x) - \frac{g^\prime(x)}{g(x)}\ln f(x)}{\ln^2 g(x)}
+                          = \frac{f^\prime(x)}{f(x) \ln g(x)} - \frac{g^\prime(x) \ln f(x)}{g(x) \ln^2 g(x)}.
+            $$
+            Now, we focus on the $f(x)^{g(x)}$:
+            $$
+            \frac{\mathrm{d}}{\mathrm{d}x} \Bigg[ f(x)^{g(x)} \Bigg] =
+            \frac{\mathrm{d}}{\mathrm{d}x} \Bigg[ e^{g(x) \ln f(x)} \Bigg] = 
+            e^{g(x) \ln f(x)} \frac{\mathrm{d}}{\mathrm{d}x} \Bigg[g(x) \ln f(x) \Bigg] = 
+            e^{g(x) \ln f(x)} \Bigg[ g^\prime(x) \ln f(x) + \frac{f^\prime(x) g(x)}{f(x)} \Bigg].
+            $$
+            </p>
+        </article>-->
     </body>
 </html>
     
