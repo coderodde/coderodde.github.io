@@ -379,17 +379,21 @@
                     \mu$-path and appending the node stack of the backward search process. 
                     
                     Otherwise, if the meeting node is not found, $k$ is incremented, and the search repeats once again. 
-                There is, however, a catch. Suppose a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest $s,t$-path.
+                There is, however, a catch. 
+                Suppose we are given a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest $s,t$-path.
+        
                 Now, the search procedure currently under discussion will return with no path, 
                     and that happens because the forward and backward search frontiers, F_f^k and F_b^k, respectively, 
                     go &quot;through&quot; each other:
+                    
                 For $k = 1$, $F_f^k = \{ u_1 \}$ and $F_b^k = \{ u_2 \}$, and if $k = 2$, $F_f^k = \{ u_2 \}$ and $F_b^k = \{ u_1 \}$,
                     and so, the search frontiers are not able to 
                 agree on a meeting node. In order to remedy this, for each turn of the backward search, 
-                it is run twice:
-                    once for detecting shortest paths with the even number of arcs, and once for detecting shortest paths with the odd number of arcs. 
+                we run it twice:
+                    once for detecting shortest paths with the odd number of arcs, and once for detecting shortest paths with the even number of arcs. 
                     Or, in another words, for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
-                Last but not least, if there is no $s,t$-path, the algorith will stuck.
+                However, if there is no $s,t$-path ($s$ belongs to a strongly connected component $S$ and $t$ to $T$ such that there is no arc leaving $S$ and entering $T$), the naïve algorithm will either keep trying to make progress without making any, or (at best) 
+                if there is a directed cycle reachable from $s$, it will recur indefinitely untill exhausting the stack.
                 </p>
                 
                 <p>
@@ -527,6 +531,10 @@
                     The results are rather impressive. What comes to solving 15-puzzles, while iterative deepening A* dominates BID by a factor of three or so, on general graphs, BID 
                     is faster than iterative deepening depth-first search by an order of magnitude, and BID outperforms unidirectional breadth-first search by three orders
                     of magnitude. The following listing is a typical output of the benchmarking program:
+                </p>
+                
+                <p>
+                The Java implementation of the BIDDFS is in my <a href="https://github.com/coderodde/LibID/blob/master/src/main/java/io/github/coderodde/libid/impl/BidirectionalIterativeDeepeningDepthFirstSearch.java">GitHub repository</a>.
                 </p>
                 
                 <pre>
