@@ -471,36 +471,36 @@
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
                         
-                        <alg-step>$(B, F, V_f, V_b) \leftarrow (\textbf{empty stack}, \emptyset, \emptyset, \emptyset)$</alg-step>
-                        <alg-step>$(\Delta, l_f, l_b) \leftarrow (0, 0, 0)$</alg-step>
+                        <alg-step>$(B, F, V_f, V_b) := (\textbf{empty stack}, \emptyset, \emptyset, \emptyset)$</alg-step>
+                        <alg-step>$(\Delta, l_f, l_b) := (0, 0, 0)$</alg-step>
                        
                         <alg-forever>
-                            <alg-step>$(F, V_f) \leftarrow (\emptyset, \emptyset)$</alg-step>
+                            <alg-step>$(F, V_f) := (\emptyset, \emptyset)$</alg-step>
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F, V_f)$</alg-step>
                             
                             <alg-if condition="$\vert V_f \vert = l_f$">
                                 <alg-return>$\Nil$</alg-return>
                             </alg-if>
                             
-                            <alg-step>$(l_f, V_b) \leftarrow (\vert V_f \vert, \emptyset)$</alg-step>
-                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, t, \Delta, F, V_b)$</alg-step>
+                            <alg-step>$(l_f, V_b) := (\vert V_f \vert, \emptyset)$</alg-step>
+                            <alg-step>$\mu := $Depth-Limited-Search-Backward$(G, t, \Delta, F, V_b)$</alg-step>
                             
                             <alg-if condition="$\mu \neq \Nil$">
-                                <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
+                                <alg-return>Build-Path$(G, s, \mu, B)$</alg-return>
                             </alg-if>
                             
-                            <alg-step>$V_b \leftarrow \emptyset$</alg-step>
-                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, t, \Delta + 1, F, V_b)$</alg-step>
+                            <alg-step>$V_b := \emptyset$</alg-step>
+                            <alg-step>$\mu := $Depth-Limited-Search-Backward$(G, t, \Delta + 1, F, V_b)$</alg-step>
                             
                             <alg-if condition="$\mu \neq \Nil$">
-                                <alg-return>Build-Path$(s, \mu, B, G)$</alg-return>
+                                <alg-return>Build-Path$(G, s, \mu, B)$</alg-return>
                             </alg-if>
                             
                             <alg-if condition="$\vert B_b \vert = l_b$">
                               <alg-return>$\Nil$</alg-return>
                             </alg-if>
                             
-                            <alg-step>$(l_b, \Delta) \leftarrow (\vert V_b \vert, \Delta + 1)$</alg-step>
+                            <alg-step>$(l_b, \Delta) := (\vert V_b \vert, \Delta + 1)$</alg-step>
                         </alg-forever>
                     </alg-algorithm>
                 </p>
@@ -510,7 +510,7 @@
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
-                        <alg-step>$\pi \leftarrow$ Find-Shortest-Path$(G, s, \mu)$</alg-step>
+                        <alg-step>$\pi :=$ Find-Shortest-Path$(G, s, \mu)$</alg-step>
                         <alg-step>Pop$(B)$</alg-step>
                         <alg-return comment="Concatenate $B$ starting from the topmost element.">$\pi \circ B$</alg-return>
                     </alg-algorithm>
@@ -526,10 +526,10 @@
                             <alg-return></alg-return>
                         </alg-if>
                         
-                        <alg-step>$V \leftarrow V \cup \{u\}$</alg-step>
+                        <alg-step>$V := V \cup \{u\}$</alg-step>
                         
                         <alg-if condition="$\Delta = 0$">
-                            <alg-step>$F \leftarrow F \cup \{u\}$</alg-step>
+                            <alg-step>$F := F \cup \{u\}$</alg-step>
                             <alg-return></alg-return>
                         </alg-if>
                         
@@ -558,10 +558,10 @@
                             <alg-return>$\Nil$</alg-return>
                         </alg-if>
                         
-                        <alg-step>$V \leftarrow V \cup \{u\}$</alg-step>
+                        <alg-step>$V := V \cup \{u\}$</alg-step>
                         
                         <alg-foreach condition="$v \in $Parents$(G, u)$">
-                            <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F, V)$</alg-step>
+                            <alg-step>$\mu := $Depth-Limited-Search-Backward$(G, v, \Delta - 1, B, F, V)$</alg-step>
                             <alg-if condition="$\mu \neq \Nil$">
                                 <alg-return>$\mu$</alg-return>
                             </alg-if>
