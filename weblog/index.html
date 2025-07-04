@@ -298,7 +298,7 @@
                 \mathfrak{I}(u_2, u_3) = \dots = \mathfrak{I}(u_{k-1}, u_k) = \mathfrak{I}(u_k, u_1) = 0$, and to pass in $\infty$ as the required potential. Since it is reasonable 
                 not to accept infinity for the requested potential, and we have the closed list around in the algorithm, this phenomenon cannot appear.     
                 Without loss of generality, suppose the search enters the cycle via $u_1$. When $u_k$ will be
-                removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 17 since $u_1$ is in $C$, and
+                removed from the priority queue, the arc $(u_k, u_1)$ will be ignored by the line 20 since $u_1$ is in $C$, and
                 so, there is no way $d(u_k)$ could be mapped to $u_1$.
                 </p>
                 <p>
@@ -448,15 +448,15 @@
                 </p>
                 
                 <p>
-                Now, we need to discuss a way for resolving the termination bug that appears when there is no path from the source node $s$ and the target node $t$. In order to circumvent the issue, we keep two (hash) sets in the algorithm 1: $V_f$ for the visited set of the forward search, and $V_b$ for the visited set of the backward search. Also, we need two unsigned integers, $l_f$ and $l_b$. $l_f$ caches the number of nodes that were visited by the forward search at the previous iteration, and $l_b$ cacehs, analogously, the number of nodes that were visited by the backward search. If at some occasion we have $l_f = \vert V_f \vert$ (line 7), we know that the forward search was not able to make any progress, and we know, therefore, that $t$ is not reachable, and halt the search returning a sentinel for a missing path. The same applies for the relationship between $l_b$ and $V_b$, (line 20). However, note that we cannot check whether $l_b = ´V_b$ after both invocations of $\mathbf{\mathrm{D}\scriptstyle\mathrm{EPTH{-}}\mathrm{L}\scriptstyle\mathrm{IMITED{-}}}\mathbf{\mathrm{S}\scriptstyle\mathrm{EARCH{-}}}\mathbf{\mathrm{B}\scriptstyle\mathrm{ACKWARD}}$ since that would lead to premature termination. For the sake of example, suppose $\Delta$ is fixed to $\Delta^\prime$. Now, the main algorithm will check for $\vert V_b \vert = l_b$ after the first invocation of algorithm 4, and after that check it after the second call to the algorithm 4 for the depth $\Delta^\prime + 1$. If the second run of the algorithm 4 did no produce an improvement, everything is in order and we can terminate. However, when $\Delta$ increases to $\Delta + 1$, the very first check will catch the equality $l_b = \vert V_b \vert$ and exit primaturely.
+                Now, we need to discuss a way for resolving the termination bug that appears when there is no path from the source node $s$ and the target node $t$. In order to circumvent the issue, we keep two (hash) sets in the algorithm 1: $V_f$ for the visited set of the forward search, and $V_b$ for the visited set of the backward search. Also, we need two unsigned integers, $l_f$ and $l_b$. $l_f$ caches the number of nodes that were visited by the forward search at the previous iteration, and $l_b$ caches, analogously, the number of nodes that were visited by the backward search. If at some occasion we have $l_f = \vert V_f \vert$ (line 7), we know that the forward search was not able to make any progress, and we know, therefore, that $t$ is not reachable, and halt the search returning a sentinel for a missing path. The same applies for the relationship between $l_b$ and $V_b$, (line 17). However, note that we cannot check whether $l_b = ´V_b$ after both invocations of $\mathbf{\mathrm{D}\scriptstyle\mathrm{EPTH{-}}\mathrm{L}\scriptstyle\mathrm{IMITED{-}}}\mathbf{\mathrm{S}\scriptstyle\mathrm{EARCH{-}}}\mathbf{\mathrm{B}\scriptstyle\mathrm{ACKWARD}}$ since that would lead to premature termination. For the sake of example, suppose $\Delta$ is fixed to $\Delta^\prime$. Now, the main algorithm will check for $\vert V_b \vert = l_b$ after the first invocation of algorithm 4, and after that check it after the second call to the algorithm 4 for the depth $\Delta^\prime + 1$. If the second run of the algorithm 4 did no produce an improvement, everything is in order and we can terminate. However, when $\Delta$ increases to $\Delta + 1$, the very first check will catch the equality $l_b = \vert V_b \vert$ and exit primaturely.
                 </p>
                 <p>
                 Finally, we discuss our option for calling the same search algorithm in order to compute the shortest path prefix via algorithm 2. Note that the running time of BIDDFS is
-                $$\mathcal{O}\Bigg(\sqrt{b^d}\Bigg) = \mathcal{O}\Bigg(b^{d / 2}\Bigg).$$
+                $$\mathcal{O}\Bigg(\sqrt{b^N}\Bigg) = \mathcal{O}\Bigg(b^{N / 2}\Bigg).$$
                 Now, in order to compute the shortest path prefix, we run it in 
-                $\mathcal{O}(b^{d / 4})$, and then we do $\mathcal{O}(b^{d / 8})$ worth effor, and so on. In total, the running time of BIDDFS is 
-                $$\mathcal{O}\Bigg( \sum_{i = 1}^{\lceil d / 2 \rceil} b^i \Bigg),$$
-                which is still $\mathcal{O}(b^{d / 2}$. Now, we are ready to proceed to the pseudocode.
+                $\mathcal{O}(b^{N / 4})$, and then we do $\mathcal{O}(b^{N / 8})$ worth effor, and so on. In total, the running time of BIDDFS is 
+                $$\mathcal{O}\Bigg( \sum_{i = 1}^{\lceil N / 2 \rceil} b^i \Bigg),$$
+                which is still $\mathcal{O}(b^{N / 2}$. Now, we are ready to proceed to the pseudocode.
                 </p>
                 
                 <a href="#biddfs_pseudocode" id="biddfs_pseudocode"><h3 id="biddfs_pseudocode">Pseudocode</h3></a>
