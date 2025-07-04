@@ -462,7 +462,7 @@
                             <alg-return>$\langle s \rangle$</alg-return>
                         </alg-if>
                         
-                        <alg-step>$(F, B, V_f, V_b) \leftarrow (\emptyset, \textbf{empty stack}, \emptyset, \emptyset)$</alg-step>
+                        <alg-step>$(B, F, V_f, V_b) \leftarrow (\textbf{empty stack}, \emptyset, \emptyset, \emptyset)$</alg-step>
                         <alg-step>$(\Delta, l_f, l_b) \leftarrow (0, 0, 0)$</alg-step>
                        
                         <alg-forever>
@@ -511,16 +511,16 @@
                 </p>
                 
                 <p>
-                    <alg-algorithm header="Algorithm 3 Depth-Limited-Search-Forward$(G, u, \Delta, F, V_f)$"
+                    <alg-algorithm header="Algorithm 3 Depth-Limited-Search-Forward$(G, u, \Delta, F, V)$"
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
                                    algorithm-footer-class="footer_bar">
                                    
-                        <alg-if condition="$u \in V_f$">
+                        <alg-if condition="$u \in V$">
                             <alg-return></alg-return>
                         </alg-if>
                         
-                        <alg-step>$V_f \leftarrow V_f \cup \{u\}$</alg-step>
+                        <alg-step>$V \leftarrow V \cup \{u\}$</alg-step>
                         
                         <alg-if condition="$\Delta = 0$">
                             <alg-step>$F \leftarrow F \cup \{u\}$</alg-step>
@@ -528,7 +528,7 @@
                         </alg-if>
                         
                         <alg-foreach condition="$v \in $ Children$(G, u)$">
-                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F, V_f)$</alg-step>
+                            <alg-step>Depth-Limited-Search-Forward$(G, v, \Delta - 1, F, V)$</alg-step>
                         </alg-foreach>
                     </alg-algorithm>
                 </p>
