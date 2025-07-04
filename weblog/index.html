@@ -344,31 +344,28 @@
                 <b>[1]</b> <a id="ref1" target="_blank" href="https://coderodde.wordpress.com/2015/08/01/keeping-vectors-efficient/">Keeping vectors efficient</a> (Retrieved 2018-03-09.)
             </article>
             
-            <a href="#biddfs"><h2 id="biddfs">Richard E. Korf's bidirectional depth-first iterative-deepening pathfinding algorithm</h2></a>
+            <a href="#biddfs"><h2 id="biddfs">Richard E. Korf's bidirectional, iterative-deepening depth-first search pathfinding algorithm</h2></a>
             <article>
                 <p>
                     In this post, I will briefly discuss a rather simple graph search technique <b>[1]</b> that turned out to be rather efficient on sparse, directed, unweighted graphs. 
                 Before that, I will review some terminology. 
                 
-                A directed, unweighted graph $G$ is an ordered pair $(V, A)$, where $V$ is the set of <i>nodes</i>, and $A \subseteq V \times V$ is the set of directed <i>arcs</i>.
+                A directed, unweighted graph $G$ is an ordered pair $(V, A)$, where $V$ is the set of <i>nodes</i>, and $A \subseteq V \times V$ is the set of directed <i>arcs</i>. Given a graph $G = (V, A)$, we write more explicitly $A = A(G)$ and $V = V(G)$. 
                 
                 Given two terminal nodes $s, t \in V$, we wish to find a <i>shortest</i> $s,t$-path, or, in other words, 
                     a path that connects the node $s$ to the node $t$ using minimum number of arcs. (Such a path may not be unique, yet it is fine to choose arbitrary one.)
                 
-                According to common jargon, $s$ is called a source node, and $t$ is called a target node.
-                    Also, by $A(G)$ we will denote the arc set of $G$.
+                According to common jargon, $s$ is called a <i>source</i> node, and $t$ is called a <i>target</i> node.
                 
                 Also, if we are given an arc $a = (u, v)$, we call $u$ a <i>parent</i> of $v$, and $v$ a <i>child</i> of $u$. 
-                
-                Finally, we reserve the term &quot; search frontier&quot; to depict the set of nodes no further from the main node than 
-                    $\Delta \in \mathbb{N} \cup \{ 0 \}$ steps.
+                  
                 </p>
                 
                 <p>
                 What comes to the actual algorithm in question, it utilizes iterative deepening in order to reduce memory consumption. 
                 
                 It first checks that the invocation is trivial (the source node is the target node), 
-                    and if so, returns $\langle s \rangle = \langle t \rangle$. We need to handle that special trivial case since the actual algorithm cannot handle it properly. 
+                    and if so, returns $\langle s \rangle = \langle t \rangle$. We need to handle that special trivial case since the actual algorithm cannot handle it properly, or, namely, it will result in a stack overflow. 
                     
                 Now, let $F_f^k$ be the set of nodes in $G$ that are reachable from $s$ in $k$ hops following the directions of the arcs.
                 Let also $F_b^k$ be the set of nodes in $G$ that are reachable from $t$ in $k$ hops following the opposite directions of the arcs.
@@ -380,7 +377,7 @@
                     
                     Otherwise, if the meeting node is not found, $k$ is incremented, and the search repeats once again. 
                 There is, however, a catch. 
-                Suppose we are given a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ is searched for a shortest $s,t$-path.
+                Suppose we are given a simple graph $V = \{s, u_1, u_2, t\}, A = \{ (s, u_1), (u_1, u_2), (u_2, t) \}$ and it is searched for a shortest $s,t$-path.
         
                 Now, the search procedure currently under discussion will return with no path, 
                     and that happens because the forward and backward search frontiers, $F_f^k$ and $F_b^k$, respectively, 
@@ -391,8 +388,8 @@
                 agree on a meeting node. In order to remedy this, for each turn of the backward search, 
                 we run it twice:
                     once for $k$ hops, and if that does not produce a meeting node $\mu$, once for $k + 1$ hops. Or, in another words, for each $k$ in forward direction, two backward searches are conducted: $F_b^k$ and $F_b^{k + 1}$.
-                However, if there is no $s,t$-path ($s$ belongs to a strongly connected component $S$ and $t$ to $T$ such that there is no arc leaving $S$ and entering $T$), the naïve algorithm will either keep trying to make progress without making any, or (at best) 
-                if there is a directed cycle reachable from $s$, it will recur indefinitely untill exhausting the stack.
+                However, if there is no $s,t$-path ($s$ belongs to a strongly connected component $S$ and $t$ to a strongly connected component $T$ such that there is no arc leaving $S$ and entering $T$), the naïve algorithm will either keep trying to make progress without making any (get stuck), or (at best) 
+                if there is a directed cycle reachable from $s$ traversing the arcs in their natural direction, or from $t$ traversing the arcs in their reversed direction, it will recur indefinitely untill exhausting the stack.
                 </p>
                 
                 <p>
@@ -434,23 +431,23 @@
                 <p>
                     Before we proceed to pseudocode, we have to review some notational conventions.
                     Given a graph $G$, the set of all children of a node $u \in V(G)$ is written as 
-                    ${\rm C{\small HILDREN}}(G, u)$. Also, the set of all parents of a node 
-                    $u$ is written as ${\rm P{\small ARENTS}}(G, u)$. The algorithm 2 reconstructs the 
+                    ${\rm C{\small HILDREN}}(G, u) = \{ v \in V(G) \; \colon \; (u, v) \in A(G)\}$. Also, the set of all parents of a node 
+                    $u$ is written as ${\rm P{\small ARENTS}}(G, u) = \{v \in V(G) \; \colon \; (v, u) \in A(G)\}$. The algorithm 2 reconstructs the 
                     shortest path by recursively searching the shortest $s,\mu$-path from the source node
-                    and to the meeting node $\mu$, appends the $B$-path to the resulting path and returning the
+                    and to the meeting node $\mu$, appends the $B$-path to the resulting path and returns the
                     concatenation. The algorithm 3 is the forward search routine that colors all the nodes
                     exactly $\Delta$ hops away from the source. Note that it may color the nodes 
                     less than $\Delta$ hops away, since it may &quot;make a turn&quot; and proceed towards
                     closer nodes. It is, however, sufficient for us that the routine does not reach the nodes
-                    farther than $\Delta$ steps away. The algorithm 3, like the algorithm 2, makes a 
-                    depth-first search backwards, but along opposite direction (from child to parent). When
-                    the node $\mu$ for which $\mu \in F_b^k$, the search is over and the shortest path
-                    is reconstructed via algorithm 2. Finally, the algorithm 1 performs the actual search
-                    by increasingly going deeper in the graph until the two search frontiers $F_f^k, F_b^k$ (or $F_f^k, F_b^{k+1}$) intersect.
+                    farther than $\Delta$ hops away. The algorithm 4 makes a 
+                    depth-first search backwards along opposite direction (from child to parent). When
+                    the node $\mu$ for which $\mu \in F_b^k \cap F_f^k$ or $\mu \in F_f^k \cap F_b^{k + 1}$, the search is over and the shortest path
+                    is reconstructed via algorithm 2. 
+                    
+                    If the algorithm may not agree on the middle node $\mu$, the parameter $\Delta$ (the search depth) is incremented and the procedure is repeated.
                 </p>
                 
                 <a href="#biddfs_pseudocode" id="biddfs_pseudocode"><h3 id="biddfs_pseudocode">Pseudocode</h3></a>
-                
                 
                 <p>
                     <alg-algorithm header="Algorithm 1 Find-Shortesst-Path($G, s, t$)"
