@@ -447,10 +447,14 @@
                     If the algorithm may not agree on the middle node $\mu$, the parameter $\Delta$ (the search depth) is incremented and the procedure is repeated.
                 </p>
                 
+                <p>
+                Now, we need to discuss a way for resolving the termination bug that appears when there is no path from the source node $s$ and the target node $t$. In order to circumvent the issue, we keep two (hash) sets in the algorithm 1: $V_f$ for the visited set of the forward search, and $V_b$ for the visited set of the backward search. Also, we need two unsigned integers, $l_f$ and $l_b$. $l_f$ caches the number of nodes that were visited by the forward search at the previous iteration, and $l_b$ cacehs, analogously, the number of nodes that were visited by the backward search. If at some occasion we have $l_f = \vert V_f \vert$ (line 9), we know that the forward search was not able to make any progress, and we know, therefore, that $t$ is not reachable, and halt the search returning a sentinel for a missing path. The same applies for the relationship between $l_b$ and $V_b$, (line 20). However, note that we cannot check whether $l_b = ´V_b$ after both invocations of $\mathbf{\mathrm{D}\scriptstyle\mathrm{EPTH{-}}\mathrm{L}\scriptstyle\mathrm{IMITED{-}}}\mathbf{\mathrm{S}\scriptstyle\mathrm{EARCH{-}}}\mathbf{\mathrm{B}\scriptstyle\mathrm{ACKWARD}}$ since that would lead to premature termination. For the sake of example, suppose $\Delta$ is fixed to $\Delta^\prime$. Now, the main algorithm will check for $\vert V_b \vert = l_b$ after the first invocation of algorithm 4, and after that check it after the second call to the algorithm 4 for the depth $\Delta^\prime + 1$. If the second run of the algorithm 4 did no produce an improvement, everything is in order and we can terminate. However, when $\Delta$ increases to $\Delta + 1$, the very first check will catch the equality $l_b = \vert V_b \vert$ and exit primaturely.
+                </p>
+                
                 <a href="#biddfs_pseudocode" id="biddfs_pseudocode"><h3 id="biddfs_pseudocode">Pseudocode</h3></a>
                 
                 <p>
-                    <alg-algorithm header="Algorithm 1 Find-Shortesst-Path($G, s, t$)"
+                    <alg-algorithm header="Algorithm 1 Find-Shortest-Path($G, s, t$)"
                                    comment="The main search routine"
                                    algorithm-upper-header-class="upper_header_bar"
                                    algorithm-lower-header-class="lower_header_bar"
@@ -463,16 +467,14 @@
                         <alg-step>$(\Delta, l_f, l_b) \leftarrow (0, 0, 0)$</alg-step>
                        
                         <alg-forever>
-                            <alg-step>$F \leftarrow \emptyset$</alg-step>
-                            <alg-step>$V_f \leftarrow \emptyset$</alg-step>
+                            <alg-step>$(F, V_f) \leftarrow (\emptyset, \emptyset)$</alg-step
                             <alg-step>Depth-Limited-Search-Forward$(G, s, \Delta, F, V_f)$</alg-step>
                             
                             <alg-if condition="$\vert V_f \vert = l_f$">
                                 <alg-return>$\Nil$</alg-return>
                             </alg-if>
                             
-                            <alg-step>$l_f \leftarrow \vert V_f \vert$</alg-step>
-                            <alg-step>$V_b \leftarrow \emptyset$</alg-step>
+                            <alg-step>$(l_f, V_b) \leftarrow (\vert V_f \vert, \emptyset)$</alg-step>
                             <alg-step>$\mu \leftarrow $Depth-Limited-Search-Backward$(G, t, \Delta, F, V_b)$</alg-step>
                             
                             <alg-if condition="$\mu \neq \Nil$">
@@ -490,8 +492,7 @@
                               <alg-return>$\Nil$</alg-return>
                             </alg-if>
                             
-                            <alg-step>$l_b \leftarrow \vert V_b \vert$</alg-step>
-                            <alg-step>$\Delta \leftarrow \Delta + 1$</alg-step>
+                            <alg-step>$(l_b, \Delta) \leftarrow (\vert V_b \vert, \Delta + 1)$</alg-step>
                         </alg-forever>
                     </alg-algorithm>
                 </p>
