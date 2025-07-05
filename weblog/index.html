@@ -1223,14 +1223,26 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
             $$
             I_n = \int_0^\pi \sin^n(x) \; \mathrm{d}x = \frac{(n - 1)}{n} \int_0^\pi \sin^{(n - 2)}(x) \; \mathrm{d}x = \frac{(n - 1)}{n} I_{n - 2}.
             $$
-            Now, the two base cases are $I_1 = 2$ and $I_2 = \pi / 2$.
+            Now, the two base cases are $I_1 = 2$ and $I_2 = \pi / 2$. The first ten volumes are:
+$$
+\begin{aligned}
+V_{  1} &= 2 R \\ % n = 1
+V_{  2} &= \pi R^2 \\ % n = 2
+V_{  3} &= \frac{4 \pi R^3}{3} \\ % n = 3
+V_{  4} &= \frac{\pi^2 R^4}{2} \\ % n = 4
+V_{  5} &= \frac{8 \pi^2 R^5}{15} \\ % n = 5
+V_{  6} &= \frac{\pi^3 R^6}{6} \\ % n = 6
+V_{  7} &= \frac{16 \pi^3 R^7}{105} \\ % n = 7
+V_{  8} &= \frac{\pi^4 R^8}{24} \\ % n = 8
+V_{  9} &= \frac{32 \pi^4 R^9}{945} \\ % n = 9
+V_{ 10} &= \frac{\pi^5 R^{10}}{120} \\ % n = 10
+\end{aligned}
+$$
             </p>
             
             <p>
-            Concluding the math, we see that $V_n = I_n R^n$. Next, we will present a Java program for printing the values of $V_i$.
+            Concluding the math, we see that $V_n = I_n R^n$. The Java program used for generating the volumes is in <a href="https://gist.github.com/coderodde/47e308e403a52ffccb179c03c70fae61">my Gist</a>.
             </p>
-            
-            <p></P>
         </article>
     </body>
 </html>
