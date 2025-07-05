@@ -1205,10 +1205,27 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
                     &= \int_0^{\pi} R^{n - 1} \sqrt{1 - \cos^2 u}^{n - 1} R \sin u \; \mathrm{d}u \\
                     &= R^n \int_0^{\pi} \sqrt{\sin^2 u}^{n - 1} \sin u \; \mathrm{d}u \\
                     &= R^n \int_0^{\pi} (\sin^{n - 1}) u \sin u \; \mathrm{d}u \\
-                    &= R^n \underbrace{\int_0^{\pi} \sin^n u \; \mathrm{d}u}_{I_n  }.
+                    &= R^n \int_0^{\pi} \sin^n u \; \mathrm{d}u} \\
+                    &= R^n \underbrace{\int_0^{\pi} \sin^n(x) \; \mathrm{d}x}_{I_n}.
             \end{aligned}
             $$
+            From <a href="https://steemit.com/steemiteducation/@masterwu/reduction-formula">this page</a>, we know that
+            $$
+            \int \sin^n(x) \; \mathrm{d}x = -\frac{1}{n}\sin^{(n - 1)}(x) \cos(x) +\frac{(n - 1)}{n} \int \sin^{(n - 2)}(x) \; \mathrm{d}x. 
+            $$
+            Since $\sin^{(n - 1)}(0) = \sin^{(n - 1)}(\pi) = 0,$
+            we must have
+            $$
+            I_n = \int_0^\pi \sin^n(x) \; \mathrm{d}x = \frac{n - 1}{n} \sin_0^\pi \sin^{(n - 2)}(x) \; \mathrm{d}x = \frac{(n - 1)}{n} I_{n - 1}.
+            $$
+            Now, the two base cases are $I_1 = 2$ and $I_2 = \pi / 2$.
             </p>
+            
+            <p>
+            Concluding the math, we see that $V_n = I_n R^n$. Next, we will present a Java program for printing the values of $V_i$.
+            </p>
+            
+            <p></P>
         </article>
     </body>
 </html>
