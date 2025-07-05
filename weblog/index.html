@@ -95,6 +95,7 @@
                 <p>
                 In the most cost-effective loan problem, we are given a directed
                 graph of actors where each actor may lend some amount of resources
+                graph of actors where each actor may lend some amount of resources
                 it possesses to its child nodes. In case an actor needs more than
                 his immediate parents can lend, the parents might need to lend from
                 their parents, adjust the interest rate to cover their own expenses,
@@ -980,18 +981,18 @@ where $a = \theta_\max \in (0, \pi / 2)$. Above we relied on the following Wolfr
                       &= -\frac{g\sin A(t)}{r} - \frac{\phi}{mr^2} \mathrm{sgn} \, A'(t).
             \end{aligned}
             $$
-			At this point, we need to notice that $\theta_{init}$ is lost due to the differentiation. We can however attempt a following hack: set instead of $A(t)$ 
-			$$
-			\tilde{A}(t) \stackrel{\text{def}}{=}\frac{|\theta_{init}|A(t)}{|A(0)|}.
-			$$
-			
+      At this point, we need to notice that $\theta_{init}$ is lost due to the differentiation. We can however attempt a following hack: set instead of $A(t)$ 
+      $$
+      \tilde{A}(t) \stackrel{\text{def}}{=}\frac{|\theta_{init}|A(t)}{|A(0)|}.
+      $$
+      
             <p align="left">If we set $\theta_{init}= 1, m = 2, r = 1, g = 9.81$ and $\phi = 1$, we get the following plot:
             <p align="center">
             <img src="AngleODE.png"></img>
             </p>
             <p>
             
-			The above plot was rendered via the following Python script:<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+      The above plot was rendered via the following Python script:<div class="demo-highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">odeint</span>
 
@@ -1176,7 +1177,7 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
             $$
             \sum_{i = 1}^{n - 1} x_i^2 + t^2 \leq R^2,
             $$
-            where $R$ is the actual radius of $B_n$. Next, we substract $t^2$ from above obtaining
+            where $R$ is the actual radius of $B_n$. Next, we subtract $t^2$ from above obtaining
             $$
             \sum_{i = 1}^{n - 1} x_i^2 \leq R^2 - t^2 = R^2(t).
             $$
@@ -1190,7 +1191,7 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
             \begin{aligned}
                 V_n &= \int_{-R}^R V_{(n - 1)}(t) \; \mathrm{d}t \\
                     &= \int_{-R}^R R^{(n - 1)}(t) \; \mathrm{d}t \\
-                    &= \int_{-R}^R \sqrt{R^2 - t^2}^{(n - 1)}\; \mathrm{d}t.
+                    &= \int_{-R}^R \Bigg[ \sqrt{R^2 - t^2} \Bigg]^{(n - 1)}\; \mathrm{d}t.
             \end{aligned}
             $$
             Next, we set $t = R \cos(u)$, which implies that
@@ -1201,9 +1202,9 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
             Now, we need to adapt the integration bounds from $t$ to $u$. To this end, we see that $R = R \cos(0)$ and $-R = R \cos(\pi)$, and so we have
             $$
             \begin{aligned} 
-                V_n &= \int_\pi^{0} \sqrt{R^2 - R^2 \cos^2 (u)}^{(n - 1)} (-R \sin(u))   \; \mathrm{d}u \\
-                    &= \int_0^{\pi} R^{(n - 1)} \sqrt{1 - \cos^2(u)}^{(n - 1)} R \sin(u) \; \mathrm{d}u \\
-                    &= R^n \int_0^{\pi} \sqrt{\sin^2(u)}^{(n - 1)} \sin(u)                 \; \mathrm{d}u \\
+                V_n &= \int_\pi^{0} \Bigg[\sqrt{R^2 - R^2 \cos^2 (u)} \Bigg]^{(n - 1)} (-R \sin(u))   \; \mathrm{d}u \\
+                    &= \int_0^{\pi} R^{(n - 1)} \Bigg[ \sqrt{1 - \cos^2(u)} \Bigg]^{(n - 1)} R \sin(u) \; \mathrm{d}u \\
+                    &= R^n \int_0^{\pi} \Bigg[ \sqrt{\sin^2(u)} \Bigg]^{(n - 1)} \sin(u)                 \; \mathrm{d}u \\
                     &= R^n \int_0^{\pi} \sin^{(n - 1)}(u) \sin(u)                        \; \mathrm{d}u \\
                     &= R^n \int_0^{\pi} \sin^n(u)                                        \; \mathrm{d}u \\
                     &= R^n \underbrace{\int_0^{\pi} \sin^n(x) \; \mathrm{d}x}_{I_n}.
