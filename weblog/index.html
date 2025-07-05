@@ -1168,6 +1168,48 @@ span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 
             $$
             </p>
         </article>
+        
+        <a href="#nvol"><h2 id="nvol">Calculating volumes of $n$-dimensional balls</h2></a>
+        <article>
+            <p>In this post, we will calculate a recursive formula for volumes of $n$-dimensional balls. 
+            Each $n$-dimensional ball $B_n$ is a set of points $\{(x_1, x_2, \ldots, x_{n - 1}, t)\}$ such that
+            $$
+            \sum_{i = 1}^{n - 1} x_i^2 + t^2 \leq R^2,
+            $$
+            where $R$ is the actual radius of $B_n$. Next, we substract $t^2$ from above obtaining
+            $$
+            \sum_{i = 1}^{n - 1} x_i^2 \leq R^2 - t^2 = R^2(t).
+            $$
+            For an $n$-dimensional ball, we denote its volume by $V_n$. Clearly, $V_1 = 2R$.
+            What comes to higher dimensions, we have a recurrence
+            $$
+            V_n = \int_{-R}^R V_{n - 1}(t) \; \mathrm{d}t.
+            $$
+            Now, we proceed to evaluating the $V_n$:
+            $$
+            \begin{aligned}
+                V_n &= \int_{-R}^R V_{n - 1}(t) \; \mathrm{d}t \\
+                    &= \int_{-R}^R R^{n - 1}(t) \; \mathrm{d}t \\
+                    &= \int_{-R}^R \sqrt{R^2 - t^2}^{n - 1}\; \mathrm{d}t.
+            \end{aligned}
+            $$
+            Next, we set $t = R \cos u$, which implies that
+            $$
+            \frac{\mathrm{d}t}{\mathrm{d}u} = -R \sin u,
+            $$
+            and so $\mathrm{d}t = -R \sin u \; \mathrm{d}u.$
+            Now, we need to adapt the integration bounds from $t$ to $u$. To this end, we see that $R = R \cos 0$ and $-R = R \cos \pi$, and so we have
+            $$
+            \begin{aligned}
+                V_n &= \int_\pi^{0} \sqrt{R^2 - R^2 \cos^2 u}^{n - 1} (-R \sin u) \; \mathrm{d}u \\
+                    &= \int_0^{\pi} R^{n - 1} \sqrt{1 - \cos^2 u}^{n - 1} R \sin u \; \mathrm{d}u \\
+                    &= R^n \int_0^{\pi} \sqrt{\sin^2 u}^{n - 1} \sin u \; \mathrm{d}u \\
+                    &= R^n \int_0^{\pi} (\sin^{n - 1}) u \sin u \; \mathrm{d}u \\
+                    &= R^n \underbrace{\int_0^{\pi} \sin^n u \; \mathrm{d}u}_{I_n  }.
+            \end{aligned}
+            $$
+            </p>
+        </article>
     </body>
 </html>
     
