@@ -13,7 +13,7 @@
             
             article {
                 font-family: "Times New Roman";
-                font-size: 13pt;
+                font-size: 16pt;
                 text-align: justify;
             }
             
@@ -1242,9 +1242,85 @@ $$
             </p>
             
             <p>
-            Concluding the math, we see that $V_n = I_n R^n$. The Java program used for generating the volumes is in <a href="https://gist.github.com/coderodde/47e308e403a52ffccb179c03c70fae61">my Gist</a>.
+            Concluding the math, we see that $V_n = I_n R^n$. The Java program used for generating the volumes follows:
+            <script src="https://gist.github.com/coderodde/47e308e403a52ffccb179c03c70fae61.js?file=NdimensionalBallVolumes.java"></script>
             </p>
         </article>
+        <!--
+        <a href="#nvolformula"><h2 id="nvol">Closed forms for volumes of $n$-dimensional balls</h2></a>
+        <article>
+          <p>In this post, I will derive a closed form for the volume of an $n$-dimensional ball, $V_n$. We conjecture that such closed form is given by 
+          $$
+          V_n = \begin{cases}
+            \frac{2^{(n + 1) / 2} \pi^{(n - 1) / 2} R^n}{\prod_{i = 1}^{(n - 1) / 2}(1 + 2i)} & \text{if $n$ is odd,} \\
+            \phantom{hello} & \\
+            \frac{\pi^{n / 2} R^n}{(n / 2)!} & \text{if $n$ is even.}
+          \end{cases}
+          $$
+          </p>
+          <p>
+          Next, assume that $n$ is odd. Let us mark 
+          $$
+          A_n = \frac{2^{(n + 1) / 2} \pi^{(n - 1) / 2}}{\prod_{i = 1}^{(n - 1) / 2}(1 + 2i)} .
+          $$
+          Now we have:
+          $$
+          \begin{aligned}
+              V_{n + 2} &= A_n \int_{-R}^R \int_{-R}^R V_n(t) \; \mathrm{d}t \; \mathrm{d}t \\
+                        &= A_n \int_{-R}^R \int_{-R}^R R^n(t) \; \mathrm{d}t \; \mathrm{d}t \\
+                        &= A_n \int_{-R}^R \int_{-R}^R \Bigg[ \sqrt{R^2 - t^2} \Bigg]^n \; \mathrm{d}t \; \mathrm{d}t \\
+                        &= A_n \int_{-R}^R \int_{-R}^R (R^2 - t^2)^{(n - 1) / 2} \sqrt{R^2 - t^2} \; \mathrm{d}t \; \mathrm{d}t
+          \end{aligned}
+          $$
+          </p>
+        </article>-->
+        <!--
+        <a href="#nrot"><h2 id="nvol">Rotational energies of $n$-dimensional, solid, equidense balls</h2></a>
+        <article>
+          <p>In this post, I will define rotational energies of $n$-dimensional, solid, equidense balls as the function of mass $m$, radius $R$ and angular speed \omega. The rotational energy in question is 
+          $$
+          E_n^{rot} = \frac{1}{2} a_n mR^2 \omega^2.
+          $$
+          First, we need the volume of an $n$-dimensional ball $V_n(R)$:
+          $$
+          V_n(R) = \begin{cases}
+            \frac{2^{(n + 1) / 2} \pi^{(n - 1) / 2} R^n}{\prod_{i = 1}^{(n - 1) / 2}(1 + 2i)} & \text{if $n$ is odd,} \\
+            \phantom{hello} & \\
+            \frac{\pi^{n / 2} R^n}{(n / 2)!} & \text{if $n$ is even.}
+          \end{cases}
+          $$
+          </p>
+          <p>
+          Now, we have that the (constant) density of the ball is 
+          $$
+          \rho = \frac{m}{V_n(R)}.  
+          $$
+          At this point, we have that
+          $$
+          \mathrm{d}m = \rho \; \mathrm{d}V, 
+          $$
+          where $\mathrm{d}V$ is the volume element given by
+          $$
+          \mathrm{d}V = r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k) \; \mathrm{d}\theta_k\big),
+          $$
+          where $r \in [0, R]$, $\theta_1, \theta_2, \ldots, \theta_{n - 2} \in [0, \pi]$ and $\theta_{n - 1} \in [0, 2\pi]$.
+          Now, we get to the actual energy expression:
+          $$
+          \begin{aligned}
+          E_n^{rot} &= \int \frac{1}{2} \mathrm{d}m R^2 \omega^2 \\
+                    &= \frac{1}{2} R^2 \omega^2 \rho \int_0^R \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^{2\pi}\mathrm{d}V \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
+                    &= \frac{1}{2}  R^2 \omega^2 \rho \int_0^R \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^{2\pi} r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
+                    &= \frac{m R^2 \omega^2}{2V_n(R)} \int_0^R \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^{2\pi} r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
+                    &= \frac{m R^2 \omega^2}{2V_n(R)} \Bigg[ \frac{r^n}{n} \Bigg]_{r = 0}^{r = R} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^{2\pi} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
+                    &= \frac{m R^{n + 2} \omega^2}{2V_n(R)n} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^{2\pi} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
+                    &= \frac{m R^{n + 2} \omega^2}{2 V_n(R)n} \prod_{k = 1}^{n - 2} I_k \Bigg( \int_0^{2\pi} 1 \; \mathrm{d}\theta_{n - 1}\Bigg) \\
+                    &= \frac{m \pi R^{n + 2} \omega^2}{V_n(R)n} \prod_{k = 1}^{n - 2} I_k \\
+          \end{aligned}
+          $$
+          Now, we can proceed to a Java program that computes the rotational energies in question:
+          
+          </p>
+        </article>-->
     </body>
 </html>
     
