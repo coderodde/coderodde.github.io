@@ -39,20 +39,8 @@ function DynamicCircularQueue(initialCapacity = 128) {
       return item;
     },
 
-    peek() {
-      return size === 0 ? undefined : items[head];
-    },
-
-    isEmpty() {
-      return size === 0;
-    },
-
     getSize() {
       return size;
-    },
-
-    getCapacity() {
-      return capacity;
     }
   };
 }
