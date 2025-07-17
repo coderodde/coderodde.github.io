@@ -1585,6 +1585,66 @@ function detachKeyListener() {
     document.onkeyup = undefined;
 }
 
+function attachTouchListener(canvas) {
+    canvas.addEventListener("touchstart", (event) => {
+        const x = event.clientX;
+        const y = event.clientY;
+        
+        const pacmanX = pacman.x;
+        const pacmanY = pacman.y;
+        
+        const dx = pacmanX - x;
+        const dy = pacmanY - y;
+        
+        if (Math.abs(dx) > Math.abs(dy)) {
+            // Once here, we request a horizontal direction:
+            if (dx < 0) {
+                pacman.input.left = true;
+            } else {
+                pacman.input.right = true;
+            }
+        } else {
+            // Once here, we request a vertical direction:
+            if (dy < 0) {
+                pacman.input.down = true;
+            } else {
+                pacman.input.up = true;
+            }
+        }
+        
+        event.prepventDefault();
+    }); 
+    
+    canvas.addEventListener("touchend", (event) => {
+        const x = event.clientX;
+        const y = event.clientY;
+        
+        const pacmanX = pacman.x;
+        const pacmanY = pacman.y;
+        
+        const dx = pacmanX - x;
+        const dy = pacmanY - y;
+        
+        if (Math.abs(dx) > Math.abs(dy)) {
+            // Once here, we request a horizontal direction:
+            if (dx < 0) {
+                pacman.input.left = false;
+            } else {
+                pacman.input.right = false;
+            }
+        } else {
+            // Once here, we request a vertical direction:
+            if (dy < 0) {
+                pacman.input.down = false;
+            } else {
+                pacman.input.up = false;
+            }
+        }
+        
+        event.prepventDefault();
+    }); 
+}
+
 function attachKeyListener() {
     document.onkeydown = function(eventInfo) {
         var code = eventInfo.keyCode;
@@ -1657,6 +1717,7 @@ function initGame(username) {
     pacman.g.setContext(ctx);
     pacman.engine.newGame();
     attachKeyListener();
+    attachTouchListener(c);
 }
 
 function nameBoxListener(e) {
