@@ -1308,7 +1308,7 @@ $$
           $$
           \begin{aligned}
           E_n^{rot} &= \int \frac{1}{2} \mathrm{d}m R^2 \omega^2 \\
-                    &= \frac{1}{2} R^2 \omega^2 \rho  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}}\int_0^R \mathrm{d}V \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
+                    &= \frac{1}{2} R^2 \omega^2 \rho  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}}\int_0^R \mathrm{d}V \\
                     &= \frac{1}{2}  R^2 \omega^2 \rho  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^R r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
                     &= \frac{m R^2 \omega^2}{2V_n(R)}  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^R r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
                     &= \frac{m R^2 \omega^2}{2V_n(R)} \Bigg[ \frac{r^n}{n} \Bigg]_{r = 0}^{r = R}  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
@@ -1317,7 +1317,6 @@ $$
                     &= \frac{m \pi R^{n + 2} \omega^2}{V_n(R)n} \prod_{k = 1}^{n - 2} I_k \\
           \end{aligned}
           $$
-          Now, we can proceed to a Java program that computes the rotational energies in question:
           
           </p>
         </article>
