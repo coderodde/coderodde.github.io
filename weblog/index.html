@@ -1286,7 +1286,7 @@ $$
           V_n(R) = \begin{cases}
             \Bigg( 2^{(n + 1) / 2} \pi^{(n - 1) / 2} R^n \Bigg) \Bigg( \prod\limits_{i = 1}^{(n - 1)/2}(1 + 2i) \Bigg)^{-1} & \text{if } n \text{ is odd},
             \phantom{hello} & \\
-            \frac{\pi^{n / 2} R^n}{(n / 2)!} & \text{if $n$ is even.}
+            \Bigg(\pi^{n / 2} R^n\Bigg)\Bigg((n / 2)!\Bigg)^{-1} & \text{if $n$ is even.}
           \end{cases}
           $$
           </p>
@@ -1298,7 +1298,7 @@ $$
           At this point, we have that
           $$
           \mathrm{d}m = \rho \; \mathrm{d}V, 
-          $$
+          $$                                           
           where $\mathrm{d}V$ is the volume element given by
           $$
           \mathrm{d}V = r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k) \; \mathrm{d}\theta_k\big) \mathrm{d}r,
@@ -1307,17 +1307,21 @@ $$
           Now, we get to the actual energy expression:
           $$
           \begin{aligned}
-          E_n^{rot} &= \int \frac{1}{2} \mathrm{d}m R^2 \omega^2 \\
+          E_n^{rot} &= \int_{\Omega} \frac{1}{2} \mathrm{d}m R^2 \omega^2 \\
                     &= \frac{1}{2} R^2 \omega^2 \rho  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}}\int_0^R \mathrm{d}V \\
                     &= \frac{1}{2}  R^2 \omega^2 \rho  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^R r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
                     &= \frac{m R^2 \omega^2}{2V_n(R)}  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \int_0^R r^{n - 1} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}r \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
                     &= \frac{m R^2 \omega^2}{2V_n(R)} \Bigg[ \frac{r^n}{n} \Bigg]_{r = 0}^{r = R}  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
                     &= \frac{m R^{n + 2} \omega^2}{2V_n(R)n}  \int_0^{2\pi} \underbrace{\int_0^\pi \ldots \int_0^\pi}_{n - 2\text{ times}} \prod_{k = 1}^{n - 1}\big(\sin^{n - k - 1}(\theta_k)\big) \; \mathrm{d}\theta_1, \ldots \mathrm{d}\theta_{n - 2} \mathrm{d}\theta_{n - 1} \\
                     &= \frac{m R^{n + 2} \omega^2}{2 V_n(R)n} \prod_{k = 1}^{n - 2} I_k \Bigg( \int_0^{2\pi} 1 \; \mathrm{d}\theta_{n - 1}\Bigg) \\
-                    &= \frac{m \pi R^{n + 2} \omega^2}{V_n(R)n} \prod_{k = 1}^{n - 2} I_k \\
+                    &= \frac{m \pi R^{n + 2} \omega^2}{V_n(R)n} \prod_{k = 1}^{n - 2} I_k, \\
           \end{aligned}
           $$
-          
+          where 
+          $$
+          I_n + \frac{n - 1}{n} I_{n - 2}.
+          $$
+          As the base cases for $I_n$, we have $I_1 = \int_0^\pi \sin(x) \, \mathrm{d}x = 2$ and $I_2 = \int_0^\pi \sin^2(x) \, \mathrm{d}x =       \pi / 2$.
           </p>
         </article>
     </body>
