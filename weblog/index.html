@@ -1274,6 +1274,24 @@ $$
           $$
           </p>
         </article>
+        
+        <a href="#kingsprop"><h2 id="kingsprop">Proving King's property in integral calculus</h2></a>
+        <article>
+          <p>
+          In this post, we will prove the King's property
+          $$
+          \int_a^b f(x) \; \mathrm{d}x = \int_a^b f(a + b - x) \; \mathrm{d}x. 
+          $$
+          First, we need substitution $u = a + b - x$, which is equivalent with $x = a + b - u$. Now,
+          $$
+          \frac{\mathrm{d}x}{\mathrm{d}u} = \frac{\mathrm{d}}{\mathrm{d}u} (a + b - u) = -1,
+          $$
+          and so $\mathrm{d}x = -\mathrm{d}u$. Next, we need to recalculate the integration bounds $a$ and $b$: $u_a = a + b - a = b$ and $u_b = a + b - b = a$, and, thus, we have
+          $$
+          \int_a^b f(x) \; \mathrm{dx} = \int_{u_a}^{u_b} f(u) \; (-\mathrm{d}u) = -\int_b^a f(u) \; \mathrm{d}u = \int_a^b f(u) \; \mathrm{d}u. 
+          $$
+          </p>
+        </article>
     </body>
 </html>
     
