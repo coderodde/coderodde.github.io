@@ -1299,6 +1299,48 @@ $$
           which concludes the property.
           </p>
         </article>
+        
+        <a href="#tdbayes"><h2 id="tdbayes">Time dependent Bayes formula</h2></a>
+        <article>
+          <p>
+          My friend mathematician told me that he had an idea of parametrizing the Bayes formula with respect to time. As we remember,
+          $$
+          P(A \cap B) = P(A \vert B) P(B)
+          $$
+          and 
+          $$
+          P(B \cap A) = P(B \vert A) P(A)
+          $$
+          By commutativity of $\cap$, we have
+          $$
+          P(A \vert B) = \frac{P(A \cap B)}{P(B)}.
+          $$
+          </p>
+          <p>
+          A <i>probability space</i> is a triple $(\Omega, \mathcal{F}, P)$, where $\Omega$ is the sample space, $\mathcal{F}$ is a $\sigma$-algebra of events, and $P$ is the probability measure.
+          In order to extend it to change with time, we use notation $(\Omega_t, \mathcal{F}_t, P_t)$.
+          Suppose $P_1(\Omega_1) = 1$, $\epsilon \not \in \Omega_1$, but $\epsilon \in \Omega_2$ and $P_1(\{\epsilon\}) > 0$. Then, $P_1$ would "overflow" on $\Omega_2$ and, so, needs to be "reweighted".
+          </p>
+          <p>
+          Now, instead of events $A$ and $B$, we consider their time dependent version $A(t)$ and $B(t)$. We must have
+          $$
+          P_t(A(t) \vert B(t)) = \frac{P_t(A(t) \cap B(t))}{P_t(B(t))}.
+          $$
+          </p>
+          
+          <h4>An example</h4>
+          
+          <p>
+          Suppose that $t \in [0, 1].$ Let the event $A(t) = [1 - t, 1]$ and $B(t)$ the interval $[0, t]$. Also, let the probability of  intersection event $P(A(t) \cap B(t))$ be $\max(0, 2 \times (t - 0.5))).$ Now, as time passes from $t = 0$ to $t = 1$, the Bayesian probability evolves as follows:
+          <center>
+          <img src="TimeDependentBayes.png" width="800px" height="450px"/>
+          </center>
+          </p>
+          
+          <p>
+          The link to the source code is <a href="https://gist.github.com/coderodde/7300fcafd69f3ce1f97c2a86600c03ac">here</a>.
+          </p>
+        </article>
     </body>
 </html>
     
