@@ -31,7 +31,7 @@ function process_facepalm(facepalm_element) {
         var divElement = document.createElement("div");
 
         divElement.style = "text-align: center;";
-        imgElement.src = "facepalm.webp";
+        imgElement.src = "https://coderodde.github.io/f_ckyeah_and_facepalm.js/facepalm.webp";
         imgElement.width="240";
         imgElement.height="144";
 
