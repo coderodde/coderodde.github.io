@@ -18,7 +18,7 @@ function process_fuckyeah(fuckyeah_element) {
     var divElement = document.createElement("div");
 
     divElement.style = "text-align: center;";
-    textElement.innerHTML = "FUCK YEAH";
+    textElement.innerHTML = "F_CK YEAH";
     textElement.style = "font-size:50px; font-weight: bold;";
 
     fuckyeah_bling(textElement);
@@ -31,7 +31,7 @@ function process_facepalm(facepalm_element) {
         var divElement = document.createElement("div");
 
         divElement.style = "text-align: center;";
-        imgElement.src = "https://tctechcrunch2011.files.wordpress.com/2012/06/912accb5_picard-facepalm.png";
+        imgElement.src = "facepalm.webp";
         imgElement.width="240";
         imgElement.height="144";
 
@@ -41,10 +41,8 @@ function process_facepalm(facepalm_element) {
 
 function setup()
 {
-    // Create the tags. Unfortunately, they MUST contain a dash '-'; 
-    // see here about that restriction: http://www.html5rocks.com/en/tutorials/webcomponents/customelements/?redirect_from_locale=es#gettingstarted
-    document.registerElement('fuck-yeah');
-    document.registerElement('face-palm');
+    customElements.define("fuck-yeah", class extends HTMLElement {});
+    customElements.define("face-palm", class extends HTMLElement {});
 
     var fuckyeahList = document.getElementsByTagName("fuck-yeah");
     var facepalmList = document.getElementsByTagName("face-palm");
